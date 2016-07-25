@@ -1,5 +1,6 @@
 package de.tuebingen.es.crc.configurator;
 
+import de.tuebingen.es.crc.configurator.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -28,6 +29,17 @@ public class Controller {
         this.model = model;
     }
 
+    /**
+     * displays a error dialog with a text
+     * @param errorMessage
+     */
+    private void showErrorMessage(String errorMessage) {
+        Alert aboutDialog = new Alert(Alert.AlertType.ERROR);
+        aboutDialog.setTitle("Error");
+        aboutDialog.setContentText(errorMessage);
+        aboutDialog.showAndWait();
+    }
+
     public void handleNewAction(ActionEvent actionEvent) {
         System.out.println("New");
     }
@@ -50,7 +62,7 @@ public class Controller {
                 this.model.parseCrcDescriptionFile(crcDescriptionFile);
             }
             catch (Exception e) {
-                System.out.println(e.getMessage());
+                showErrorMessage(e.getMessage());
             }
         }
     }
@@ -74,5 +86,11 @@ public class Controller {
         aboutDialog.getButtonTypes().clear();
         aboutDialog.getButtonTypes().add(ButtonType.CLOSE);
         aboutDialog.showAndWait();
+    }
+
+    public void handleQuitAction(ActionEvent actionEvent) {
+
+        // TODO: check if a file is open
+        System.exit(0);
     }
 }

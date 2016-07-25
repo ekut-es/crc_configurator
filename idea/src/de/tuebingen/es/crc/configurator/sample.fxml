@@ -18,7 +18,7 @@
                     <MenuItem text="New" onAction="#handleNewAction"/>
                     <MenuItem text="Open" onAction="#handleOpenAction"/>
                     <SeparatorMenuItem/>
-                    <MenuItem text="Quit"/>
+                    <MenuItem text="Quit" onAction="#handleQuitAction"/>
                 </items>
             </Menu>
             <Menu fx:id="menuText" text="Help">

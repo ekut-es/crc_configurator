@@ -1,5 +1,6 @@
 package de.tuebingen.es.crc.configurator;
 
+import de.tuebingen.es.crc.configurator.model.Model;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
