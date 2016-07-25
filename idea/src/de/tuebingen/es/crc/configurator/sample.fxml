@@ -1,0 +1,32 @@
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import com.sun.javafx.scene.control.skin.ContextMenuContent.MenuBox?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+
+<?import javafx.scene.layout.VBox?>
+<VBox fx:id="mainVBox" prefHeight="500" prefWidth="500" xmlns:fx="http://javafx.com/fxml" fx:controller="de.tuebingen.es.crc.configurator.Controller">
+    <MenuBar fx:id="mainMenuBar">
+        <menus>
+            <Menu fx:id="menuFile" text="File">
+                <items>
+                    <MenuItem text="New" onAction="#handleNewAction"/>
+                    <MenuItem text="Open" onAction="#handleOpenAction"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Quit"/>
+                </items>
+            </Menu>
+            <Menu fx:id="menuText" text="Help">
+                <items>
+                    <MenuItem text="Documentation"/>
+                    <MenuItem text="About" onAction="#handleAboutAction"/>
+                </items>
+            </Menu>
+        </menus>
+    </MenuBar>
+</VBox>

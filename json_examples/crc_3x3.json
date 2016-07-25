@@ -1,0 +1,19 @@
+{
+    "rows": 3,
+    "columns": 3,
+    "staticConfigLines": 4,
+    "dynamicConfigLines": 4,
+    "PEs" : [
+        {"row": 0, "column": 0, "FUFunctions": ["add", "sub", "mul", "div", "and", "or", "xor", "not", "shift_left", "shift_right", "compare", "multiplex"]},
+        {"row": 0, "column": 1, "FUFunctions": ["add", "sub", "mul", "div", "and", "or", "xor", "not", "shift_left", "shift_right", "compare", "multiplex"]},
+        {"row": 0, "column": 2, "FUFunctions": ["add", "sub", "mul", "div", "and", "or", "xor", "not", "shift_left", "shift_right", "compare", "multiplex"]},
+        {"row": 1, "column": 0, "FUFunctions": ["add", "sub", "mul", "div", "and", "or", "xor", "not", "shift_left", "shift_right", "compare", "multiplex"]},
+        {"row": 1, "column": 1, "FUFunctions": ["add", "sub", "mul", "div", "and", "or", "xor", "not", "shift_left", "shift_right", "compare", "multiplex"]},
+        {"row": 1, "column": 2, "FUFunctions": ["add", "sub", "mul", "div", "and", "or", "xor", "not", "shift_left", "shift_right", "compare", "multiplex"]},
+        {"row": 2, "column": 0, "FUFunctions": ["add", "sub", "mul", "div", "and", "or", "xor", "not", "shift_left", "shift_right", "compare", "multiplex"]},
+        {"row": 2, "column": 1, "FUFunctions": ["add", "sub", "mul", "div", "and", "or", "xor", "not", "shift_left", "shift_right", "compare", "multiplex"]},
+        {"row": 2, "column": 2, "FUFunctions": ["add", "sub", "mul", "div", "and", "or", "xor", "not", "shift_left", "shift_right", "compare", "multiplex"]}
+    ],
+    "staticConfigs": [],
+    "dynamicConfigs": []
+}
