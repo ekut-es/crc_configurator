@@ -3,18 +3,20 @@ package de.tuebingen.es.crc.configurator;
 import de.tuebingen.es.crc.configurator.model.CRC;
 import de.tuebingen.es.crc.configurator.model.FU;
 import de.tuebingen.es.crc.configurator.model.Model;
+import de.tuebingen.es.crc.configurator.view.FuFunctionsDialog;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 
+import java.awt.*;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,6 +34,9 @@ public class Controller {
 
     @FXML
     private TabPane tabPane;
+
+    private Tab hardwareModelTab;
+    private GraphicsContext hardwareModelGc;
 
     /**
      * initializes the model
@@ -124,25 +129,12 @@ public class Controller {
      * adds the "Hardware Model" tab to the tab pane
      */
     private void displayHardwareModelTab() {
-        Tab hardwareModelTab = new Tab();
+        hardwareModelTab = new Tab();
         hardwareModelTab.setText("Hardware Model");
 
-        this.drawHardwareModelCrc(hardwareModelTab);
-
-        tabPane.getTabs().add(hardwareModelTab);
-    }
-
-    /**
-     * draws the hardware model of the CRC into the "Hardware Model" tab
-     * @param hardwareModelTab
-     */
-    private void drawHardwareModelCrc(Tab hardwareModelTab) {
-
-        CRC crc = model.getCrc();
-
         Canvas canvas = new Canvas();
-        canvas.setHeight(2*CANVAS_PADDING+(crc.getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE)));
-        canvas.setWidth(2*CANVAS_PADDING+(crc.getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
+        canvas.setWidth(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
+        canvas.setHeight(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE)));
 
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED,
                 event -> {
@@ -154,24 +146,35 @@ public class Controller {
                 }
         );
 
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-
-        gc.setStroke(Color.BLACK);
-        gc.setLineWidth(2);
-
-        for(int i = 0; i < crc.getRows(); i++) {
-            for(int j = 0; j < crc.getColumns(); j++) {
-                drawPe(gc, i, j);
-                writeFuFunctions(gc, i, j, crc.getFu(i,j));
-            }
-        }
-
         ScrollPane scrollPane = new ScrollPane(canvas);
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
 
+        this.hardwareModelGc = canvas.getGraphicsContext2D();
+        this.drawHardwareModelCrc(this.hardwareModelGc);
+
         hardwareModelTab.setContent(scrollPane);
 
+        tabPane.getTabs().add(hardwareModelTab);
+    }
+
+    /**
+     * draws the hardware model of the CRC into the "Hardware Model" provided graphics content
+     * @param gc
+     */
+    private void drawHardwareModelCrc(GraphicsContext gc) {
+
+        gc.clearRect(0,0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(2);
+
+        for(int i = 0; i < model.getCrc().getRows(); i++) {
+            for(int j = 0; j < model.getCrc().getColumns(); j++) {
+                drawPe(gc, i, j);
+                writeFuFunctions(gc, i, j, model.getCrc().getFu(i,j));
+            }
+        }
     }
 
     /**
@@ -257,6 +260,11 @@ public class Controller {
         gc.fillText(fuFunctionsString, x, y);
     }
 
+    /**
+     * figures out on which PE in the "Hardware Model" tab was clicked ans shows dialog to select FU functions
+     * @param x
+     * @param y
+     */
     private void handleHardwareModelDoubleClick(int x, int y) {
         // decide which PE
         int row = -1;
@@ -279,7 +287,22 @@ public class Controller {
             }
         }
 
-        System.out.println(row + "," + column);
+        // it was clicked on PE
+        if(row != -1) {
+
+            Point p = MouseInfo.getPointerInfo().getLocation();
+
+            FuFunctionsDialog dialog = new FuFunctionsDialog(row, column, crc.getFu(row, column).getFunctions());
+
+            dialog.setX(p.x-100);
+            dialog.setY(p.y-80);
+
+            dialog.showAndWait();
+
+            if(dialog.modelHasChanged) {
+                this.drawHardwareModelCrc(this.hardwareModelGc);
+            }
+        }
     }
 }
 
