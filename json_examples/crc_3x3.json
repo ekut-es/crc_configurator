@@ -4,7 +4,7 @@
     "staticConfigLines": 4,
     "dynamicConfigLines": 4,
     "PEs" : [
-        {"row": 0, "column": 0, "FUFunctions": ["add", "sub", "mul", "div", "and", "or", "xor", "not", "shift_left", "shift_right", "compare", "multiplex"]},
+        {"row": 0, "column": 0, "FUFunctions": ["add", "sub", "and", "or", "xor", "not", "shift_left", "shift_right", "compare", "multiplex"]},
         {"row": 0, "column": 1, "FUFunctions": ["add", "sub", "mul", "div", "and", "or", "xor", "not", "shift_left", "shift_right", "compare", "multiplex"]},
         {"row": 0, "column": 2, "FUFunctions": ["add", "sub", "mul", "div", "and", "or", "xor", "not", "shift_left", "shift_right", "compare", "multiplex"]},
         {"row": 1, "column": 0, "FUFunctions": ["add", "sub", "mul", "div", "and", "or", "xor", "not", "shift_left", "shift_right", "compare", "multiplex"]},

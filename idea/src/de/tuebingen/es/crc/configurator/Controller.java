@@ -4,19 +4,18 @@ import de.tuebingen.es.crc.configurator.model.CRC;
 import de.tuebingen.es.crc.configurator.model.FU;
 import de.tuebingen.es.crc.configurator.model.Model;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
-import javafx.geometry.Orientation;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.scene.shape.ArcType;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -145,6 +144,16 @@ public class Controller {
         canvas.setHeight(2*CANVAS_PADDING+(crc.getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE)));
         canvas.setWidth(2*CANVAS_PADDING+(crc.getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
 
+        canvas.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                event -> {
+                    if(event.getButton().equals(MouseButton.PRIMARY)) {
+                        if(event.getClickCount() == 2) {
+                            this.handleHardwareModelDoubleClick((int) event.getX(), (int) event.getY());
+                        }
+                    }
+                }
+        );
+
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         gc.setStroke(Color.BLACK);
@@ -247,4 +256,31 @@ public class Controller {
 
         gc.fillText(fuFunctionsString, x, y);
     }
+
+    private void handleHardwareModelDoubleClick(int x, int y) {
+        // decide which PE
+        int row = -1;
+        int column = -1;
+
+        CRC crc = model.getCrc();
+
+        for(int i = 0; i < crc.getColumns(); i++) {
+
+            if(x >= CANVAS_PADDING+(i*(PE_DRAW_SIZE+INTER_PE_DISTANCE)) && x <= CANVAS_PADDING+(i*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+PE_DRAW_SIZE) {
+
+                column = i;
+
+                for(int j = 0; j < crc.getRows(); j++) {
+
+                    if(y >= CANVAS_PADDING+(j*(PE_DRAW_SIZE+INTER_PE_DISTANCE)) && y <= CANVAS_PADDING+(j*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+PE_DRAW_SIZE) {
+                        row = j;
+                    }
+                }
+            }
+        }
+
+        System.out.println(row + "," + column);
+    }
 }
+
+
