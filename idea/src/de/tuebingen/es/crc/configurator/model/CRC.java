@@ -126,7 +126,7 @@ public class CRC {
         }
     }
 
-    private FU getFu(int row, int column) {
+    public FU getFu(int row, int column) {
         return this.fuMatrix.get(row).get(column);
     }
 }

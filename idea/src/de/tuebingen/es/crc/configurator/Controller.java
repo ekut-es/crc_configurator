@@ -1,6 +1,7 @@
 package de.tuebingen.es.crc.configurator;
 
 import de.tuebingen.es.crc.configurator.model.CRC;
+import de.tuebingen.es.crc.configurator.model.FU;
 import de.tuebingen.es.crc.configurator.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,12 +16,15 @@ import javafx.stage.FileChooser;
 import javafx.scene.shape.ArcType;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Controller {
 
-    private static final int PE_DRAW_SIZE = 200;
-    private static final int CANVAS_PADDING = 40;
-    private static final int INTER_PE_DISTANCE = 60;
+    public static final int PE_DRAW_SIZE = 200;
+    public static final int CANVAS_PADDING = 40;
+    public static final int INTER_PE_DISTANCE = 80;
 
     private Model model;
 
@@ -107,12 +111,19 @@ public class Controller {
         aboutDialog.showAndWait();
     }
 
+    /**
+     * quits the application (checks is a CRC is opened)
+     * @param actionEvent
+     */
     public void handleQuitAction(ActionEvent actionEvent) {
 
         // TODO: check if a file is open
         System.exit(0);
     }
 
+    /**
+     * adds the "Hardware Model" tab to the tab pane
+     */
     private void displayHardwareModelTab() {
         Tab hardwareModelTab = new Tab();
         hardwareModelTab.setText("Hardware Model");
@@ -122,12 +133,16 @@ public class Controller {
         tabPane.getTabs().add(hardwareModelTab);
     }
 
+    /**
+     * draws the hardware model of the CRC into the "Hardware Model" tab
+     * @param hardwareModelTab
+     */
     private void drawHardwareModelCrc(Tab hardwareModelTab) {
 
         CRC crc = model.getCrc();
 
         Canvas canvas = new Canvas();
-        canvas.setHeight(2*CANVAS_PADDING+(crc.getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
+        canvas.setHeight(2*CANVAS_PADDING+(crc.getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE)));
         canvas.setWidth(2*CANVAS_PADDING+(crc.getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -138,6 +153,7 @@ public class Controller {
         for(int i = 0; i < crc.getRows(); i++) {
             for(int j = 0; j < crc.getColumns(); j++) {
                 drawPe(gc, i, j);
+                writeFuFunctions(gc, i, j, crc.getFu(i,j));
             }
         }
 
@@ -149,6 +165,12 @@ public class Controller {
 
     }
 
+    /**
+     * draws a PE
+     * @param gc
+     * @param row
+     * @param column
+     */
     private void drawPe(GraphicsContext gc, int row, int column) {
 
         int x = CANVAS_PADDING+(column*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
@@ -182,5 +204,47 @@ public class Controller {
         );
 
         gc.fillText("FU", 9*peDrawSizeTwentieth+x, 14*peDrawSizeTwentieth+y);
+    }
+
+    /**
+     * writes the supported PE FU functions under a PE
+     * @param gc
+     * @param row
+     * @param column
+     * @param fu
+     */
+    private void writeFuFunctions(GraphicsContext gc, int row, int column, FU fu) {
+
+        int x = CANVAS_PADDING+(column*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
+        int y = CANVAS_PADDING+(row*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+(PE_DRAW_SIZE+(PE_DRAW_SIZE/10));
+
+        LinkedHashMap<String, Boolean> fuFunctions = fu.getFunctions();
+
+        String fuFunctionsString = "";
+
+        int i = 0;
+
+        for(Map.Entry<String, Boolean> function : fuFunctions.entrySet())  {
+            if(function.getValue()) {
+
+                if(i != 0) {
+                    fuFunctionsString += ", ";
+                }
+
+                if((i != 0) && (i % 3 == 0)) {
+                    fuFunctionsString += "\n";
+                }
+
+                fuFunctionsString += function.getKey() ;
+
+                i++;
+            }
+        }
+
+        if(fuFunctionsString.isEmpty()) {
+            fuFunctionsString = "nop";
+        }
+
+        gc.fillText(fuFunctionsString, x, y);
     }
 }

@@ -1,15 +1,15 @@
 package de.tuebingen.es.crc.configurator.model;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 25/07/16.
  */
 public class FU {
-    private HashMap<String, Boolean> functions;
+    private LinkedHashMap<String, Boolean> functions;
 
     public FU() {
-        this.functions = new HashMap<>();
+        this.functions = new LinkedHashMap<>();
 
         this.functions.put("add", false);
         this.functions.put("sub", false);
@@ -27,5 +27,9 @@ public class FU {
 
     public void setFunction(String key, boolean value) {
         this.functions.replace(key, value);
+    }
+
+    public LinkedHashMap<String, Boolean> getFunctions() {
+        return this.functions;
     }
 }

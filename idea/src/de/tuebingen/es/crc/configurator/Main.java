@@ -24,10 +24,13 @@ public class Main extends Application {
         Controller controller = fxmlLoader.getController();
         controller.initModel(model);
 
+        int stageWidth = 2*Controller.CANVAS_PADDING+2*Controller.PE_DRAW_SIZE+Controller.INTER_PE_DISTANCE+10;
+        int stageHeight = 2*Controller.CANVAS_PADDING+2*Controller.PE_DRAW_SIZE+Controller.INTER_PE_DISTANCE+110;
+
         primaryStage.setTitle("CRC Configurator");
-        primaryStage.setMinHeight(400);
-        primaryStage.setMinWidth(400);
-        primaryStage.setScene(new Scene(root, 500, 500));
+        primaryStage.setMinWidth(stageWidth);
+        primaryStage.setMinHeight(stageHeight);
+        primaryStage.setScene(new Scene(root, stageWidth, stageHeight));
         primaryStage.show();
 
         // open file from file path given from the command line
