@@ -3,6 +3,7 @@ package de.tuebingen.es.crc.configurator;
 import de.tuebingen.es.crc.configurator.model.CRC;
 import de.tuebingen.es.crc.configurator.model.FU;
 import de.tuebingen.es.crc.configurator.model.Model;
+import de.tuebingen.es.crc.configurator.view.AboutDialog;
 import de.tuebingen.es.crc.configurator.view.FuFunctionsDialog;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -99,19 +100,7 @@ public class Controller {
      * @param actionEvent
      */
     public void handleAboutAction(ActionEvent actionEvent) {
-        Alert aboutDialog = new Alert(Alert.AlertType.NONE);
-        aboutDialog.setTitle("About CRC Configurator");
-
-        aboutDialog.setContentText(
-                "Konstantin Lübeck\n" +
-                        "Eberhard Karls Universität Tübingen\n" +
-                        "Wilhelm-Schickard-Institut\n" +
-                        "Chair for Embedded Systems\n\n" +
-                        "Version 0.1 (2016)"
-        );
-
-        aboutDialog.getButtonTypes().clear();
-        aboutDialog.getButtonTypes().add(ButtonType.CLOSE);
+        AboutDialog aboutDialog = new AboutDialog();
         aboutDialog.showAndWait();
     }
 
