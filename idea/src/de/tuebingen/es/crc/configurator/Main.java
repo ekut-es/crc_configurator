@@ -1,6 +1,7 @@
 package de.tuebingen.es.crc.configurator;
 
 import de.tuebingen.es.crc.configurator.model.Model;
+import de.tuebingen.es.crc.configurator.view.ConfiguratorTab;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,8 +25,8 @@ public class Main extends Application {
         Controller controller = fxmlLoader.getController();
         controller.initModel(model);
 
-        int stageWidth = 2*Controller.CANVAS_PADDING+2*Controller.PE_DRAW_SIZE+Controller.INTER_PE_DISTANCE+10;
-        int stageHeight = 2*Controller.CANVAS_PADDING+2*Controller.PE_DRAW_SIZE+Controller.INTER_PE_DISTANCE+110;
+        int stageWidth = 2*ConfiguratorTab.CANVAS_PADDING+2*ConfiguratorTab.PE_DRAW_SIZE+ConfiguratorTab.INTER_PE_DISTANCE+10;
+        int stageHeight = 2*ConfiguratorTab.CANVAS_PADDING+2*ConfiguratorTab.PE_DRAW_SIZE+ConfiguratorTab.INTER_PE_DISTANCE+110;
 
         primaryStage.setTitle("CRC Configurator");
         primaryStage.setMinWidth(stageWidth);
