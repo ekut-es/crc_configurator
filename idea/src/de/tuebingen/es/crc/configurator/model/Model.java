@@ -45,6 +45,10 @@ public class Model {
         }
 
         // generate object representation CRC
-        CRC crc = new CRC(jsonCrcDescription);
+        this.crc = new CRC(jsonCrcDescription);
+    }
+
+    public CRC getCrc() {
+        return this.crc;
     }
 }

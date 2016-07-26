@@ -1,5 +1,6 @@
 package de.tuebingen.es.crc.configurator;
 
+import de.tuebingen.es.crc.configurator.model.CRC;
 import de.tuebingen.es.crc.configurator.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,6 +17,10 @@ import javafx.scene.shape.ArcType;
 import java.io.File;
 
 public class Controller {
+
+    private static final int PE_DRAW_SIZE = 200;
+    private static final int CANVAS_PADDING = 40;
+    private static final int INTER_PE_DISTANCE = 60;
 
     private Model model;
 
@@ -112,20 +117,29 @@ public class Controller {
         Tab hardwareModelTab = new Tab();
         hardwareModelTab.setText("Hardware Model");
 
+        this.drawHardwareModelCrc(hardwareModelTab);
+
+        tabPane.getTabs().add(hardwareModelTab);
+    }
+
+    private void drawHardwareModelCrc(Tab hardwareModelTab) {
+
+        CRC crc = model.getCrc();
+
         Canvas canvas = new Canvas();
-        canvas.setHeight(2000);
-        canvas.setWidth(2000);
+        canvas.setHeight(2*CANVAS_PADDING+(crc.getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
+        canvas.setWidth(2*CANVAS_PADDING+(crc.getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        //gc.setFill(Color.GREEN);
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(2);
 
-        drawPe(gc, 0, 0);
-        drawPe(gc, 1, 0);
-        drawPe(gc, 0, 1);
-        drawPe(gc, 1, 1);
+        for(int i = 0; i < crc.getRows(); i++) {
+            for(int j = 0; j < crc.getColumns(); j++) {
+                drawPe(gc, i, j);
+            }
+        }
 
         ScrollPane scrollPane = new ScrollPane(canvas);
         scrollPane.setFitToHeight(true);
@@ -133,21 +147,40 @@ public class Controller {
 
         hardwareModelTab.setContent(scrollPane);
 
-        tabPane.getTabs().add(hardwareModelTab);
     }
 
     private void drawPe(GraphicsContext gc, int row, int column) {
 
-        int x = 20+(row*240);
-        int y = 20+(column*240);
+        int x = CANVAS_PADDING+(column*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
+        int y = CANVAS_PADDING+(row*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
 
-        gc.strokeRect(x, y, 200, 200);
-        gc.fillText(row + "," + column, 10+x, 190+y);
+        final int peDrawSizeTwentieth = (PE_DRAW_SIZE/20);
+
+        gc.strokeRect(x, y, PE_DRAW_SIZE, PE_DRAW_SIZE);
+        gc.fillText(row + "," + column, peDrawSizeTwentieth+x, PE_DRAW_SIZE-(peDrawSizeTwentieth)+y);
+
         gc.strokePolygon(
-                new double[] {0+70+x, 60+70+x, 60+70+x, 0+70+x, 0+70+x, 20+70+x, 0+70+x},
-                new double[] {0+30+y, 20+30+y, 120+30+y, 140+30+y, 80+30+y, 70+30+y, 60+30+y},
+                new double[] {
+                        0+7*peDrawSizeTwentieth+x,
+                        6*peDrawSizeTwentieth+7*peDrawSizeTwentieth+x,
+                        6*peDrawSizeTwentieth+7*peDrawSizeTwentieth+x,
+                        0+7*peDrawSizeTwentieth+x,
+                        0+7*peDrawSizeTwentieth+x,
+                        2*peDrawSizeTwentieth+7*peDrawSizeTwentieth+x,
+                        0+7*peDrawSizeTwentieth+x
+                },
+                new double[] {
+                        0+3*peDrawSizeTwentieth+y,
+                        2*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
+                        12*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
+                        14*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
+                        8*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
+                        7*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
+                        6*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y
+                },
                 7
         );
-        gc.fillText("FU", 90+x, 140+y);
+
+        gc.fillText("FU", 9*peDrawSizeTwentieth+x, 14*peDrawSizeTwentieth+y);
     }
 }
