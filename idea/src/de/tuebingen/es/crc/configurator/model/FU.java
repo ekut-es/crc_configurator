@@ -7,29 +7,48 @@ import java.util.LinkedHashMap;
  */
 public class FU {
     private LinkedHashMap<String, Boolean> functions;
+    private CRC crc;
 
-    public FU() {
-        this.functions = new LinkedHashMap<>();
+    public FU(CRC crc) {
 
-        this.functions.put("add", false);
-        this.functions.put("sub", false);
-        this.functions.put("mul", false);
-        this.functions.put("div", false);
-        this.functions.put("and", false);
-        this.functions.put("or", false);
-        this.functions.put("xor", false);
-        this.functions.put("not", false);
-        this.functions.put("shift_left", false);
-        this.functions.put("shift_right", false);
-        this.functions.put("compare", false);
-        this.functions.put("multiplex", false);
+        this.crc = crc;
+
+        functions = new LinkedHashMap<>();
+
+        functions.put("add", false);
+        functions.put("sub", false);
+        functions.put("mul", false);
+        functions.put("div", false);
+        functions.put("and", false);
+        functions.put("or", false);
+        functions.put("xor", false);
+        functions.put("not", false);
+        functions.put("shift_left", false);
+        functions.put("shift_right", false);
+        functions.put("compare", false);
+        functions.put("multiplex", false);
     }
 
+    public LinkedHashMap<String, Boolean> getFunctions() {
+        return functions;
+    }
+
+    /**
+     * set a FU function to true or false
+     * @param key
+     * @param value
+     */
     public void setFunction(String key, boolean value) {
         this.functions.replace(key, value);
     }
 
-    public LinkedHashMap<String, Boolean> getFunctions() {
-        return this.functions;
+    /**
+     * sets a FU functions at once by copying from functions
+     * @param functions
+     */
+    public void setFunctions(LinkedHashMap<String, Boolean> functions) {
+        this.functions = new LinkedHashMap<String, Boolean>();
+        this.functions.putAll(functions);
+        crc.notifyAllObservers();
     }
 }

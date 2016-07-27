@@ -1,5 +1,6 @@
 package de.tuebingen.es.crc.configurator.view;
 
+import de.tuebingen.es.crc.configurator.Controller;
 import de.tuebingen.es.crc.configurator.model.CRC;
 import de.tuebingen.es.crc.configurator.model.FU;
 import de.tuebingen.es.crc.configurator.model.Model;
@@ -21,12 +22,14 @@ import java.util.Map;
 public class HardwareModelTab extends ConfiguratorTab {
 
     private Model model;
+    private Controller controller;
     private GraphicsContext gc;
 
-    public HardwareModelTab(Model model) {
+    public HardwareModelTab(Model model, Controller controller) {
         super();
 
         this.model = model;
+        this.controller = controller;
 
         this.setText("Hardware Model");
 
@@ -34,6 +37,7 @@ public class HardwareModelTab extends ConfiguratorTab {
         canvas.setWidth(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
         canvas.setHeight(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE)));
 
+        // listen for double clicks in the hardware model tab
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED,
                 event -> {
                     if(event.getButton().equals(MouseButton.PRIMARY)) {
@@ -48,10 +52,15 @@ public class HardwareModelTab extends ConfiguratorTab {
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
 
-        this.gc = canvas.getGraphicsContext2D();
-        this.drawHardwareModelCrc(this.gc);
+        gc = canvas.getGraphicsContext2D();
+        this.drawHardwareModelCrc(gc);
 
         this.setContent(scrollPane);
+    }
+
+    @Override
+    public void update() {
+        this.drawHardwareModelCrc(gc);
     }
 
     private void drawHardwareModelCrc(GraphicsContext gc) {
@@ -64,7 +73,7 @@ public class HardwareModelTab extends ConfiguratorTab {
         for(int i = 0; i < model.getCrc().getRows(); i++) {
             for(int j = 0; j < model.getCrc().getColumns(); j++) {
                 drawPe(gc, i, j);
-                writeFuFunctions(gc, i, j, model.getCrc().getFu(i,j));
+                writeFuFunctions(gc, i, j, model.getCrc().getFu(i, j));
             }
         }
     }
@@ -151,6 +160,7 @@ public class HardwareModelTab extends ConfiguratorTab {
 
         gc.fillText(fuFunctionsString, x, y);
     }
+
     /**
      * figures out on which PE in the "Hardware Model" tab was clicked ans shows dialog to select FU functions
      * @param x
@@ -161,15 +171,13 @@ public class HardwareModelTab extends ConfiguratorTab {
         int row = -1;
         int column = -1;
 
-        CRC crc = model.getCrc();
-
-        for(int i = 0; i < crc.getColumns(); i++) {
+        for(int i = 0; i < model.getCrc().getColumns(); i++) {
 
             if(x >= CANVAS_PADDING+(i*(PE_DRAW_SIZE+INTER_PE_DISTANCE)) && x <= CANVAS_PADDING+(i*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+PE_DRAW_SIZE) {
 
                 column = i;
 
-                for(int j = 0; j < crc.getRows(); j++) {
+                for(int j = 0; j < model.getCrc().getRows(); j++) {
 
                     if(y >= CANVAS_PADDING+(j*(PE_DRAW_SIZE+INTER_PE_DISTANCE)) && y <= CANVAS_PADDING+(j*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+PE_DRAW_SIZE) {
                         row = j;
@@ -183,16 +191,19 @@ public class HardwareModelTab extends ConfiguratorTab {
 
             Point p = MouseInfo.getPointerInfo().getLocation();
 
-            FuFunctionsDialog dialog = new FuFunctionsDialog(row, column, crc.getFu(row, column).getFunctions());
+            FuFunctionsDialog dialog = new FuFunctionsDialog(row, column, model.getCrc().getFu(row, column).getFunctions());
 
             dialog.setX(p.x-100);
             dialog.setY(p.y-80);
 
             dialog.showAndWait();
 
+            // data was changed -> update model
             if(dialog.modelHasChanged) {
-                this.drawHardwareModelCrc(this.gc);
+                controller.setFuFunctions(row, column, dialog.getFuFunctions());
             }
         }
     }
+
+
 }

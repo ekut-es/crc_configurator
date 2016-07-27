@@ -5,12 +5,16 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 25/07/16.
  */
 public class CRC {
+
+    private Model model;
+
     private int rows;
     private int columns;
     private int staticConfigLines;
@@ -18,35 +22,30 @@ public class CRC {
 
     private ArrayList<ArrayList<FU>> fuMatrix;
 
-    public CRC() {
-        this.rows = 2;
-        this.columns = 2;
-        this.staticConfigLines = 0;
-        this.dynamicConfigLines = 0;
+    public CRC(Model model) {
+        this.model = model;
+        rows = 2;
+        columns = 2;
+        staticConfigLines = 0;
+        dynamicConfigLines = 0;
     }
 
-    /*
-    public CRC(int rows, int columns) {
-        this.rows = rows;
-        this.columns = columns;
-        this.staticConfigLines = 0;
-        this.dynamicConfigLines = 0;
+    public CRC(int rows, int columns, int staticConfigLines, int dynamicConfigLines, Model model) {
+        this.model = model;
+        rows = rows;
+        columns = columns;
+        staticConfigLines = staticConfigLines;
+        dynamicConfigLines = dynamicConfigLines;
     }
-
-    public CRC(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
-        this.rows = rows;
-        this.columns = columns;
-        this.staticConfigLines = staticConfigLines;
-        this.dynamicConfigLines = dynamicConfigLines;
-    }
-    */
 
     /**
      * generates a CRC object with properties from a CRC description file
      * @param jsonCrcDescription
      * @throws Exception
      */
-    public CRC(JSONObject jsonCrcDescription) throws Exception {
+    public CRC(JSONObject jsonCrcDescription, Model model) throws Exception {
+
+        this.model = model;
 
         // read rows, columns, static config lines, and dynamic config lines
         this.setRows(Integer.parseInt(jsonCrcDescription.get("rows").toString()));
@@ -112,21 +111,77 @@ public class CRC {
         return dynamicConfigLines;
     }
 
+    public void notifyAllObservers() {
+        this.model.notifyAllObservers();
+    }
+
+    /**
+     * generates a Matrix (2D ArrayList) containing rows x columns FUs
+     */
     private void generateFuMatrix() {
 
         fuMatrix = new ArrayList<>();
 
-        for(int i = 0; i < this.rows; i++) {
+        for(int i = 0; i < rows; i++) {
 
             fuMatrix.add(new ArrayList<>());
 
-            for(int j = 0; j < this.columns; j++) {
-                fuMatrix.get(i).add(new FU());
+            for(int j = 0; j < columns; j++) {
+                fuMatrix.get(i).add(new FU(this));
             }
         }
     }
 
+    /**
+     * @param row
+     * @param column
+     * @return FU at position row,column
+     */
     public FU getFu(int row, int column) {
-        return this.fuMatrix.get(row).get(column);
+        return fuMatrix.get(row).get(column);
+    }
+
+    /**
+     * @return JSONObject containing a description of the CRC
+     */
+    public JSONObject toJSON() {
+        JSONObject jsonCRCDescription = new JSONObject();
+        jsonCRCDescription.put("rows", rows);
+        jsonCRCDescription.put("columns", columns);
+        jsonCRCDescription.put("staticConfigLines", staticConfigLines);
+        jsonCRCDescription.put("dynamicConfigLines", dynamicConfigLines);
+
+        JSONArray pes = new JSONArray();
+
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                JSONObject pe = new JSONObject();
+                pe.put("row", i);
+                pe.put("columns", j);
+
+                JSONArray fuFunctions = new JSONArray();
+
+                LinkedHashMap<String, Boolean> fuFunctionsMap = this.getFu(i,j).getFunctions();
+
+                for(Map.Entry<String, Boolean> function : fuFunctionsMap.entrySet()) {
+                    if(function.getValue()) {
+                        fuFunctions.add(function.getKey());
+                    }
+                }
+
+                pe.put("FUFunctions", fuFunctions);
+                pes.add(pe);
+            }
+        }
+
+        jsonCRCDescription.put("PEs", pes);
+
+        JSONArray staticConfigs = new JSONArray();
+        JSONArray dynamicConfigs = new JSONArray();
+
+        jsonCRCDescription.put("staticConfigs", staticConfigs);
+        jsonCRCDescription.put("dynamicConfigs", dynamicConfigs);
+
+        return jsonCRCDescription;
     }
 }

@@ -2,14 +2,17 @@ package de.tuebingen.es.crc.configurator;
 
 import de.tuebingen.es.crc.configurator.model.Model;
 import de.tuebingen.es.crc.configurator.view.AboutDialog;
+import de.tuebingen.es.crc.configurator.view.ConfiguratorTab;
 import de.tuebingen.es.crc.configurator.view.HardwareModelTab;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+import sun.rmi.server.Activation$ActivationSystemImpl_Stub;
 
 import java.io.File;
+import java.util.LinkedHashMap;
 
 public class Controller {
 
@@ -21,7 +24,17 @@ public class Controller {
     @FXML
     private TabPane tabPane;
 
+    @FXML
+    private MenuItem menuItemSave;
+
+    @FXML
+    private MenuItem menuItemSaveAs;
+
+    @FXML
+    private MenuItem menuItemClose;
+
     private Tab hardwareModelTab;
+
 
     /**
      * initializes the model
@@ -55,6 +68,11 @@ public class Controller {
      * @param actionEvent
      */
     public void handleOpenAction(ActionEvent actionEvent) {
+
+        if(!model.isSaved()) {
+            showErrorMessage("Current CRC description file was not saved.");
+        }
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open CRC Description File");
         fileChooser.getExtensionFilters().addAll(
@@ -63,20 +81,43 @@ public class Controller {
         );
         File crcDescriptionFile = fileChooser.showOpenDialog(mainVBox.getScene().getWindow());
 
-        this.openCrcDescriptionFile(crcDescriptionFile);
+        if(crcDescriptionFile != null) {
+            this.openCrcDescriptionFile(crcDescriptionFile);
+        }
     }
 
+    /**
+     * opens a CRC description file and passes it to the model, adjusts the menu bar, and creates the "Hardware Model" tab
+     * @param crcDescriptionFile
+     */
     public void openCrcDescriptionFile(File crcDescriptionFile) {
         if(crcDescriptionFile != null) {
             try {
-                this.model.parseCrcDescriptionFile(crcDescriptionFile);
+                model.parseCrcDescriptionFile(crcDescriptionFile);
             }
             catch (Exception e) {
                 showErrorMessage(e.getMessage());
             }
         }
 
+        // show "Save" and "Save As" in menu bar
+        menuItemSave.setDisable(false);
+        menuItemSaveAs.setDisable(false);
+        menuItemClose.setDisable(false);
+
+        model.setSaved(false);
+
         this.displayHardwareModelTab();
+    }
+
+    public void handleSaveAction(ActionEvent actionEvent) {
+        System.out.println(model.getCrc().toJSON());
+    }
+
+    public void handleSaveAsAction(ActionEvent actionEvent) {
+    }
+
+    public void handleCloseAction(ActionEvent actionEvent) {
     }
 
     /**
@@ -89,12 +130,21 @@ public class Controller {
     }
 
     /**
-     * quits the application (checks is a CRC is opened)
+     * calls quit method (checks is a CRC is opened)
      * @param actionEvent
      */
     public void handleQuitAction(ActionEvent actionEvent) {
+        this.quitApplication();
+    }
 
-        // TODO: check if a file is open
+    /**
+     * checks if a file is opened and quits application
+     */
+    public void quitApplication() {
+        if(!model.isSaved()) {
+            showErrorMessage("Current CRC description file was not saved.");
+        }
+
         System.exit(0);
     }
 
@@ -102,8 +152,19 @@ public class Controller {
      * adds the "Hardware Model" tab to the tab pane
      */
     private void displayHardwareModelTab() {
-        this.hardwareModelTab = new HardwareModelTab(this.model);
+        hardwareModelTab = new HardwareModelTab(model, this);
+        model.attachObserver((ConfiguratorTab) hardwareModelTab);
         tabPane.getTabs().add(hardwareModelTab);
+    }
+
+    /**
+     * sets the functions of FU at position row,column
+     * @param row
+     * @param column
+     * @param fuFunctions
+     */
+    public void setFuFunctions(int row, int column, LinkedHashMap<String, Boolean> fuFunctions) {
+        this.model.getCrc().getFu(row, column).setFunctions(fuFunctions);
     }
 }
 

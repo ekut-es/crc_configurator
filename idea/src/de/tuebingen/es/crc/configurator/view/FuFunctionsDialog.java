@@ -27,11 +27,11 @@ public class FuFunctionsDialog extends Stage {
     public FuFunctionsDialog(int row, int column, LinkedHashMap<String, Boolean> fuFunctions) {
 
         super();
-        this.fuFunctions = fuFunctions;
+        this.fuFunctions = new LinkedHashMap<String, Boolean>();
+        this.fuFunctions.putAll(fuFunctions);
 
-        this.fuFunctionCheckboxes = new LinkedHashMap<>();
-
-        this.modelHasChanged = false;
+        fuFunctionCheckboxes = new LinkedHashMap<>();
+        modelHasChanged = false;
 
         this.setResizable(false);
         this.initStyle(StageStyle.UNIFIED);
@@ -63,9 +63,9 @@ public class FuFunctionsDialog extends Stage {
         // save changes to model an close dialog when "Save" button was pressed
         saveButton.setOnAction(event -> {
             for(Map.Entry<String, CheckBox> function : fuFunctionCheckboxes.entrySet()) {
-                fuFunctions.replace(function.getKey(), function.getValue().isSelected());
+                this.fuFunctions.replace(function.getKey(), function.getValue().isSelected());
             }
-            this.modelHasChanged = true;
+            modelHasChanged = true;
             this.close();
         });
 
@@ -79,5 +79,9 @@ public class FuFunctionsDialog extends Stage {
         root.getChildren().add(vBox);
 
         this.setScene(scene);
+    }
+
+    public LinkedHashMap<String, Boolean> getFuFunctions() {
+        return this.fuFunctions;
     }
 }

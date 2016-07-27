@@ -32,6 +32,9 @@ public class Main extends Application {
         primaryStage.setMinWidth(stageWidth);
         primaryStage.setMinHeight(stageHeight);
         primaryStage.setScene(new Scene(root, stageWidth, stageHeight));
+
+        primaryStage.setOnCloseRequest(event -> controller.quitApplication());
+
         primaryStage.show();
 
         // open file from file path given from the command line

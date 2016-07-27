@@ -12,6 +12,9 @@
                 <items>
                     <MenuItem text="New" onAction="#handleNewAction"/>
                     <MenuItem text="Open" onAction="#handleOpenAction"/>
+                    <MenuItem fx:id="menuItemSave" text="Save" disable="true" onAction="#handleSaveAction"/>
+                    <MenuItem fx:id="menuItemSaveAs" text="Save As" disable="true" onAction="#handleSaveAsAction"/>
+                    <MenuItem fx:id="menuItemClose" text="Close" disable="true" onAction="#handleCloseAction"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="Quit" onAction="#handleQuitAction"/>
                 </items>

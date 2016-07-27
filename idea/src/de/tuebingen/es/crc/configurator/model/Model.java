@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import de.tuebingen.es.crc.configurator.view.ConfiguratorTab;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -14,6 +17,40 @@ import org.json.simple.parser.JSONParser;
 public class Model {
 
     private CRC crc;
+    private boolean saved;
+
+    private List<ConfiguratorTab> observers;
+
+    public Model() {
+        saved = true;
+        observers = new ArrayList<ConfiguratorTab>();
+    }
+
+    public CRC getCrc() {
+        return crc;
+    }
+
+    public void setSaved(boolean saved) {
+        this.saved = saved;
+    }
+
+    public boolean isSaved() {
+        return saved;
+    }
+
+    public void attachObserver(ConfiguratorTab observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(ConfiguratorTab observer) {
+        observers.remove(observer);
+    }
+
+    public void notifyAllObservers() {
+        for(ConfiguratorTab observer : observers) {
+           observer.update();
+        }
+    }
 
     /**
      * reads a CRC description file an checks if it is correct and builds CRC object representation
@@ -45,10 +82,8 @@ public class Model {
         }
 
         // generate object representation CRC
-        this.crc = new CRC(jsonCrcDescription);
+        crc = new CRC(jsonCrcDescription, this);
     }
 
-    public CRC getCrc() {
-        return this.crc;
-    }
+
 }
