@@ -1,10 +1,7 @@
 package de.tuebingen.es.crc.configurator;
 
 import de.tuebingen.es.crc.configurator.model.Model;
-import de.tuebingen.es.crc.configurator.view.AboutDialog;
-import de.tuebingen.es.crc.configurator.view.ConfiguratorTab;
-import de.tuebingen.es.crc.configurator.view.HardwareModelTab;
-import de.tuebingen.es.crc.configurator.view.NotSavedAlert;
+import de.tuebingen.es.crc.configurator.view.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -67,7 +64,12 @@ public class Controller {
     }
 
     public void handleNewAction(ActionEvent actionEvent) {
-        System.out.println("New");
+        NewDialog newDialog = new NewDialog();
+        newDialog.showAndWait();
+
+        if(newDialog.create) {
+            // TODO
+        }
     }
 
     /**
