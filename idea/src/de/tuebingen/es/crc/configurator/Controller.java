@@ -103,6 +103,7 @@ public class Controller {
 
     /**
      * checks if file was saved before closing it and presents a warning if necessary
+     * closes file
      * @param actionEvent
      */
     public void handleCloseAction(ActionEvent actionEvent) {
@@ -128,19 +129,11 @@ public class Controller {
         }
     }
 
-    /**
-     * shows the about dialog
-     * @param actionEvent
-     */
     public void handleAboutAction(ActionEvent actionEvent) {
         AboutDialog aboutDialog = new AboutDialog();
         aboutDialog.showAndWait();
     }
 
-    /**
-     * calls quit method (checks is a CRC is opened)
-     * @param actionEvent
-     */
     public void handleQuitAction(ActionEvent actionEvent) {
         this.quitApplication();
     }
@@ -199,14 +192,30 @@ public class Controller {
     }
 
     /**
-     * checks if a file is opened and quits application
+     * checks if file was saved before closing it and presents a warning if necessary
+     * quits Application
      */
     public void quitApplication() {
         if(!model.isSaved()) {
-            showErrorMessage("Current CRC description file was not saved.");
-        }
+            NotSavedAlert notSavedAlert = new NotSavedAlert();
+            NotSavedAlert.ButtonPressed result = notSavedAlert.displayAndWait();
 
-        System.exit(0);
+            if(result == NotSavedAlert.ButtonPressed.SAVE) {
+                if(model.getCrcDescriptionFilePath().isEmpty()) {
+                    this.saveAsCrcDescriptionFile();
+                } else {
+                    this.saveCrcDescriptionFile();
+                }
+            }
+
+            if(result == NotSavedAlert.ButtonPressed.DONT_SAVE) {
+                System.exit(0);
+            }
+
+            // Cancel do nothing
+        } else {
+            System.exit(0);
+        }
     }
 
     /**
