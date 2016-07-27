@@ -5,6 +5,8 @@
 
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
 <VBox fx:id="mainVBox" prefHeight="500" prefWidth="500" xmlns:fx="http://javafx.com/fxml" fx:controller="de.tuebingen.es.crc.configurator.Controller">
     <MenuBar fx:id="mainMenuBar">
         <menus>

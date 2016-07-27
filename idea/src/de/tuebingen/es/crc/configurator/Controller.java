@@ -4,18 +4,22 @@ import de.tuebingen.es.crc.configurator.model.Model;
 import de.tuebingen.es.crc.configurator.view.AboutDialog;
 import de.tuebingen.es.crc.configurator.view.ConfiguratorTab;
 import de.tuebingen.es.crc.configurator.view.HardwareModelTab;
+import de.tuebingen.es.crc.configurator.view.NotSavedAlert;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.LinkedHashMap;
+import java.util.Optional;
 
 public class Controller {
 
     private Model model;
+    private Stage stage;
 
     @FXML
     private VBox mainVBox;
@@ -47,15 +51,19 @@ public class Controller {
         this.model = model;
     }
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
     /**
      * displays a error dialog with a text
      * @param errorMessage
      */
     private void showErrorMessage(String errorMessage) {
-        Alert aboutDialog = new Alert(Alert.AlertType.ERROR);
-        aboutDialog.setTitle("Error");
-        aboutDialog.setContentText(errorMessage);
-        aboutDialog.showAndWait();
+        Alert dialog = new Alert(Alert.AlertType.ERROR);
+        dialog.setTitle("Error");
+        dialog.setContentText(errorMessage);
+        dialog.showAndWait();
     }
 
     public void handleNewAction(ActionEvent actionEvent) {
@@ -85,53 +93,39 @@ public class Controller {
         }
     }
 
-    /**
-     * opens a CRC description file and passes it to the model, adjusts the menu bar, and creates the "Hardware Model" tab
-     * @param crcDescriptionFile
-     */
-    public void openCrcDescriptionFile(File crcDescriptionFile) {
-        if(crcDescriptionFile != null) {
-            try {
-                model.parseCrcDescriptionFile(crcDescriptionFile);
-            }
-            catch (Exception e) {
-                showErrorMessage(e.getMessage());
-            }
-        }
-
-        // show "Save" and "Save As" in menu bar
-        menuItemSave.setDisable(false);
-        menuItemSaveAs.setDisable(false);
-        menuItemClose.setDisable(false);
-
-        this.displayHardwareModelTab();
-    }
-
     public void handleSaveAction(ActionEvent actionEvent) {
-        try {
-            model.saveCrcDescriptionFile();
-        }
-        catch (Exception e) {
-            showErrorMessage(e.getMessage());
-        }
+       this.saveCrcDescriptionFile();
     }
 
     public void handleSaveAsAction(ActionEvent actionEvent) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save CRC Description File");
-        File crcDescriptionFile = fileChooser.showSaveDialog(mainVBox.getScene().getWindow());
-
-        if(crcDescriptionFile != null) {
-            try {
-                model.saveCrcDescriptionFile(crcDescriptionFile.getAbsolutePath());
-                model.setCrcDescriptionFilePath(crcDescriptionFile.getAbsolutePath());
-            } catch (Exception e) {
-                showErrorMessage(e.getMessage());
-            }
-        }
+        this.saveAsCrcDescriptionFile();
     }
 
+    /**
+     * checks if file was saved before closing it and presents a warning if necessary
+     * @param actionEvent
+     */
     public void handleCloseAction(ActionEvent actionEvent) {
+        if(!model.isSaved()) {
+            NotSavedAlert notSavedAlert = new NotSavedAlert();
+            NotSavedAlert.ButtonPressed result = notSavedAlert.displayAndWait();
+
+            if(result == NotSavedAlert.ButtonPressed.SAVE) {
+                if(model.getCrcDescriptionFilePath().isEmpty()) {
+                    this.saveAsCrcDescriptionFile();
+                } else {
+                    this.saveCrcDescriptionFile();
+                }
+            }
+
+            if(result == NotSavedAlert.ButtonPressed.DONT_SAVE) {
+                this.closeCrcDescriptionFile();
+            }
+
+            // Cancel do nothing
+        } else {
+            this.closeCrcDescriptionFile();
+        }
     }
 
     /**
@@ -152,6 +146,59 @@ public class Controller {
     }
 
     /**
+     * opens a CRC description file and passes it to the model, adjusts the menu bar, and creates the "Hardware Model" tab
+     * @param crcDescriptionFile
+     */
+    public void openCrcDescriptionFile(File crcDescriptionFile) {
+        if(crcDescriptionFile != null) {
+            try {
+                model.parseCrcDescriptionFile(crcDescriptionFile);
+            }
+            catch (Exception e) {
+                showErrorMessage(e.getMessage());
+            }
+        }
+
+        // show "Save" and "Save As" in menu bar
+        menuItemSave.setDisable(false);
+        menuItemSaveAs.setDisable(false);
+        menuItemClose.setDisable(false);
+
+        stage.setTitle("CRC Configurator (" + crcDescriptionFile.getName() + ")");
+        this.displayHardwareModelTab();
+    }
+
+    /**
+     * saves data stored in model to file path stored in model
+     */
+    public void saveCrcDescriptionFile() {
+        try {
+            model.saveCrcDescriptionFile();
+        }
+        catch (Exception e) {
+            showErrorMessage(e.getMessage());
+        }
+    }
+
+    /**
+     * shows a file chooser dialog to save the file to a specific location
+     */
+    public void saveAsCrcDescriptionFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save CRC Description File");
+        File crcDescriptionFile = fileChooser.showSaveDialog(mainVBox.getScene().getWindow());
+
+        if(crcDescriptionFile != null) {
+            try {
+                model.saveCrcDescriptionFile(crcDescriptionFile.getAbsolutePath());
+                model.setCrcDescriptionFilePath(crcDescriptionFile.getAbsolutePath());
+            } catch (Exception e) {
+                showErrorMessage(e.getMessage());
+            }
+        }
+    }
+
+    /**
      * checks if a file is opened and quits application
      */
     public void quitApplication() {
@@ -160,6 +207,18 @@ public class Controller {
         }
 
         System.exit(0);
+    }
+
+    /**
+     * removes all tabs from tab pane, adjusts menu, and resets model
+     */
+    public void closeCrcDescriptionFile() {
+        tabPane.getTabs().clear();
+        hardwareModelTab = null;
+        model = new Model();
+        menuItemSave.setDisable(true);
+        menuItemSaveAs.setDisable(true);
+        stage.setTitle("CRC Configurator");
     }
 
     /**

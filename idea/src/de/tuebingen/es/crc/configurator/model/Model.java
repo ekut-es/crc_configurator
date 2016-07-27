@@ -22,6 +22,7 @@ public class Model {
     public Model() {
         saved = true;
         observers = new ArrayList<ConfiguratorTab>();
+        crcDescriptionFilePath = "";
     }
 
     public CRC getCrc() {
