@@ -157,7 +157,7 @@ public class CRC {
             for(int j = 0; j < columns; j++) {
                 JSONObject pe = new JSONObject();
                 pe.put("row", i);
-                pe.put("columns", j);
+                pe.put("column", j);
 
                 JSONArray fuFunctions = new JSONArray();
 

@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
-import sun.rmi.server.Activation$ActivationSystemImpl_Stub;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -105,13 +104,16 @@ public class Controller {
         menuItemSaveAs.setDisable(false);
         menuItemClose.setDisable(false);
 
-        model.setSaved(false);
-
         this.displayHardwareModelTab();
     }
 
     public void handleSaveAction(ActionEvent actionEvent) {
-        System.out.println(model.getCrc().toJSON());
+        try {
+            model.saveCrcDescriptionFile();
+        }
+        catch (Exception e) {
+            showErrorMessage(e.getMessage());
+        }
     }
 
     public void handleSaveAsAction(ActionEvent actionEvent) {
@@ -164,7 +166,8 @@ public class Controller {
      * @param fuFunctions
      */
     public void setFuFunctions(int row, int column, LinkedHashMap<String, Boolean> fuFunctions) {
-        this.model.getCrc().getFu(row, column).setFunctions(fuFunctions);
+        model.setSaved(false);
+        model.getCrc().getFu(row, column).setFunctions(fuFunctions);
     }
 }
 

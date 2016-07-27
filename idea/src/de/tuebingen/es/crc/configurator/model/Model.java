@@ -1,9 +1,6 @@
 package de.tuebingen.es.crc.configurator.model;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +15,7 @@ public class Model {
 
     private CRC crc;
     private boolean saved;
+    private String crcDescriptionFilePath;
 
     private List<ConfiguratorTab> observers;
 
@@ -36,6 +34,14 @@ public class Model {
 
     public boolean isSaved() {
         return saved;
+    }
+
+    public String getCrcDescriptionFilePath() {
+        return this.crcDescriptionFilePath;
+    }
+
+    public void setCrcDescriptionFilePath(String crcDescriptionFilePath) {
+        this.crcDescriptionFilePath = crcDescriptionFilePath;
     }
 
     public void attachObserver(ConfiguratorTab observer) {
@@ -83,7 +89,31 @@ public class Model {
 
         // generate object representation CRC
         crc = new CRC(jsonCrcDescription, this);
+
+        crcDescriptionFilePath = crcDescriptionFile.getAbsolutePath();
     }
 
+    public void saveCrcDescriptionFile() throws Exception {
+        this.saveCrcDescriptionFile(crcDescriptionFilePath);
+    }
 
+    public void saveCrcDescriptionFile(String filePath) throws Exception {
+
+        File crcDescriptionFile = new File(filePath);
+        FileWriter fw = new FileWriter(crcDescriptionFile);
+
+        if(!crcDescriptionFile.exists()) {
+            crcDescriptionFile.createNewFile();
+        }
+
+        try {
+            fw.write(crc.toJSON().toString());
+            saved = true;
+        } catch (Exception e) {
+            throw new Exception("Can't write to file '" + filePath + "'!");
+        } finally {
+            fw.flush();
+            fw.close();
+        }
+    }
 }
