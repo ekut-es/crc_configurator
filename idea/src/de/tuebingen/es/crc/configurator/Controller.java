@@ -117,6 +117,18 @@ public class Controller {
     }
 
     public void handleSaveAsAction(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save CRC Description File");
+        File crcDescriptionFile = fileChooser.showSaveDialog(mainVBox.getScene().getWindow());
+
+        if(crcDescriptionFile != null) {
+            try {
+                model.saveCrcDescriptionFile(crcDescriptionFile.getAbsolutePath());
+                model.setCrcDescriptionFilePath(crcDescriptionFile.getAbsolutePath());
+            } catch (Exception e) {
+                showErrorMessage(e.getMessage());
+            }
+        }
     }
 
     public void handleCloseAction(ActionEvent actionEvent) {
