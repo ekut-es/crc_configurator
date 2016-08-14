@@ -60,6 +60,19 @@ public class Model {
     }
 
     /**
+     * creates a new CRC description file
+     * @param rows
+     * @param columns
+     * @param staticConfigLines
+     * @param dynamicConfigLines
+     * @throws Exception
+     */
+    public void createCrcDescriptionFile(int rows, int columns, int staticConfigLines, int dynamicConfigLines) throws Exception {
+        crc = new CRC(rows, columns, staticConfigLines, dynamicConfigLines, this);
+        saved = false;
+    }
+
+    /**
      * reads a CRC description file an checks if it is correct and builds CRC object representation
      * @param crcDescriptionFile
      */

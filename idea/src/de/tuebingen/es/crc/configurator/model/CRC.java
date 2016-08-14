@@ -32,10 +32,12 @@ public class CRC {
 
     public CRC(int rows, int columns, int staticConfigLines, int dynamicConfigLines, Model model) {
         this.model = model;
-        rows = rows;
-        columns = columns;
-        staticConfigLines = staticConfigLines;
-        dynamicConfigLines = dynamicConfigLines;
+        this.setRows(rows);
+        this.setColumns(columns);
+        this.setStaticConfigLines(staticConfigLines);
+        this.setDynamicConfigLines(dynamicConfigLines);
+
+        this.generateFuMatrix();
     }
 
     /**

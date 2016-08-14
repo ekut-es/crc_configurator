@@ -34,8 +34,8 @@ public class HardwareModelTab extends ConfiguratorTab {
         this.setText("Hardware Model");
 
         Canvas canvas = new Canvas();
-        canvas.setWidth(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
         canvas.setHeight(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE)));
+        canvas.setWidth(2*CANVAS_PADDING+(model.getCrc().getColumns()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
 
         // listen for double clicks in the hardware model tab
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED,

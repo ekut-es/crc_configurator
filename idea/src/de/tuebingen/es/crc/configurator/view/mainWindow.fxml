@@ -12,13 +12,14 @@
         <menus>
             <Menu fx:id="menuFile" text="File">
                 <items>
-                    <MenuItem text="New" onAction="#handleNewAction"/>
-                    <MenuItem text="Open" onAction="#handleOpenAction"/>
-                    <MenuItem fx:id="menuItemSave" text="Save" disable="true" onAction="#handleSaveAction"/>
-                    <MenuItem fx:id="menuItemSaveAs" text="Save As" disable="true" onAction="#handleSaveAsAction"/>
-                    <MenuItem fx:id="menuItemClose" text="Close" disable="true" onAction="#handleCloseAction"/>
+                    <MenuItem text="New" onAction="#handleNewAction" accelerator="Shortcut+N"/>
+                    <MenuItem text="Open" onAction="#handleOpenAction" accelerator="Shortcut+O"/>
+                    <MenuItem fx:id="menuItemEdit" text="Edit" disable="true" onAction="#handleEditAction"/>
+                    <MenuItem fx:id="menuItemSave" text="Save" disable="true" onAction="#handleSaveAction" accelerator="Shortcut+S"/>
+                    <MenuItem fx:id="menuItemSaveAs" text="Save As" disable="true" onAction="#handleSaveAsAction" accelerator="Shift+Shortcut+S"/>
+                    <MenuItem fx:id="menuItemClose" text="Close" disable="true" onAction="#handleCloseAction" accelerator="Shortcut+W"/>
                     <SeparatorMenuItem/>
-                    <MenuItem text="Quit" onAction="#handleQuitAction"/>
+                    <MenuItem text="Quit" onAction="#handleQuitAction" accelerator="Shortcut+Q"/>
                 </items>
             </Menu>
             <Menu fx:id="menuText" text="Help">

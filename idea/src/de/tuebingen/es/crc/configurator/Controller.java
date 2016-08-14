@@ -25,6 +25,9 @@ public class Controller {
     private TabPane tabPane;
 
     @FXML
+    private MenuItem menuItemEdit;
+
+    @FXML
     private MenuItem menuItemSave;
 
     @FXML
@@ -63,23 +66,86 @@ public class Controller {
         dialog.showAndWait();
     }
 
+    /**
+     * checks if file was saved before creating a new one it and presents a warning if necessary
+     * shows a dialog to insert the CRC parameters
+     * @param actionEvent
+     */
     public void handleNewAction(ActionEvent actionEvent) {
+        if(!model.isSaved()) {
+            NotSavedAlert notSavedAlert = new NotSavedAlert();
+            NotSavedAlert.ButtonPressed result = notSavedAlert.displayAndWait();
+
+            if(result == NotSavedAlert.ButtonPressed.SAVE) {
+                if(model.getCrcDescriptionFilePath().isEmpty()) {
+                    this.saveAsCrcDescriptionFile();
+                } else {
+                    this.saveCrcDescriptionFile();
+                }
+
+                this.closeCrcDescriptionFile();
+            }
+
+            if(result == NotSavedAlert.ButtonPressed.DONT_SAVE) {
+                this.closeCrcDescriptionFile();
+            }
+
+            if(result == NotSavedAlert.ButtonPressed.CANCEL) {
+                return;
+            }
+
+        }
+
         NewDialog newDialog = new NewDialog();
         newDialog.showAndWait();
 
         if(newDialog.create) {
-            // TODO
+
+            try {
+                model.createCrcDescriptionFile(newDialog.getRows(), newDialog.getColumns(), newDialog.getStaticConfigLines(), newDialog.getDynamicConfigLines());
+            } catch (Exception e) {
+                showErrorMessage(e.getMessage());
+            }
+
+            // show "Edit", "Save As", and "Close" in menu bar
+            menuItemEdit.setDisable(false);
+            menuItemSaveAs.setDisable(false);
+            menuItemClose.setDisable(false);
+
+            stage.setTitle("CRC Configurator (Unnamed File)");
+            this.displayHardwareModelTab();
         }
     }
 
     /**
+     * checks if file was saved before open another one it and presents a warning if necessary
      * show a file chooser dialog and passes selected file to model
      * @param actionEvent
      */
     public void handleOpenAction(ActionEvent actionEvent) {
 
         if(!model.isSaved()) {
-            showErrorMessage("Current CRC description file was not saved.");
+            NotSavedAlert notSavedAlert = new NotSavedAlert();
+            NotSavedAlert.ButtonPressed result = notSavedAlert.displayAndWait();
+
+            if(result == NotSavedAlert.ButtonPressed.SAVE) {
+                if(model.getCrcDescriptionFilePath().isEmpty()) {
+                    this.saveAsCrcDescriptionFile();
+                } else {
+                    this.saveCrcDescriptionFile();
+                }
+
+                this.closeCrcDescriptionFile();
+            }
+
+            if(result == NotSavedAlert.ButtonPressed.DONT_SAVE) {
+                this.closeCrcDescriptionFile();
+            }
+
+            if(result == NotSavedAlert.ButtonPressed.CANCEL) {
+                return;
+            }
+
         }
 
         FileChooser fileChooser = new FileChooser();
@@ -154,7 +220,8 @@ public class Controller {
             }
         }
 
-        // show "Save" and "Save As" in menu bar
+        // show "Edit", "Save", "Save As", and "Close" in menu bar
+        menuItemEdit.setDisable(false);
         menuItemSave.setDisable(false);
         menuItemSaveAs.setDisable(false);
         menuItemClose.setDisable(false);
@@ -187,6 +254,11 @@ public class Controller {
             try {
                 model.saveCrcDescriptionFile(crcDescriptionFile.getAbsolutePath());
                 model.setCrcDescriptionFilePath(crcDescriptionFile.getAbsolutePath());
+                menuItemSave.setDisable(false);
+
+                // TODO change main window title and crc description file name in model
+                //stage.setTitle("CRC Configurator (" + crcDescriptionFile.getName() + ")");
+
             } catch (Exception e) {
                 showErrorMessage(e.getMessage());
             }
@@ -227,8 +299,10 @@ public class Controller {
         tabPane.getTabs().clear();
         hardwareModelTab = null;
         model = new Model();
+        menuItemEdit.setDisable(true);
         menuItemSave.setDisable(true);
         menuItemSaveAs.setDisable(true);
+        menuItemClose.setDisable(true);
         stage.setTitle("CRC Configurator");
     }
 
@@ -250,6 +324,9 @@ public class Controller {
     public void setFuFunctions(int row, int column, LinkedHashMap<String, Boolean> fuFunctions) {
         model.setSaved(false);
         model.getCrc().getFu(row, column).setFunctions(fuFunctions);
+    }
+
+    public void handleEditAction(ActionEvent actionEvent) {
     }
 }
 

@@ -22,6 +22,38 @@ public class NewDialog extends Stage {
     private int staticConfigLines;
     private int dynamicConfigLines;
 
+    public int getRows() {
+        return rows;
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
+    public void setColumns(int columns) {
+        this.columns = columns;
+    }
+
+    public int getStaticConfigLines() {
+        return staticConfigLines;
+    }
+
+    public void setStaticConfigLines(int staticConfigLines) {
+        this.staticConfigLines = staticConfigLines;
+    }
+
+    public int getDynamicConfigLines() {
+        return dynamicConfigLines;
+    }
+
+    public void setDynamicConfigLines(int dynamicConfigLines) {
+        this.dynamicConfigLines = dynamicConfigLines;
+    }
+
     public boolean create;
 
     public NewDialog() {
@@ -97,6 +129,15 @@ public class NewDialog extends Stage {
 
         // close dialog when "Cancel" button was pressed
         cancelButton.setOnAction(event -> this.close());
+
+        // set variable when "Create" button was pressed
+        createButton.setOnAction(event -> {
+            create = true;
+            rows = Integer.parseInt(rowsTextField.getText());
+            columns = Integer.parseInt(columnsTextField.getText());
+            this.close();
+
+        });
 
         HBox buttonHBox = new HBox(2);
         buttonHBox.setSpacing(15);
