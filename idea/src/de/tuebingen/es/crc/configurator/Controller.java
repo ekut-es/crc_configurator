@@ -94,6 +94,8 @@ public class Controller {
                 return;
             }
 
+        } else {
+            this.closeCrcDescriptionFile();
         }
 
         NewDialog newDialog = new NewDialog();
@@ -146,6 +148,8 @@ public class Controller {
                 return;
             }
 
+        } else {
+            this.closeCrcDescriptionFile();
         }
 
         FileChooser fileChooser = new FileChooser();
