@@ -10,6 +10,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Optional;
 
@@ -37,6 +38,8 @@ public class Controller {
     private MenuItem menuItemClose;
 
     private Tab hardwareModelTab;
+
+    private ArrayList<Tab> staticConfigurationTabs;
 
     /**
      * initializes the model
@@ -231,6 +234,9 @@ public class Controller {
 
         stage.setTitle("CRC Configurator (" + crcDescriptionFile.getName() + ")");
         this.displayHardwareModelTab();
+
+        // display configurations
+        this.displayStaticConfigurationTabs();
     }
 
     /**
@@ -316,6 +322,21 @@ public class Controller {
         hardwareModelTab = new HardwareModelTab(model, this);
         model.attachObserver((ConfiguratorTab) hardwareModelTab);
         tabPane.getTabs().add(hardwareModelTab);
+    }
+
+    /**
+     * adds the "Static Configration" tabs to the tab pane
+     */
+    private void displayStaticConfigurationTabs() {
+
+        staticConfigurationTabs = new ArrayList<>();
+
+        for(int i = 0; i < model.getCrc().getStaticConfigLines(); i++) {
+            ConfigurationTab staticConfigurationTab = new ConfigurationTab(model, this);
+            model.attachObserver(staticConfigurationTab);
+            tabPane.getTabs().add(staticConfigurationTab);
+            staticConfigurationTabs.add(staticConfigurationTab);
+        }
     }
 
     /**
