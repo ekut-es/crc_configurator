@@ -140,6 +140,7 @@ public class Model {
     }
 
     public void editCrc(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
+        saved = false;
         crcWasResized = true;
         crc.editCrc(rows, columns, staticConfigLines, dynamicConfigLines);
         crcWasResized = false;

@@ -39,6 +39,8 @@ public class CRC {
         this.setDynamicConfigLines(dynamicConfigLines);
 
         this.generateFuMatrix();
+
+        // TODO static and dynamic configurations
     }
 
     /**
@@ -80,6 +82,7 @@ public class CRC {
         }
 
         // TODO: read static and dynamic configurations
+        // TODO: HERE TOMORROW
     }
 
     public void editCrc(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
