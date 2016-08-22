@@ -3,6 +3,7 @@ package de.tuebingen.es.crc.configurator.model;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -79,6 +80,47 @@ public class CRC {
         }
 
         // TODO: read static and dynamic configurations
+    }
+
+    public void editCrc(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
+
+        // save current FU matrix in temp FU matrix
+        ArrayList<ArrayList<FU>> tempFuMatrix = new ArrayList<>();
+
+        for(int i = 0; i < this.rows; i++) {
+
+            tempFuMatrix.add(new ArrayList<>());
+
+            for(int j = 0; j < this.columns; j++) {
+                tempFuMatrix.get(i).add(this.getFu(i,j));
+            }
+        }
+
+        // generate new FU matrix with saved values
+        fuMatrix = new ArrayList<>();
+
+        for(int i = 0; i < rows; i++) {
+
+            fuMatrix.add(new ArrayList<>());
+
+            for(int j = 0; j < columns; j++) {
+
+                if(i < this.rows && j < this.columns) {
+                    fuMatrix.get(i).add(new FU(this, tempFuMatrix.get(i).get(j)));
+                } else {
+                    fuMatrix.get(i).add(new FU(this));
+                }
+            }
+        }
+
+        this.rows = rows;
+        this.columns = columns;
+        this.staticConfigLines = staticConfigLines;
+        this.dynamicConfigLines = dynamicConfigLines;
+
+        // TODO static and dynamic configs
+
+        this.notifyAllObservers();
     }
 
     public void setRows(int rows) {

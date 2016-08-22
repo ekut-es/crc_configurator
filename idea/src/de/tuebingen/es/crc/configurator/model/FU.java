@@ -29,6 +29,27 @@ public class FU {
         functions.put("multiplex", false);
     }
 
+    public FU(CRC crc, FU fu) {
+        this.crc = crc;
+
+        this.functions = new LinkedHashMap<>();
+
+        LinkedHashMap<String, Boolean> fuFunctions = fu.getFunctions();
+
+        this.functions.put("add", fuFunctions.get("add"));
+        this.functions.put("sub", fuFunctions.get("sub"));
+        this.functions.put("mul", fuFunctions.get("mul"));
+        this.functions.put("div", fuFunctions.get("div"));
+        this.functions.put("and", fuFunctions.get("and"));
+        this.functions.put("or", fuFunctions.get("or"));
+        this.functions.put("xor", fuFunctions.get("xor"));
+        this.functions.put("not", fuFunctions.get("not"));
+        this.functions.put("shift_left", fuFunctions.get("shift_left"));
+        this.functions.put("shift_right", fuFunctions.get("shift_right"));
+        this.functions.put("compare", fuFunctions.get("compare"));
+        this.functions.put("multiplex", fuFunctions.get("multiplex"));
+    }
+
     public LinkedHashMap<String, Boolean> getFunctions() {
         return functions;
     }

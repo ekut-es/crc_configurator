@@ -1,13 +1,11 @@
 package de.tuebingen.es.crc.configurator.view;
 
 import de.tuebingen.es.crc.configurator.Controller;
-import de.tuebingen.es.crc.configurator.model.CRC;
 import de.tuebingen.es.crc.configurator.model.FU;
 import de.tuebingen.es.crc.configurator.model.Model;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tab;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -33,6 +31,17 @@ public class HardwareModelTab extends ConfiguratorTab {
 
         this.setText("Hardware Model");
 
+        this.drawHardwareModelCrc();
+
+    }
+
+    @Override
+    public void update() {
+        this.drawHardwareModelCrc();
+    }
+
+    private void drawHardwareModelCrc() {
+
         Canvas canvas = new Canvas();
         canvas.setHeight(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE)));
         canvas.setWidth(2*CANVAS_PADDING+(model.getCrc().getColumns()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
@@ -53,18 +62,6 @@ public class HardwareModelTab extends ConfiguratorTab {
         scrollPane.setFitToWidth(true);
 
         gc = canvas.getGraphicsContext2D();
-        this.drawHardwareModelCrc(gc);
-
-        this.setContent(scrollPane);
-    }
-
-    @Override
-    public void update() {
-        this.drawHardwareModelCrc(gc);
-    }
-
-    private void drawHardwareModelCrc(GraphicsContext gc) {
-
         gc.clearRect(0,0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 
         gc.setStroke(Color.BLACK);
@@ -76,6 +73,8 @@ public class HardwareModelTab extends ConfiguratorTab {
                 writeFuFunctions(gc, i, j, model.getCrc().getFu(i, j));
             }
         }
+
+        this.setContent(scrollPane);
     }
 
     /**

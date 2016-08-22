@@ -327,6 +327,26 @@ public class Controller {
     }
 
     public void handleEditAction(ActionEvent actionEvent) {
+        EditDialog editDialog = new EditDialog(
+                model.getCrc().getRows(),
+                model.getCrc().getColumns(),
+                model.getCrc().getStaticConfigLines(),
+                model.getCrc().getDynamicConfigLines()
+        );
+
+        editDialog.showAndWait();
+
+        if(editDialog.apply) {
+            model.editCrc(
+                    editDialog.getRows(),
+                    editDialog.getColumns(),
+                    editDialog.getStaticConfigLines(),
+                    editDialog.getDynamicConfigLines()
+            );
+        }
+
+        // canvas of the Hardware Model Tab has to be resized
+
     }
 }
 

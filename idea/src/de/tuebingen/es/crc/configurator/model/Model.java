@@ -130,4 +130,8 @@ public class Model {
             fw.close();
         }
     }
+
+    public void editCrc(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
+        crc.editCrc(rows, columns, staticConfigLines, dynamicConfigLines);
+    }
 }
