@@ -19,10 +19,14 @@ public class Model {
 
     private List<ConfiguratorTab> observers;
 
+
+    private boolean crcWasResized;
+
     public Model() {
         saved = true;
         observers = new ArrayList<ConfiguratorTab>();
         crcDescriptionFilePath = "";
+        crcWasResized = false;
     }
 
     public CRC getCrc() {
@@ -43,6 +47,10 @@ public class Model {
 
     public void setCrcDescriptionFilePath(String crcDescriptionFilePath) {
         this.crcDescriptionFilePath = crcDescriptionFilePath;
+    }
+
+    public boolean wasCrcResized() {
+        return crcWasResized;
     }
 
     public void attachObserver(ConfiguratorTab observer) {
@@ -132,6 +140,8 @@ public class Model {
     }
 
     public void editCrc(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
+        crcWasResized = true;
         crc.editCrc(rows, columns, staticConfigLines, dynamicConfigLines);
+        crcWasResized = false;
     }
 }

@@ -31,17 +31,20 @@ public class HardwareModelTab extends ConfiguratorTab {
 
         this.setText("Hardware Model");
 
+        this.setup();
         this.drawHardwareModelCrc();
 
     }
 
     @Override
     public void update() {
+        if(model.wasCrcResized()) {
+            this.setup();
+        }
         this.drawHardwareModelCrc();
     }
 
-    private void drawHardwareModelCrc() {
-
+    private void setup() {
         Canvas canvas = new Canvas();
         canvas.setHeight(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE)));
         canvas.setWidth(2*CANVAS_PADDING+(model.getCrc().getColumns()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
@@ -61,7 +64,13 @@ public class HardwareModelTab extends ConfiguratorTab {
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
 
+        this.setContent(scrollPane);
+
         gc = canvas.getGraphicsContext2D();
+    }
+
+    private void drawHardwareModelCrc() {
+
         gc.clearRect(0,0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 
         gc.setStroke(Color.BLACK);
@@ -74,7 +83,6 @@ public class HardwareModelTab extends ConfiguratorTab {
             }
         }
 
-        this.setContent(scrollPane);
     }
 
     /**

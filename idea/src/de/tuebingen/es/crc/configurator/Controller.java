@@ -38,7 +38,6 @@ public class Controller {
 
     private Tab hardwareModelTab;
 
-
     /**
      * initializes the model
      * @param model
@@ -340,6 +339,7 @@ public class Controller {
 
         editDialog.showAndWait();
 
+
         if(editDialog.apply) {
             model.editCrc(
                     editDialog.getRows(),
@@ -348,8 +348,6 @@ public class Controller {
                     editDialog.getDynamicConfigLines()
             );
         }
-
-        // canvas of the Hardware Model Tab has to be resized
 
     }
 }
