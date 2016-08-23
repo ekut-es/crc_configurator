@@ -225,6 +225,14 @@ public class CRC {
         return dynamicConfigLines;
     }
 
+    public Configuration getStaticConfiguration(int number) {
+        return staticConfigs.get(number);
+    }
+
+    public Configuration getDynamicConfiguration(int number) {
+        return dynamicConfigs.get(number);
+    }
+
     public void notifyAllObservers() {
         this.model.notifyAllObservers();
     }

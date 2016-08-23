@@ -2,30 +2,58 @@
     "staticConfigLines":2,
     "dynamicConfigLines":0,"columns":3,
     "staticConfigs":[
-        {"staticConfigNumber": 0,
+        {"configNumber": 0,
             "PEs":[
-                {"row":0, "column": 0, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":0, "column": 1, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":0, "column": 2, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":1, "column": 0, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":1, "column": 1, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":1, "column": 2, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":2, "column": 0, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":2, "column": 1, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":2, "column": 2, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"}
+                {"row":0, "column": 0, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":0, "column": 1, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "sub"},
+                {"row":0, "column": 2, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "mul"},
+                {"row":1, "column": 0, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "div"},
+                {"row":1, "column": 1, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "and"},
+                {"row":1, "column": 2, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "or"},
+                {"row":2, "column": 0, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "xor"},
+                {"row":2, "column": 1, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "not"},
+                {"row":2, "column": 2, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "mux_0"}
             ]
         },
-        {"staticConfigNumber": 1,
+        {"configNumber": 1,
             "PEs":[
-                {"row":0, "column": 0, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":0, "column": 1, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":0, "column": 2, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":1, "column": 0, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":1, "column": 1, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":1, "column": 2, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":2, "column": 0, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":2, "column": 1, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"},
-                {"row":2, "column": 2, "N0Source": "none", "N1Source": "none", "E0Source": "none", "E1Source": "none", "S0Source": "none", "S1Source": "none"}
+                {"row":0, "column": 0, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "shift_left"},
+                {"row":0, "column": 1, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "shift_right"},
+                {"row":0, "column": 2, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "compare_eq"},
+                {"row":1, "column": 0, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "compare_neq"},
+                {"row":1, "column": 1, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "compare_lt"},
+                {"row":1, "column": 2, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "compare_gt"},
+                {"row":2, "column": 0, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "compare_leq"},
+                {"row":2, "column": 1, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "compare_geq"},
+                {"row":2, "column": 2, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "mux_1"}
+            ]
+        }
+    ],
+    "dynamicConfigs": [
+        {"configNumber": 0,
+            "PEs":[
+                {"row":0, "column": 0, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":0, "column": 1, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":0, "column": 2, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":1, "column": 0, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":1, "column": 1, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":1, "column": 2, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":2, "column": 0, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":2, "column": 1, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":2, "column": 2, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"}
+            ]
+        },
+        {"configNumber": 1,
+            "PEs":[
+                {"row":0, "column": 0, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":0, "column": 1, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":0, "column": 2, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":1, "column": 0, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":1, "column": 1, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":1, "column": 2, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":2, "column": 0, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":2, "column": 1, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"},
+                {"row":2, "column": 2, "dataFlagOutN0": "NONE", "dataFlagOutN1": "NONE", "dataFlagOutE0": "NONE", "dataFlagOutE1": "NONE", "dataFlagOutS0": "NONE", "dataFlagOutS1": "NONE", "dataFlagInFU0": "NONE", "dataFlagInFU1": "NONE", "muxFlagInFU": "NONE", "FUFunction": "add"}
             ]
         }
     ],

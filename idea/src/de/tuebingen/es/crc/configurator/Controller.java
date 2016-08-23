@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Optional;
 
 public class Controller {
 
@@ -332,7 +331,7 @@ public class Controller {
         staticConfigurationTabs = new ArrayList<>();
 
         for(int i = 0; i < model.getCrc().getStaticConfigLines(); i++) {
-            ConfigurationTab staticConfigurationTab = new ConfigurationTab(model, this);
+            ConfigurationTab staticConfigurationTab = new ConfigurationTab(model, this, ConfigurationTab.ConfigurationTabType.STATIC, i);
             model.attachObserver(staticConfigurationTab);
             tabPane.getTabs().add(staticConfigurationTab);
             staticConfigurationTabs.add(staticConfigurationTab);

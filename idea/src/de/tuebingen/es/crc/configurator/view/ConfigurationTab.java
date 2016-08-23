@@ -1,17 +1,16 @@
 package de.tuebingen.es.crc.configurator.view;
 
 import de.tuebingen.es.crc.configurator.Controller;
-import de.tuebingen.es.crc.configurator.model.FU;
 import de.tuebingen.es.crc.configurator.model.Model;
+import de.tuebingen.es.crc.configurator.model.PE;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 
-import java.awt.*;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -19,19 +18,31 @@ import java.util.Map;
  */
 public class ConfigurationTab extends ConfiguratorTab {
 
+    public enum ConfigurationTabType {
+        STATIC, DYNAMIC
+    }
+
     private Model model;
     private Controller controller;
     private GraphicsContext gc;
+    private int number;
+    private ConfigurationTabType configurationTabType;
 
     final int peDrawSizeTwentieth = (PE_DRAW_SIZE/20);
 
-    public ConfigurationTab(Model model, Controller controller) {
+    public ConfigurationTab(Model model, Controller controller, ConfigurationTabType configurationTabType, int number) {
         super();
 
         this.model = model;
         this.controller = controller;
+        this.configurationTabType = configurationTabType;
+        this.number = number;
 
-        this.setText("TODO Configuration");
+        if(this.configurationTabType == ConfigurationTabType.STATIC) {
+            this.setText("Static Configuration " + number);
+        } else {
+            this.setText("Dynamic Configuration " + number);
+        }
 
         this.setup();
         this.drawConfigurationCrc();
@@ -128,8 +139,100 @@ public class ConfigurationTab extends ConfiguratorTab {
                 7
         );
 
-
         gc.fillText("FU", 9*peDrawSizeTwentieth+x, 14*peDrawSizeTwentieth+y);
+
+        // draw function into FU
+        PE.FUFunction fuFunction = model.getCrc().getStaticConfiguration(number).getPE(row, column).getFUFunction();
+
+        String fuFunctionString;
+        double fuFunctionStringOffset = 0;
+
+        switch (fuFunction) {
+            case add:
+                fuFunctionString = "+";
+                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
+                break;
+            case sub:
+                fuFunctionString = "−";
+                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
+                break;
+            case mul:
+                fuFunctionString = "×";
+                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
+                break;
+            case div:
+                fuFunctionString = "÷";
+                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
+                break;
+            case and:
+                fuFunctionString = "AND";
+                fuFunctionStringOffset = 1.3*peDrawSizeTwentieth;
+                break;
+            case or:
+                fuFunctionString = "OR";
+                fuFunctionStringOffset = 2*peDrawSizeTwentieth;
+                break;
+            case xor:
+                fuFunctionString = "XOR";
+                fuFunctionStringOffset = 1.2*peDrawSizeTwentieth;
+                break;
+            case not:
+                fuFunctionString = "NOT";
+                fuFunctionStringOffset = 1.2*peDrawSizeTwentieth;
+                break;
+            case shift_left:
+                fuFunctionString = "<<";
+                fuFunctionStringOffset = 2*peDrawSizeTwentieth;
+                break;
+            case shift_right:
+                fuFunctionString = ">>";
+                fuFunctionStringOffset = 2*peDrawSizeTwentieth;
+                break;
+            case compare_eq:
+                fuFunctionString = "==";
+                fuFunctionStringOffset = 2*peDrawSizeTwentieth;
+                break;
+            case compare_neq:
+                fuFunctionString = "!=";
+                fuFunctionStringOffset = 2*peDrawSizeTwentieth;
+                break;
+            case compare_lt:
+                fuFunctionString = "<";
+                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
+                break;
+            case compare_gt:
+                fuFunctionString = ">";
+                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
+                break;
+            case compare_leq:
+                fuFunctionString = "<=";
+                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
+                break;
+            case compare_geq:
+                fuFunctionString = ">=";
+                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
+                break;
+            case mux_0:
+                fuFunctionString = "MUX 0";
+                fuFunctionStringOffset = 0.5*peDrawSizeTwentieth;
+                break;
+            case mux_1:
+                fuFunctionString = "MUX 1";
+                fuFunctionStringOffset = 0.5*peDrawSizeTwentieth;
+                break;
+            default:
+                fuFunctionString = "NOP";
+                fuFunctionStringOffset = 1.2*peDrawSizeTwentieth;
+                break;
+        }
+
+        Font defaultFont = gc.getFont();
+        Font fontBold = Font.font(defaultFont.getName(), FontWeight.BOLD, defaultFont.getSize()+2);
+
+        gc.setFont(fontBold);
+        gc.fillText(fuFunctionString, 7*peDrawSizeTwentieth+fuFunctionStringOffset+x, 7*peDrawSizeTwentieth+y);
+        gc.setFont(defaultFont);
+
 
 
         // draw data paths
