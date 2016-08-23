@@ -4,10 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 25/07/16.
@@ -20,6 +17,9 @@ public class CRC {
     private int columns;
     private int staticConfigLines;
     private int dynamicConfigLines;
+
+    private HashMap<Integer, Configuration> staticConfigs;
+    private HashMap<Integer, Configuration> dynamicConfigs;
 
     private ArrayList<ArrayList<FU>> fuMatrix;
 
@@ -60,6 +60,9 @@ public class CRC {
 
         this.generateFuMatrix();
 
+        this.staticConfigs = new HashMap<>();
+        this.dynamicConfigs = new HashMap<>();
+
         JSONArray pes = (JSONArray) jsonCrcDescription.get("PEs");
 
         if(pes == null) {
@@ -81,8 +84,72 @@ public class CRC {
             }
         }
 
-        // TODO: read static and dynamic configurations
-        // TODO: HERE TOMORROW
+        // generate static configs
+        JSONArray staticConfigs = (JSONArray) jsonCrcDescription.get("staticConfigs");
+
+        if(staticConfigs == null) {
+            throw new Exception("CRC description file does not contain 'staticConfigs'!");
+        }
+
+        Iterator<JSONObject> staticConfigsIterator = staticConfigs.iterator();
+
+        while(staticConfigsIterator.hasNext()) {
+            JSONObject staticConfig = staticConfigsIterator.next();
+
+            Configuration configuration = this.readConfigFromJSON(staticConfig);
+
+            this.staticConfigs.put(configuration.getNumber(), configuration);
+        }
+
+        // generate dynamic configs
+        JSONArray dynamicConfigs = (JSONArray) jsonCrcDescription.get("dynamicConfigs");
+
+        if(dynamicConfigs == null) {
+            throw new Exception("CRC description file does not contain 'dynamicConfigs'!");
+        }
+
+        Iterator<JSONObject> dynamicConfigsIterator = dynamicConfigs.iterator();
+
+        while(dynamicConfigsIterator.hasNext()) {
+            JSONObject dynamicConfig = dynamicConfigsIterator.next();
+
+            Configuration configuration = this.readConfigFromJSON(dynamicConfig);
+
+            this.dynamicConfigs.put(configuration.getNumber(), configuration);
+        }
+
+    }
+
+    public Configuration readConfigFromJSON(JSONObject staticConfig) throws Exception {
+
+        // read PEs
+        JSONArray pes = (JSONArray) staticConfig.get("PEs");
+
+        if(pes == null) {
+            throw new Exception("CRC description file section staticConfigs does not contain 'PEs'!");
+        }
+
+        Configuration configuration = new Configuration(this, Integer.parseInt(staticConfig.get("configNumber").toString()));
+        Iterator<JSONObject> peIterator = pes.iterator();
+
+        while(peIterator.hasNext()) {
+            JSONObject peJson = peIterator.next();
+
+            PE pe = configuration.getPE(Integer.parseInt(peJson.get("row").toString()), Integer.parseInt(peJson.get("column").toString()));
+
+            pe.setDataFlagOutN0(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutN0").toString()));
+            pe.setDataFlagOutN1(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutN1").toString()));
+            pe.setDataFlagOutE0(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutE0").toString()));
+            pe.setDataFlagOutE1(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutE1").toString()));
+            pe.setDataFlagOutS0(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutS0").toString()));
+            pe.setDataFlagOutS1(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutS1").toString()));
+            pe.setDataFlagInFU0(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFU0").toString()));
+            pe.setDataFlagInFU1(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFU1").toString()));
+            pe.setMuxFlagInFU(PE.DataFlagInFuDriver.valueOf(peJson.get("muxFlagInFU").toString()));
+            pe.setFUFunction(PE.FUFunction.valueOf(peJson.get("FUFunction").toString()));
+        }
+
+        return configuration;
     }
 
     public void editCrc(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {

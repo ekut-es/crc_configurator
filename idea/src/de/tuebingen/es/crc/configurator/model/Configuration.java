@@ -7,28 +7,23 @@ import java.util.ArrayList;
  */
 public class Configuration {
 
-    public enum ConfigurationType {
-        STATIC, DYNAMIC
-    }
-
     private CRC crc;
 
     private int number;
-    private ConfigurationType configurationType;
     private ArrayList<ArrayList<PE>> pes;
 
-    public Configuration(CRC crc) {
-        this.crc = crc;
-        number = -1;
-        configurationType = ConfigurationType.STATIC;
-
-        this.generatePeMatrix();
+    public int getNumber() {
+        return number;
     }
 
-    public Configuration(CRC crc, int number, ConfigurationType configurationType) {
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public Configuration(CRC crc, int number) {
         this.crc = crc;
         this.number = number;
-        this.configurationType = configurationType;
+        //configurationType = ConfigurationType.STATIC;
 
         this.generatePeMatrix();
     }
