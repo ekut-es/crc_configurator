@@ -96,34 +96,9 @@ public class HardwareModelTab extends ConfiguratorTab {
         int x = CANVAS_PADDING+(column*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
         int y = CANVAS_PADDING+(row*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
 
-        final int peDrawSizeTwentieth = (PE_DRAW_SIZE/20);
-
         gc.strokeRect(x, y, PE_DRAW_SIZE, PE_DRAW_SIZE);
-        gc.fillText(row + "," + column, peDrawSizeTwentieth+x, PE_DRAW_SIZE-(peDrawSizeTwentieth)+y);
 
-        gc.strokePolygon(
-                new double[] {
-                        0+7*peDrawSizeTwentieth+x,
-                        6*peDrawSizeTwentieth+7*peDrawSizeTwentieth+x,
-                        6*peDrawSizeTwentieth+7*peDrawSizeTwentieth+x,
-                        0+7*peDrawSizeTwentieth+x,
-                        0+7*peDrawSizeTwentieth+x,
-                        2*peDrawSizeTwentieth+7*peDrawSizeTwentieth+x,
-                        0+7*peDrawSizeTwentieth+x
-                },
-                new double[] {
-                        0+3*peDrawSizeTwentieth+y,
-                        2*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
-                        12*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
-                        14*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
-                        8*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
-                        7*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
-                        6*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y
-                },
-                7
-        );
-
-        gc.fillText("FU", 9*peDrawSizeTwentieth+x, 14*peDrawSizeTwentieth+y);
+        this.drawFU(gc, x, y);
     }
 
     /**

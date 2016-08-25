@@ -28,7 +28,7 @@ public class ConfigurationTab extends ConfiguratorTab {
     private int number;
     private ConfigurationTabType configurationTabType;
 
-    final int peDrawSizeTwentieth = (PE_DRAW_SIZE/20);
+    private final int peDrawSizeTwentieth = (PE_DRAW_SIZE/20);
 
     public ConfigurationTab(Model model, Controller controller, ConfigurationTabType configurationTabType, int number) {
         super();
@@ -117,32 +117,11 @@ public class ConfigurationTab extends ConfiguratorTab {
         gc.fillText(row + "," + column, peDrawSizeTwentieth+x, PE_DRAW_SIZE-(peDrawSizeTwentieth)+y);
 
         // draw FU
-        gc.strokePolygon(
-                new double[] {
-                        0+7*peDrawSizeTwentieth+x,
-                        6*peDrawSizeTwentieth+7*peDrawSizeTwentieth+x,
-                        6*peDrawSizeTwentieth+7*peDrawSizeTwentieth+x,
-                        0+7*peDrawSizeTwentieth+x,
-                        0+7*peDrawSizeTwentieth+x,
-                        2*peDrawSizeTwentieth+7*peDrawSizeTwentieth+x,
-                        0+7*peDrawSizeTwentieth+x
-                },
-                new double[] {
-                        0+3*peDrawSizeTwentieth+y,
-                        2*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
-                        12*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
-                        14*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
-                        8*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
-                        7*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y,
-                        6*peDrawSizeTwentieth+3*peDrawSizeTwentieth+y
-                },
-                7
-        );
-
-        gc.fillText("FU", 9*peDrawSizeTwentieth+x, 14*peDrawSizeTwentieth+y);
+        this.drawFU(gc, x, y);
 
         // draw function into FU
         PE.FUFunction fuFunction = model.getCrc().getStaticConfiguration(number).getPE(row, column).getFUFunction();
+
 
         String fuFunctionString;
         double fuFunctionStringOffset = 0;
@@ -230,9 +209,45 @@ public class ConfigurationTab extends ConfiguratorTab {
         Font fontBold = Font.font(defaultFont.getName(), FontWeight.BOLD, defaultFont.getSize()+2);
 
         gc.setFont(fontBold);
-        gc.fillText(fuFunctionString, 7*peDrawSizeTwentieth+fuFunctionStringOffset+x, 7*peDrawSizeTwentieth+y);
+        gc.fillText(fuFunctionString, 7*peDrawSizeTwentieth+fuFunctionStringOffset+x, 8*peDrawSizeTwentieth+y);
         gc.setFont(defaultFont);
 
+        // draw FU pads
+        gc.setFill(Color.GRAY);
+
+        gc.fillPolygon(
+                new double[] {
+                        0+7*peDrawSizeTwentieth+x-1,
+                        0+7*peDrawSizeTwentieth+x-1,
+                        0+7*peDrawSizeTwentieth+x-12-1,
+                        0+7*peDrawSizeTwentieth+x-12-1
+                },
+                new double[] {
+                        6*peDrawSizeTwentieth+y,
+                        6*peDrawSizeTwentieth+y+12,
+                        6*peDrawSizeTwentieth+y+12,
+                        6*peDrawSizeTwentieth+y
+                },
+                4
+        );
+
+        gc.fillPolygon(
+                new double[] {
+                        0+7*peDrawSizeTwentieth+x-1,
+                        0+7*peDrawSizeTwentieth+x-1,
+                        0+7*peDrawSizeTwentieth+x-12-1,
+                        0+7*peDrawSizeTwentieth+x-12-1
+                },
+                new double[] {
+                        13*peDrawSizeTwentieth+y,
+                        13*peDrawSizeTwentieth+y+12,
+                        13*peDrawSizeTwentieth+y+12,
+                        13*peDrawSizeTwentieth+y
+                },
+                4
+        );
+
+        gc.setFill(Color.BLACK);
 
 
         // draw data paths
@@ -321,13 +336,67 @@ public class ConfigurationTab extends ConfiguratorTab {
             this.drawConnectionN1toS1(x, y);
             this.drawConnectionS0toN0(x, y);
             this.drawConnectionS1toN1(x, y);
+
+            // internal connection
+            this.drawInternalConnectionFUtoN0(x, y);
+            this.drawInternalConnectionFUtoN1(x, y);
+            this.drawInternalConnectionFUtoE0(x, y);
+            this.drawInternalConnectionFUtoE1(x, y);
+            this.drawInternalConnectionFUtoS0(x, y);
+            this.drawInternalConnectionFUtoS1(x, y);
+
+            this.drawInternalConnectionN0toInFU0(x, y);
+            this.drawInternalConnectionN0toInFU1(x, y);
+            this.drawInternalConnectionN0toE0(x, y);
+            this.drawInternalConnectionN0toE1(x, y);
+            this.drawInternalConnectionN0toS0(x, y);
+            this.drawInternalConnectionN0toS1(x, y);
+
+            this.drawInternalConnectionN1toInFU0(x, y);
+            this.drawInternalConnectionN1toInFU1(x, y);
+            this.drawInternalConnectionN1toE0(x, y);
+            this.drawInternalConnectionN1toE1(x, y);
+            this.drawInternalConnectionN1toS0(x, y);
+            this.drawInternalConnectionN1toS1(x, y);
+
+            this.drawInternalConnectionS0toInFU0(x, y);
+            this.drawInternalConnectionS0toInFU1(x, y);
+            this.drawInternalConnectionS0toE0(x, y);
+            this.drawInternalConnectionS0toE1(x, y);
+            this.drawInternalConnectionS0toN0(x, y);
+            this.drawInternalConnectionS0toN1(x, y);
+
+            this.drawInternalConnectionS1toInFU0(x, y);
+            this.drawInternalConnectionS1toInFU1(x, y);
+            this.drawInternalConnectionS1toE0(x, y);
+            this.drawInternalConnectionS1toE1(x, y);
+            this.drawInternalConnectionS1toN0(x, y);
+            this.drawInternalConnectionS1toN1(x, y);
+
+            this.drawInternalConnectionW0toInFU0(x, y);
+            this.drawInternalConnectionW0toInFU1(x, y);
+            this.drawInternalConnectionW0toN0(x, y);
+            this.drawInternalConnectionW0toN1(x, y);
+            this.drawInternalConnectionW0toS0(x, y);
+            this.drawInternalConnectionW0toS1(x, y);
+
+            this.drawInternalConnectionW1toInFU0(x, y);
+            this.drawInternalConnectionW1toInFU1(x, y);
+            this.drawInternalConnectionW1toN0(x, y);
+            this.drawInternalConnectionW1toN1(x, y);
+            this.drawInternalConnectionW1toS0(x, y);
+            this.drawInternalConnectionW1toS1(x, y);
         }
     }
 
     private void drawConnectionN0toS0(double x, double y) {
+
+        // line
         gc.setStroke(Color.GRAY);
         gc.setLineWidth(4);
         gc.strokeLine(x+3*peDrawSizeTwentieth, y-3, x+3*peDrawSizeTwentieth, y-INTER_PE_DISTANCE+4);
+
+        // arrow tip
         gc.strokePolygon(
                 new double[] {
                         x+3*peDrawSizeTwentieth,
@@ -342,16 +411,40 @@ public class ConfigurationTab extends ConfiguratorTab {
                 3
         );
 
+        // pad
+        gc.setFill(Color.GRAY);
+        gc.fillPolygon(
+                new double[] {
+                        x+3*peDrawSizeTwentieth-6,
+                        x+3*peDrawSizeTwentieth+6,
+                        x+3*peDrawSizeTwentieth+6,
+                        x+3*peDrawSizeTwentieth-6
+                },
+                new double[] {
+                        y+1,
+                        y+1,
+                        y+13,
+                        y+13
+                },
+                4
+        );
+
+        // text
         gc.setStroke(Color.BLACK);
+        gc.setFill(Color.BLACK);
         gc.setLineWidth(2);
         gc.fillText("N0", x+(peDrawSizeTwentieth/2), y-peDrawSizeTwentieth);
         gc.fillText("S0", x+(peDrawSizeTwentieth/2), y-INTER_PE_DISTANCE+2*peDrawSizeTwentieth);
     }
 
     private void drawConnectionN1toS1(double x, double y) {
+
+        // line
         gc.setStroke(Color.GRAY);
         gc.setLineWidth(4);
         gc.strokeLine(x+7*peDrawSizeTwentieth, y-3, x+7*peDrawSizeTwentieth, y-INTER_PE_DISTANCE+4);
+
+        // arrow tip
         gc.strokePolygon(
                 new double[] {
                         x+7*peDrawSizeTwentieth,
@@ -366,16 +459,40 @@ public class ConfigurationTab extends ConfiguratorTab {
                 3
         );
 
+        // pad
+        gc.setFill(Color.GRAY);
+        gc.fillPolygon(
+                new double[] {
+                        x+7*peDrawSizeTwentieth-6,
+                        x+7*peDrawSizeTwentieth+6,
+                        x+7*peDrawSizeTwentieth+6,
+                        x+7*peDrawSizeTwentieth-6
+                },
+                new double[] {
+                        y+1,
+                        y+1,
+                        y+13,
+                        y+13
+                },
+                4
+        );
+
+        // text
         gc.setStroke(Color.BLACK);
+        gc.setFill(Color.BLACK);
         gc.setLineWidth(2);
         gc.fillText("N1", x+4.5*peDrawSizeTwentieth, y-peDrawSizeTwentieth);
         gc.fillText("S1", x+4.5*peDrawSizeTwentieth, y-INTER_PE_DISTANCE+2*peDrawSizeTwentieth);
     }
 
     private void drawConnectionS0toN0(double x, double y) {
+
+        // line
         gc.setStroke(Color.GRAY);
         gc.setLineWidth(4);
         gc.strokeLine(x+13*peDrawSizeTwentieth, y+PE_DRAW_SIZE+3, x+13*peDrawSizeTwentieth, y+PE_DRAW_SIZE+INTER_PE_DISTANCE-4);
+
+        // arrow tip
         gc.strokePolygon(
                 new double[] {
                         x+13*peDrawSizeTwentieth,
@@ -390,16 +507,40 @@ public class ConfigurationTab extends ConfiguratorTab {
                 3
         );
 
+        // pad
+        gc.setFill(Color.GRAY);
+        gc.fillPolygon(
+                new double[] {
+                        x+13*peDrawSizeTwentieth-6,
+                        x+13*peDrawSizeTwentieth+6,
+                        x+13*peDrawSizeTwentieth+6,
+                        x+13*peDrawSizeTwentieth-6
+                },
+                new double[] {
+                        y+PE_DRAW_SIZE-1,
+                        y+PE_DRAW_SIZE-1,
+                        y+PE_DRAW_SIZE-13,
+                        y+PE_DRAW_SIZE-13
+                },
+                4
+        );
+
+        // text
         gc.setStroke(Color.BLACK);
+        gc.setFill(Color.BLACK);
         gc.setLineWidth(2);
-        gc.fillText("S0", x+10.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+INTER_PE_DISTANCE-peDrawSizeTwentieth);
-        gc.fillText("N0", x+10.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+2*peDrawSizeTwentieth);
+        gc.fillText("N0", x+10.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+INTER_PE_DISTANCE-peDrawSizeTwentieth);
+        gc.fillText("S0", x+10.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+2*peDrawSizeTwentieth);
     }
 
     private void drawConnectionS1toN1(double x, double y) {
+
+        // line
         gc.setStroke(Color.GRAY);
         gc.setLineWidth(4);
         gc.strokeLine(x+17*peDrawSizeTwentieth, y+PE_DRAW_SIZE+3, x+17*peDrawSizeTwentieth, y+PE_DRAW_SIZE+INTER_PE_DISTANCE-4);
+
+        // arrow tip
         gc.strokePolygon(
                 new double[] {
                         x+17*peDrawSizeTwentieth,
@@ -414,16 +555,40 @@ public class ConfigurationTab extends ConfiguratorTab {
                 3
         );
 
+        // pad
+        gc.setFill(Color.GRAY);
+        gc.fillPolygon(
+                new double[] {
+                        x+17*peDrawSizeTwentieth-6,
+                        x+17*peDrawSizeTwentieth+6,
+                        x+17*peDrawSizeTwentieth+6,
+                        x+17*peDrawSizeTwentieth-6
+                },
+                new double[] {
+                        y+PE_DRAW_SIZE-1,
+                        y+PE_DRAW_SIZE-1,
+                        y+PE_DRAW_SIZE-13,
+                        y+PE_DRAW_SIZE-13
+                },
+                4
+        );
+
+        // text
         gc.setStroke(Color.BLACK);
+        gc.setFill(Color.BLACK);
         gc.setLineWidth(2);
-        gc.fillText("S1", x+14.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+INTER_PE_DISTANCE-peDrawSizeTwentieth);
-        gc.fillText("N1", x+14.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+2*peDrawSizeTwentieth);
+        gc.fillText("N1", x+14.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+INTER_PE_DISTANCE-peDrawSizeTwentieth);
+        gc.fillText("S1", x+14.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+2*peDrawSizeTwentieth);
     }
 
     private void drawConnectionE0toW0(double x, double y, boolean crcOutput, boolean crcInput) {
+
+        // line
         gc.setStroke(Color.GRAY);
         gc.setLineWidth(4);
         gc.strokeLine(x+PE_DRAW_SIZE+3, y+8*peDrawSizeTwentieth, x+PE_DRAW_SIZE+INTER_PE_DISTANCE-4, y+8*peDrawSizeTwentieth);
+
+        // arrow tip
         gc.strokePolygon(
                 new double[] {
                         x+PE_DRAW_SIZE+INTER_PE_DISTANCE-3,
@@ -438,7 +603,29 @@ public class ConfigurationTab extends ConfiguratorTab {
                 3
         );
 
+        // pad
+        if(!crcInput) {
+            gc.setFill(Color.GRAY);
+            gc.fillPolygon(
+                    new double[]{
+                            x + PE_DRAW_SIZE - 1,
+                            x + PE_DRAW_SIZE - 1,
+                            x + PE_DRAW_SIZE - 12 - 1,
+                            x + PE_DRAW_SIZE - 12 - 1
+                    },
+                    new double[]{
+                            y + 8 * peDrawSizeTwentieth - 6,
+                            y + 8 * peDrawSizeTwentieth + 6,
+                            y + 8 * peDrawSizeTwentieth + 6,
+                            y + 8 * peDrawSizeTwentieth - 6
+                    },
+                    4
+            );
+        }
+
+        // text
         gc.setStroke(Color.BLACK);
+        gc.setFill(Color.BLACK);
         gc.setLineWidth(2);
 
         if(!crcInput) {
@@ -452,9 +639,13 @@ public class ConfigurationTab extends ConfiguratorTab {
     }
 
     private void drawConnectionE1toW1(double x, double y, boolean crcOutput, boolean crcInput) {
+
+        // line
         gc.setStroke(Color.GRAY);
         gc.setLineWidth(4);
         gc.strokeLine(x+PE_DRAW_SIZE+3, y+12*peDrawSizeTwentieth, x+PE_DRAW_SIZE+INTER_PE_DISTANCE-4, y+12*peDrawSizeTwentieth);
+
+        // arrow tip
         gc.strokePolygon(
                 new double[] {
                         x+PE_DRAW_SIZE+INTER_PE_DISTANCE-3,
@@ -469,7 +660,29 @@ public class ConfigurationTab extends ConfiguratorTab {
                 3
         );
 
+        // pad
+        if(!crcInput) {
+            gc.setFill(Color.GRAY);
+            gc.fillPolygon(
+                    new double[]{
+                            x + PE_DRAW_SIZE - 1,
+                            x + PE_DRAW_SIZE - 1,
+                            x + PE_DRAW_SIZE - 12 - 1,
+                            x + PE_DRAW_SIZE - 12 - 1
+                    },
+                    new double[]{
+                            y + 12 * peDrawSizeTwentieth - 6,
+                            y + 12 * peDrawSizeTwentieth + 6,
+                            y + 12 * peDrawSizeTwentieth + 6,
+                            y + 12 * peDrawSizeTwentieth - 6
+                    },
+                    4
+            );
+        }
+
+        // text
         gc.setStroke(Color.BLACK);
+        gc.setFill(Color.BLACK);
         gc.setLineWidth(2);
 
         if(!crcInput) {
@@ -480,4 +693,1114 @@ public class ConfigurationTab extends ConfiguratorTab {
             gc.fillText("W1", x + PE_DRAW_SIZE + INTER_PE_DISTANCE - 2.5 * peDrawSizeTwentieth, y + 11 * peDrawSizeTwentieth);
         }
     }
+
+    private void drawInternalConnectionFUtoN0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+13*peDrawSizeTwentieth,
+                        x+13.5*peDrawSizeTwentieth,
+                        x+13.5*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth
+                },
+                new double[] {
+                        y+(PE_DRAW_SIZE/2),
+                        y+(PE_DRAW_SIZE/2),
+                        y+3.5*peDrawSizeTwentieth,
+                        y+3.5*peDrawSizeTwentieth,
+                        y+12+1
+                },
+                5
+        );
+
+        this.drawArrowTipN0(x, y);
+    }
+
+    private void drawInternalConnectionFUtoN1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+13*peDrawSizeTwentieth,
+                        x+14*peDrawSizeTwentieth,
+                        x+14*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth
+                },
+                new double[] {
+                        y+(PE_DRAW_SIZE/2),
+                        y+(PE_DRAW_SIZE/2),
+                        y+3*peDrawSizeTwentieth,
+                        y+3*peDrawSizeTwentieth,
+                        y+12+1
+                },
+                5
+        );
+
+        this.drawArrowTipN1(x, y);
+    }
+
+    private void drawInternalConnectionFUtoE0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+13*peDrawSizeTwentieth,
+                        x+14.5*peDrawSizeTwentieth,
+                        x+14.5*peDrawSizeTwentieth,
+                        x+PE_DRAW_SIZE-12-1
+                },
+                new double[] {
+                        y+(PE_DRAW_SIZE/2),
+                        y+(PE_DRAW_SIZE/2),
+                        y+8*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth
+                },
+                4
+        );
+
+        this.drawArrowTipE0(x,y);
+    }
+
+    private void drawInternalConnectionFUtoE1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+13*peDrawSizeTwentieth,
+                        x+14.5*peDrawSizeTwentieth,
+                        x+14.5*peDrawSizeTwentieth,
+                        x+PE_DRAW_SIZE-12-1
+                },
+                new double[] {
+                        y+(PE_DRAW_SIZE/2),
+                        y+(PE_DRAW_SIZE/2),
+                        y+12*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth
+                },
+                4
+        );
+
+        this.drawArrowTipE1(x,y);
+    }
+
+    private void drawInternalConnectionFUtoS0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+13*peDrawSizeTwentieth,
+                        x+13.5*peDrawSizeTwentieth,
+                        x+13.5*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth
+                },
+                new double[] {
+                        y+(PE_DRAW_SIZE/2),
+                        y+(PE_DRAW_SIZE/2),
+                        y+18*peDrawSizeTwentieth,
+                        y+18*peDrawSizeTwentieth,
+                        y+PE_DRAW_SIZE-12-1
+                },
+                5
+        );
+
+        this.drawArrowTipS0(x,y);
+    }
+
+    private void drawInternalConnectionFUtoS1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+13*peDrawSizeTwentieth,
+                        x+14*peDrawSizeTwentieth,
+                        x+14*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth
+                },
+                new double[] {
+                        y+(PE_DRAW_SIZE/2),
+                        y+(PE_DRAW_SIZE/2),
+                        y+18*peDrawSizeTwentieth,
+                        y+18*peDrawSizeTwentieth,
+                        y+PE_DRAW_SIZE-12-1
+                },
+                5
+        );
+
+        this.drawArrowTipS1(x,y);
+    }
+
+    private void drawInternalConnectionN0toInFU0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+4*peDrawSizeTwentieth,
+                        x+4*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth-12-1
+                },
+                new double[] {
+                        y,
+                        y+2*peDrawSizeTwentieth,
+                        y+2*peDrawSizeTwentieth,
+                        y+6*peDrawSizeTwentieth+6,
+                        y+6*peDrawSizeTwentieth+6
+                },
+                5
+        );
+
+        this.drawArrowTipInFU0(x,y);
+    }
+
+    private void drawInternalConnectionN0toInFU1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+4*peDrawSizeTwentieth,
+                        x+4*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth-12-1
+                },
+                new double[] {
+                        y,
+                        y+2*peDrawSizeTwentieth,
+                        y+2*peDrawSizeTwentieth,
+                        y+13*peDrawSizeTwentieth+6,
+                        y+13*peDrawSizeTwentieth+6
+                },
+                5
+        );
+
+        this.drawArrowTipInFU1(x,y);
+    }
+
+    private void drawInternalConnectionN0toE0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+14.5*peDrawSizeTwentieth,
+                        x+14.5*peDrawSizeTwentieth,
+                        x+PE_DRAW_SIZE-12-1
+                },
+                new double[] {
+                        y,
+                        y+2*peDrawSizeTwentieth,
+                        y+2*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth
+                },
+                5
+        );
+
+        this.drawArrowTipE0(x,y);
+    }
+
+    private void drawInternalConnectionN0toE1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+14.5*peDrawSizeTwentieth,
+                        x+14.5*peDrawSizeTwentieth,
+                        x+PE_DRAW_SIZE-12-1
+                },
+                new double[] {
+                        y,
+                        y+2*peDrawSizeTwentieth,
+                        y+2*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth
+                },
+                5
+        );
+
+        this.drawArrowTipE1(x,y);
+    }
+
+    private void drawInternalConnectionN0toS0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+14.5*peDrawSizeTwentieth,
+                        x+14.5*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth
+                },
+                new double[] {
+                        y,
+                        y+2*peDrawSizeTwentieth,
+                        y+2*peDrawSizeTwentieth,
+                        y+17.5*peDrawSizeTwentieth,
+                        y+17.5*peDrawSizeTwentieth,
+                        y+PE_DRAW_SIZE-12-1
+                },
+                6
+        );
+
+        this.drawArrowTipS0(x,y);
+    }
+
+    private void drawInternalConnectionN0toS1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+14.5*peDrawSizeTwentieth,
+                        x+14.5*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth
+                },
+                new double[] {
+                        y,
+                        y+2*peDrawSizeTwentieth,
+                        y+2*peDrawSizeTwentieth,
+                        y+17.5*peDrawSizeTwentieth,
+                        y+17.5*peDrawSizeTwentieth,
+                        y+PE_DRAW_SIZE-12-1
+                },
+                6
+        );
+
+        this.drawArrowTipS1(x,y);
+    }
+    private void drawInternalConnectionN1toInFU0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+17*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth,
+                        x+4.5*peDrawSizeTwentieth,
+                        x+4.5*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth-12-1
+                },
+                new double[] {
+                        y,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+6*peDrawSizeTwentieth+6,
+                        y+6*peDrawSizeTwentieth+6
+                },
+                5
+        );
+
+        this.drawArrowTipInFU0(x,y);
+    }
+
+    private void drawInternalConnectionN1toInFU1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+17*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth,
+                        x+4.5*peDrawSizeTwentieth,
+                        x+4.5*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth-12-1
+                },
+                new double[] {
+                        y,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+13*peDrawSizeTwentieth+6,
+                        y+13*peDrawSizeTwentieth+6
+                },
+                5
+        );
+
+        this.drawArrowTipInFU1(x,y);
+    }
+
+    private void drawInternalConnectionN1toE0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+17*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth,
+                        x+15*peDrawSizeTwentieth,
+                        x+15*peDrawSizeTwentieth,
+                        x+PE_DRAW_SIZE-12-1
+                },
+                new double[] {
+                        y,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth
+                },
+                5
+        );
+
+        this.drawArrowTipE0(x,y);
+    }
+
+    private void drawInternalConnectionN1toE1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+17*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth,
+                        x+15*peDrawSizeTwentieth,
+                        x+15*peDrawSizeTwentieth,
+                        x+PE_DRAW_SIZE-12-1
+                },
+                new double[] {
+                        y,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth
+                },
+                5
+        );
+
+        this.drawArrowTipE1(x,y);
+    }
+
+    private void drawInternalConnectionN1toS0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+17*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth,
+                        x+15*peDrawSizeTwentieth,
+                        x+15*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth
+                },
+                new double[] {
+                        y,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+17*peDrawSizeTwentieth,
+                        y+17*peDrawSizeTwentieth,
+                        y+PE_DRAW_SIZE-12-1
+                },
+                6
+        );
+
+        this.drawArrowTipS0(x,y);
+    }
+
+    private void drawInternalConnectionN1toS1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+17*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth,
+                        x+15*peDrawSizeTwentieth,
+                        x+15*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth
+                },
+                new double[] {
+                        y,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+17*peDrawSizeTwentieth,
+                        y+17*peDrawSizeTwentieth,
+                        y+PE_DRAW_SIZE-12-1
+                },
+                6
+        );
+
+        this.drawArrowTipS1(x,y);
+    }
+
+    private void drawInternalConnectionS0toInFU0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth-12-1
+                },
+                new double[] {
+                        y+PE_DRAW_SIZE,
+                        y+18.5*peDrawSizeTwentieth,
+                        y+18.5*peDrawSizeTwentieth,
+                        y+6*peDrawSizeTwentieth+6,
+                        y+6*peDrawSizeTwentieth+6
+                },
+                5
+        );
+
+        this.drawArrowTipInFU0(x,y);
+    }
+
+    private void drawInternalConnectionS0toInFU1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth-12-1
+                },
+                new double[] {
+                        y+PE_DRAW_SIZE,
+                        y+18.5*peDrawSizeTwentieth,
+                        y+18.5*peDrawSizeTwentieth,
+                        y+13*peDrawSizeTwentieth+6,
+                        y+13*peDrawSizeTwentieth+6
+                },
+                5
+        );
+
+        this.drawArrowTipInFU1(x,y);
+    }
+
+    private void drawInternalConnectionS0toE0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                        x+11.5*peDrawSizeTwentieth,
+                        x+11.5*peDrawSizeTwentieth,
+                        x+15.5*peDrawSizeTwentieth,
+                        x+15.5*peDrawSizeTwentieth,
+                        x+PE_DRAW_SIZE-12-1
+                },
+                new double[]{
+                        y+PE_DRAW_SIZE,
+                        y+18.5*peDrawSizeTwentieth,
+                        y+18.5*peDrawSizeTwentieth,
+                        y+15*peDrawSizeTwentieth,
+                        y+15*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth
+                },
+                7
+        );
+
+        this.drawArrowTipE0(x, y);
+    }
+
+    private void drawInternalConnectionS0toE1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                        x+11.5*peDrawSizeTwentieth,
+                        x+11.5*peDrawSizeTwentieth,
+                        x+15.5*peDrawSizeTwentieth,
+                        x+15.5*peDrawSizeTwentieth,
+                        x+PE_DRAW_SIZE-12-1
+                },
+                new double[]{
+                        y+PE_DRAW_SIZE,
+                        y+18.5*peDrawSizeTwentieth,
+                        y+18.5*peDrawSizeTwentieth,
+                        y+15*peDrawSizeTwentieth,
+                        y+15*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth
+                },
+                7
+        );
+
+        this.drawArrowTipE0(x, y);
+    }
+
+    private void drawInternalConnectionS0toN0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                },
+                new double[] {
+                        y+PE_DRAW_SIZE,
+                        y+12+1
+                },
+                2
+        );
+
+        this.drawArrowTipN0(x,y);
+    }
+
+    private void drawInternalConnectionS0toN1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth
+                },
+                new double[] {
+                        y+PE_DRAW_SIZE,
+                        y+3*peDrawSizeTwentieth,
+                        y+3*peDrawSizeTwentieth,
+                        y+12+1
+                },
+                4
+        );
+
+        this.drawArrowTipN1(x,y);
+    }
+
+    private void drawInternalConnectionS1toInFU0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+7*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth,
+                        x+3.5*peDrawSizeTwentieth,
+                        x+3.5*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth-12-1
+                },
+                new double[] {
+                        y+PE_DRAW_SIZE,
+                        y+19*peDrawSizeTwentieth,
+                        y+19*peDrawSizeTwentieth,
+                        y+6*peDrawSizeTwentieth+6,
+                        y+6*peDrawSizeTwentieth+6
+                },
+                5
+        );
+
+        this.drawArrowTipInFU0(x,y);
+    }
+
+    private void drawInternalConnectionS1toInFU1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+7*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth,
+                        x+3.5*peDrawSizeTwentieth,
+                        x+3.5*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth-12-1
+                },
+                new double[] {
+                        y+PE_DRAW_SIZE,
+                        y+19*peDrawSizeTwentieth,
+                        y+19*peDrawSizeTwentieth,
+                        y+13*peDrawSizeTwentieth+6,
+                        y+13*peDrawSizeTwentieth+6
+                },
+                5
+        );
+
+        this.drawArrowTipInFU1(x,y);
+    }
+
+    private void drawInternalConnectionS1toE0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x+7*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth,
+                        x+12*peDrawSizeTwentieth,
+                        x+12*peDrawSizeTwentieth,
+                        x+16*peDrawSizeTwentieth,
+                        x+16*peDrawSizeTwentieth,
+                        x+PE_DRAW_SIZE-12-1
+                },
+                new double[]{
+                        y+PE_DRAW_SIZE,
+                        y+19*peDrawSizeTwentieth,
+                        y+19*peDrawSizeTwentieth,
+                        y+15.5*peDrawSizeTwentieth,
+                        y+15.5*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth
+                },
+                7
+        );
+
+        this.drawArrowTipE0(x, y);
+    }
+
+    private void drawInternalConnectionS1toE1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x+7*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth,
+                        x+12*peDrawSizeTwentieth,
+                        x+12*peDrawSizeTwentieth,
+                        x+16*peDrawSizeTwentieth,
+                        x+16*peDrawSizeTwentieth,
+                        x+PE_DRAW_SIZE-12-1
+                },
+                new double[]{
+                        y+PE_DRAW_SIZE,
+                        y+19*peDrawSizeTwentieth,
+                        y+19*peDrawSizeTwentieth,
+                        y+15.5*peDrawSizeTwentieth,
+                        y+15.5*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth
+                },
+                7
+        );
+
+        this.drawArrowTipE1(x, y);
+    }
+
+    private void drawInternalConnectionS1toN0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x+7*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth,
+                        x+3.5*peDrawSizeTwentieth,
+                        x+3.5*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth
+                },
+                new double[]{
+                        y+PE_DRAW_SIZE,
+                        y+19*peDrawSizeTwentieth,
+                        y+19*peDrawSizeTwentieth,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+12+1
+                },
+                6
+        );
+
+        this.drawArrowTipN0(x, y);
+    }
+
+    private void drawInternalConnectionS1toN1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x+7*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth,
+                        x+3.5*peDrawSizeTwentieth,
+                        x+3.5*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth
+                },
+                new double[]{
+                        y+PE_DRAW_SIZE,
+                        y+19*peDrawSizeTwentieth,
+                        y+19*peDrawSizeTwentieth,
+                        y+3*peDrawSizeTwentieth,
+                        y+3*peDrawSizeTwentieth,
+                        y+12+1
+                },
+                6
+        );
+
+        this.drawArrowTipN1(x, y);
+    }
+
+    private void drawInternalConnectionW0toInFU0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x,
+                        x+2*peDrawSizeTwentieth,
+                        x+2*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth-12-1
+                },
+                new double[]{
+                        y+8*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth,
+                        y+6*peDrawSizeTwentieth+6,
+                        y+6*peDrawSizeTwentieth+6
+                },
+                4
+        );
+
+        this.drawArrowTipInFU0(x, y);
+    }
+
+    private void drawInternalConnectionW0toInFU1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x,
+                        x+2*peDrawSizeTwentieth,
+                        x+2*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth-12-1
+                },
+                new double[]{
+                        y+8*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth,
+                        y+13*peDrawSizeTwentieth+6,
+                        y+13*peDrawSizeTwentieth+6
+                },
+                4
+        );
+
+        this.drawArrowTipInFU1(x, y);
+    }
+
+    private void drawInternalConnectionW0toN0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x,
+                        x+2*peDrawSizeTwentieth,
+                        x+2*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth
+                },
+                new double[]{
+                        y+8*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+12+1
+                },
+                5
+        );
+
+        this.drawArrowTipN0(x, y);
+    }
+
+    private void drawInternalConnectionW0toN1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x,
+                        x+2*peDrawSizeTwentieth,
+                        x+2*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth
+                },
+                new double[]{
+                        y+8*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+12+1
+                },
+                5
+        );
+
+        this.drawArrowTipN1(x, y);
+    }
+
+    private void drawInternalConnectionW0toS0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x,
+                        x+2*peDrawSizeTwentieth,
+                        x+2*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth
+                },
+                new double[]{
+                        y+8*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth,
+                        y+17*peDrawSizeTwentieth,
+                        y+17*peDrawSizeTwentieth,
+                        y+PE_DRAW_SIZE-12-1
+                },
+                5
+        );
+
+        this.drawArrowTipS0(x, y);
+    }
+
+    private void drawInternalConnectionW0toS1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x,
+                        x+2*peDrawSizeTwentieth,
+                        x+2*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth
+                },
+                new double[]{
+                        y+8*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth,
+                        y+17*peDrawSizeTwentieth,
+                        y+17*peDrawSizeTwentieth,
+                        y+16*peDrawSizeTwentieth,
+                        y+16*peDrawSizeTwentieth,
+                        y+PE_DRAW_SIZE-12-1
+                },
+                7
+        );
+
+        this.drawArrowTipS1(x, y);
+    }
+
+    private void drawInternalConnectionW1toInFU0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x,
+                        x+2.5*peDrawSizeTwentieth,
+                        x+2.5*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth-12-1
+                },
+                new double[]{
+                        y+12*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth,
+                        y+6*peDrawSizeTwentieth+6,
+                        y+6*peDrawSizeTwentieth+6
+                },
+                4
+        );
+
+        this.drawArrowTipInFU0(x, y);
+    }
+
+    private void drawInternalConnectionW1toInFU1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x,
+                        x+2.5*peDrawSizeTwentieth,
+                        x+2.5*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth-12-1
+                },
+                new double[]{
+                        y+12*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth,
+                        y+13*peDrawSizeTwentieth+6,
+                        y+13*peDrawSizeTwentieth+6
+                },
+                4
+        );
+
+        this.drawArrowTipInFU1(x, y);
+    }
+
+    private void drawInternalConnectionW1toN0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x,
+                        x+2.5*peDrawSizeTwentieth,
+                        x+2.5*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth
+                },
+                new double[]{
+                        y+12*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth,
+                        y+3*peDrawSizeTwentieth,
+                        y+3*peDrawSizeTwentieth,
+                        y+12+1
+                },
+                5
+        );
+
+        this.drawArrowTipN0(x, y);
+    }
+
+    private void drawInternalConnectionW1toN1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x,
+                        x+2.5*peDrawSizeTwentieth,
+                        x+2.5*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth
+                },
+                new double[]{
+                        y+12*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth,
+                        y+3*peDrawSizeTwentieth,
+                        y+3*peDrawSizeTwentieth,
+                        y+12+1
+                },
+                5
+        );
+
+        this.drawArrowTipN1(x, y);
+    }
+
+    private void drawInternalConnectionW1toS0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x,
+                        x+2.5*peDrawSizeTwentieth,
+                        x+2.5*peDrawSizeTwentieth,
+                        x+12.5*peDrawSizeTwentieth,
+                        x+12.5*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth
+                },
+                new double[]{
+                        y+12*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth,
+                        y+16.5*peDrawSizeTwentieth,
+                        y+16.5*peDrawSizeTwentieth,
+                        y+18*peDrawSizeTwentieth,
+                        y+18*peDrawSizeTwentieth,
+                        y+PE_DRAW_SIZE-12-1
+                },
+                7
+        );
+
+        this.drawArrowTipS0(x, y);
+    }
+
+    private void drawInternalConnectionW1toS1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x,
+                        x+2.5*peDrawSizeTwentieth,
+                        x+2.5*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth
+                },
+                new double[]{
+                        y+12*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth,
+                        y+16.5*peDrawSizeTwentieth,
+                        y+16.5*peDrawSizeTwentieth,
+                        y+PE_DRAW_SIZE-12-1
+                },
+                5
+        );
+
+        this.drawArrowTipS1(x, y);
+    }
+
+    private void drawArrowTipN0(double x, double y) {
+        gc.fillPolygon(
+                new double[] {
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth+4,
+                        x+3*peDrawSizeTwentieth-4
+                },
+                new double[] {
+                        y+12,
+                        y+16,
+                        y+16
+                },
+                3
+        );
+    }
+
+    private void drawArrowTipN1(double x, double y) {
+        gc.fillPolygon(
+                new double[] {
+                        x+7*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth+4,
+                        x+7*peDrawSizeTwentieth-4
+                },
+                new double[] {
+                        y+12,
+                        y+16,
+                        y+16
+                },
+                3
+        );
+    }
+
+    private void drawArrowTipE0(double x, double y) {
+        gc.fillPolygon(
+                new double[] {
+                        x+PE_DRAW_SIZE-12,
+                        x+PE_DRAW_SIZE-16,
+                        x+PE_DRAW_SIZE-16
+                },
+                new double[] {
+                        y+8*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth+4,
+                        y+8*peDrawSizeTwentieth-4
+                },
+                3
+        );
+    }
+
+    private void drawArrowTipE1(double x, double y) {
+        gc.fillPolygon(
+                new double[] {
+                        x+PE_DRAW_SIZE-12,
+                        x+PE_DRAW_SIZE-16,
+                        x+PE_DRAW_SIZE-16
+                },
+                new double[] {
+                        y+12*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth+4,
+                        y+12*peDrawSizeTwentieth-4
+                },
+                3
+        );
+    }
+
+    private void drawArrowTipS0(double x, double y) {
+        gc.fillPolygon(
+                new double[] {
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth+4,
+                        x+13*peDrawSizeTwentieth-4
+                },
+                new double[] {
+                        y+PE_DRAW_SIZE-12,
+                        y+PE_DRAW_SIZE-12-4,
+                        y+PE_DRAW_SIZE-12-4,
+                },
+                3
+        );
+    }
+
+    private void drawArrowTipS1(double x, double y) {
+        gc.fillPolygon(
+                new double[] {
+                        x+17*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth+4,
+                        x+17*peDrawSizeTwentieth-4
+                },
+                new double[] {
+                        y+PE_DRAW_SIZE-12,
+                        y+PE_DRAW_SIZE-12-4,
+                        y+PE_DRAW_SIZE-12-4,
+                },
+                3
+        );
+    }
+
+    private void drawArrowTipInFU0(double x, double y) {
+        gc.fillPolygon(
+                new double[] {
+                        x+7*peDrawSizeTwentieth-12,
+                        x+7*peDrawSizeTwentieth-12-4,
+                        x+7*peDrawSizeTwentieth-12-4
+                },
+                new double[] {
+                        y+6*peDrawSizeTwentieth+6,
+                        y+6*peDrawSizeTwentieth+6+4,
+                        y+6*peDrawSizeTwentieth+6-4
+                },
+                3
+        );
+    }
+
+    private void drawArrowTipInFU1(double x, double y) {
+        gc.fillPolygon(
+                new double[] {
+                        x+7*peDrawSizeTwentieth-12,
+                        x+7*peDrawSizeTwentieth-12-4,
+                        x+7*peDrawSizeTwentieth-12-4
+                },
+                new double[] {
+                        y+13*peDrawSizeTwentieth+6,
+                        y+13*peDrawSizeTwentieth+6+4,
+                        y+13*peDrawSizeTwentieth+6-4
+                },
+                3
+        );
+    }
+
 }
