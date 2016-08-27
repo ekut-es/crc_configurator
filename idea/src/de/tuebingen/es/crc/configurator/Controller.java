@@ -401,6 +401,12 @@ public class Controller {
         model.setSaved(false);
         this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setFlagInFUMux(dataFlagInFuDriver);
     }
+
+    public void setPeDataFlagN0Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
+        model.setSaved(false);
+        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setDataFlagOutN0(dataFlagOutDriver);
+    }
 }
+
 
 
