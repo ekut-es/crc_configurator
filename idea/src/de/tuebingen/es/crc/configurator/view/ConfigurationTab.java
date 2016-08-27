@@ -540,7 +540,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 this.drawInternalConnectionN1toE0(x, y);
                 break;
             case data_flag_in_S_0:
-                this.drawInternalConnectionS0toN0(x, y);
+                this.drawInternalConnectionS0toE0(x, y);
                 break;
             case data_flag_in_S_1:
                 this.drawInternalConnectionS1toE0(x, y);
@@ -2565,7 +2565,19 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     xNormalized <= PE_DRAW_SIZE-1+4 &&
                     yNormalized >= 8*peDrawSizeTwentieth-6-4 &&
                     yNormalized <= 8*peDrawSizeTwentieth+6+4) {
-                System.out.println("E0");
+
+                DataFlagEastDriverContextMenu dataFlagEastDriverContextMenu = new DataFlagEastDriverContextMenu(this.getConfiguration().getPE(row, column).getDataFlagOutE0(), model.getCrc().getRows(), row);
+                contextMenu = dataFlagEastDriverContextMenu;
+                dataFlagEastDriverContextMenu.show(this.getContent(), p.x, p.y);
+
+                dataFlagEastDriverContextMenu.setOnHiding(event -> {
+                    if(dataFlagEastDriverContextMenu.getSelectedDataFlagEastDriver() == this.getConfiguration().getPE(finalRow, finalColumn).getDataFlagOutE0()) {
+                        controller.setPeDataFlagE0Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagOutDriver.none);
+                    }
+                    else if(dataFlagEastDriverContextMenu.getSelectedDataFlagEastDriver() != PE.DataFlagOutDriver.none) {
+                        controller.setPeDataFlagE0Driver(configurationTabType, number, finalRow, finalColumn, dataFlagEastDriverContextMenu.getSelectedDataFlagEastDriver());
+                    }
+                });
             }
 
             // in E1
