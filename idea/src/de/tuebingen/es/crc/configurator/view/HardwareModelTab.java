@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * Created by Konstantin (Konze) Lübeck on 26/07/16.
  */
-public class HardwareModelTab extends ConfiguratorTab {
+public class HardwareModelTab extends ConfiguratorTab implements Observer {
 
     private Model model;
     private Controller controller;

@@ -5,26 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tuebingen.es.crc.configurator.view.ConfiguratorTab;
+import de.tuebingen.es.crc.configurator.view.Observer;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 25/07/16.
  */
-public class Model {
+public class Model implements Observable {
 
     private CRC crc;
     private boolean saved;
     private String crcDescriptionFilePath;
 
-    private List<ConfiguratorTab> observers;
-
+    private List<Observer> observers;
 
     private boolean crcWasResized;
 
     public Model() {
         saved = true;
-        observers = new ArrayList<ConfiguratorTab>();
+        observers = new ArrayList<Observer>();
         crcDescriptionFilePath = "";
         crcWasResized = false;
     }
@@ -53,16 +53,19 @@ public class Model {
         return crcWasResized;
     }
 
-    public void attachObserver(ConfiguratorTab observer) {
+    @Override
+    public void attachObserver(Observer observer) {
         observers.add(observer);
     }
 
-    public void removeObserver(ConfiguratorTab observer) {
+    @Override
+    public void removeObserver(Observer observer) {
         observers.remove(observer);
     }
 
+    @Override
     public void notifyAllObservers() {
-        for(ConfiguratorTab observer : observers) {
+        for(Observer observer : observers) {
            observer.update();
         }
     }

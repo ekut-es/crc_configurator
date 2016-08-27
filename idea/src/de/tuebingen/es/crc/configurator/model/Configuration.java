@@ -1,16 +1,20 @@
 package de.tuebingen.es.crc.configurator.model;
 
+import de.tuebingen.es.crc.configurator.view.Observer;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 22/08/16.
  */
-public class Configuration {
+public class Configuration implements Observable {
 
     private CRC crc;
 
     private int number;
     private ArrayList<ArrayList<PE>> pes;
+    private List<Observer> observers;
 
     public int getNumber() {
         return number;
@@ -24,6 +28,7 @@ public class Configuration {
         this.crc = crc;
         this.number = number;
         //configurationType = ConfigurationType.STATIC;
+        observers = new ArrayList<Observer>();
 
         this.generatePeMatrix();
     }
@@ -43,5 +48,22 @@ public class Configuration {
 
     public PE getPE(int row, int column) {
         return pes.get(row).get(column);
+    }
+
+    @Override
+    public void attachObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyAllObservers() {
+        for(Observer observer : observers) {
+           observer.update();
+        }
     }
 }

@@ -1,6 +1,8 @@
 package de.tuebingen.es.crc.configurator;
 
+import de.tuebingen.es.crc.configurator.model.Configuration;
 import de.tuebingen.es.crc.configurator.model.Model;
+import de.tuebingen.es.crc.configurator.model.PE;
 import de.tuebingen.es.crc.configurator.view.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -319,7 +321,7 @@ public class Controller {
      */
     private void displayHardwareModelTab() {
         hardwareModelTab = new HardwareModelTab(model, this);
-        model.attachObserver((ConfiguratorTab) hardwareModelTab);
+        model.attachObserver((Observer) hardwareModelTab);
         tabPane.getTabs().add(hardwareModelTab);
     }
 
@@ -333,21 +335,12 @@ public class Controller {
         for(int i = 0; i < model.getCrc().getStaticConfigLines(); i++) {
             ConfigurationTab staticConfigurationTab = new ConfigurationTab(model, this, ConfigurationTab.ConfigurationTabType.STATIC, i);
             model.attachObserver(staticConfigurationTab);
+            model.getCrc().getStaticConfiguration(i).attachObserver((Observer) staticConfigurationTab);
             tabPane.getTabs().add(staticConfigurationTab);
             staticConfigurationTabs.add(staticConfigurationTab);
         }
     }
 
-    /**
-     * sets the functions of FU at position row,column
-     * @param row
-     * @param column
-     * @param fuFunctions
-     */
-    public void setFuFunctions(int row, int column, LinkedHashMap<String, Boolean> fuFunctions) {
-        model.setSaved(false);
-        model.getCrc().getFu(row, column).setFunctions(fuFunctions);
-    }
 
     public void handleEditAction(ActionEvent actionEvent) {
         EditDialog editDialog = new EditDialog(
@@ -368,7 +361,22 @@ public class Controller {
                     editDialog.getDynamicConfigLines()
             );
         }
+    }
 
+    /**
+     * sets the functions of FU at position row,column
+     * @param row
+     * @param column
+     * @param fuFunctions
+     */
+    public void setFuFunctions(int row, int column, LinkedHashMap<String, Boolean> fuFunctions) {
+        model.setSaved(false);
+        model.getCrc().getFu(row, column).setFunctions(fuFunctions);
+    }
+
+    public void setPeFunctionStatic(int configurationNumber, int row, int column, PE.FUFunction fuFunction) {
+        model.setSaved(false);
+        model.getCrc().getStaticConfiguration(configurationNumber).getPE(row, column).setFUFunction(fuFunction);
     }
 }
 

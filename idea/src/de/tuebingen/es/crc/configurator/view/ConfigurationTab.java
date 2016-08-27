@@ -3,8 +3,12 @@ package de.tuebingen.es.crc.configurator.view;
 import de.tuebingen.es.crc.configurator.Controller;
 import de.tuebingen.es.crc.configurator.model.Model;
 import de.tuebingen.es.crc.configurator.model.PE;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -13,13 +17,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
+import java.awt.*;
 import java.awt.event.PaintEvent;
 import java.util.Map;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 26/07/16.
  */
-public class ConfigurationTab extends ConfiguratorTab {
+public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
     public enum ConfigurationTabType {
         STATIC, DYNAMIC
@@ -32,6 +37,8 @@ public class ConfigurationTab extends ConfiguratorTab {
     private ConfigurationTabType configurationTabType;
 
     private final int peDrawSizeTwentieth = (PE_DRAW_SIZE/20);
+
+    private ContextMenu contextMenu;
 
     public ConfigurationTab(Model model, Controller controller, ConfigurationTabType configurationTabType, int number) {
         super();
@@ -68,6 +75,9 @@ public class ConfigurationTab extends ConfiguratorTab {
         // listen for right clicks in the hardware model tab
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED,
                 event -> {
+                    if(contextMenu != null && contextMenu.isShowing()) {
+                        contextMenu.hide();
+                    }
                     if(event.getButton().equals(MouseButton.SECONDARY)) {
                         this.handleConfigurationRightClick((int) event.getX(), (int) event.getY());
                     }
@@ -120,86 +130,68 @@ public class ConfigurationTab extends ConfiguratorTab {
 
         // draw function into FU
         PE.FUFunction fuFunction = model.getCrc().getStaticConfiguration(number).getPE(row, column).getFUFunction();
+        FuFunctionStringMap fuFunctionStringMap = new FuFunctionStringMap();
 
+        String fuFunctionString = fuFunctionStringMap.getString(fuFunction);
 
-        String fuFunctionString;
         double fuFunctionStringOffset = 0;
 
         switch (fuFunction) {
             case add:
-                fuFunctionString = "+";
                 fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
                 break;
             case sub:
-                fuFunctionString = "−";
                 fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
                 break;
             case mul:
-                fuFunctionString = "×";
                 fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
                 break;
             case div:
-                fuFunctionString = "÷";
                 fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
                 break;
             case and:
-                fuFunctionString = "AND";
                 fuFunctionStringOffset = 1.3*peDrawSizeTwentieth;
                 break;
             case or:
-                fuFunctionString = "OR";
                 fuFunctionStringOffset = 2*peDrawSizeTwentieth;
                 break;
             case xor:
-                fuFunctionString = "XOR";
                 fuFunctionStringOffset = 1.2*peDrawSizeTwentieth;
                 break;
             case not:
-                fuFunctionString = "NOT";
                 fuFunctionStringOffset = 1.2*peDrawSizeTwentieth;
                 break;
             case shift_left:
-                fuFunctionString = "<<";
                 fuFunctionStringOffset = 2*peDrawSizeTwentieth;
                 break;
             case shift_right:
-                fuFunctionString = ">>";
                 fuFunctionStringOffset = 2*peDrawSizeTwentieth;
                 break;
             case compare_eq:
-                fuFunctionString = "==";
                 fuFunctionStringOffset = 2*peDrawSizeTwentieth;
                 break;
             case compare_neq:
-                fuFunctionString = "!=";
                 fuFunctionStringOffset = 2*peDrawSizeTwentieth;
                 break;
             case compare_lt:
-                fuFunctionString = "<";
                 fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
                 break;
             case compare_gt:
-                fuFunctionString = ">";
                 fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
                 break;
             case compare_leq:
-                fuFunctionString = "<=";
-                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
+                fuFunctionStringOffset = 2*peDrawSizeTwentieth;
                 break;
             case compare_geq:
-                fuFunctionString = ">=";
                 fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
                 break;
             case mux_0:
-                fuFunctionString = "MUX 0";
                 fuFunctionStringOffset = 0.5*peDrawSizeTwentieth;
                 break;
             case mux_1:
-                fuFunctionString = "MUX 1";
                 fuFunctionStringOffset = 0.5*peDrawSizeTwentieth;
                 break;
             default:
-                fuFunctionString = "NOP";
                 fuFunctionStringOffset = 1.2*peDrawSizeTwentieth;
                 break;
         }
@@ -526,15 +518,7 @@ public class ConfigurationTab extends ConfiguratorTab {
                 break;
         }
 
-        if(
-                dataFlagInFu0Driver == PE.DataFlagInFuDriver.NONE &&
-                dataFlagInFu1Driver == PE.DataFlagInFuDriver.NONE &&
-                dataFlagOutN0Driver == PE.DataFlagOutDriver.NONE &&
-                dataFlagOutN1Driver == PE.DataFlagOutDriver.NONE &&
-                dataFlagOutE0Driver == PE.DataFlagOutDriver.NONE &&
-                dataFlagOutE1Driver == PE.DataFlagOutDriver. NONE &&
-                dataFlagOutS0Driver == PE.DataFlagOutDriver.NONE &&
-                dataFlagOutS1Driver == PE.DataFlagOutDriver.NONE) {
+        if(!model.getCrc().getStaticConfiguration(number).getPE(row, column).isActive()) {
             this.drawInternalConnectionInactive(x, y);
         }
     }
@@ -2174,6 +2158,30 @@ public class ConfigurationTab extends ConfiguratorTab {
             int yNormalized = y - yOffset;
 
             // check if a pad and which pad was clicked
+
+            // FU Function
+             if(
+                    xNormalized >= 7.5*peDrawSizeTwentieth &&
+                    xNormalized <= 12.5*peDrawSizeTwentieth &&
+                    yNormalized >= 6.5*peDrawSizeTwentieth &&
+                    yNormalized <= 8.5*peDrawSizeTwentieth) {
+                 Point p = MouseInfo.getPointerInfo().getLocation();
+
+                 FuFunctionContextMenu fuFunctionContextMenu = new FuFunctionContextMenu(model.getCrc().getFu(row, column), model.getCrc().getStaticConfiguration(number).getPE(row, column));
+                 contextMenu = fuFunctionContextMenu;
+                 fuFunctionContextMenu.show(this.getContent(), p.x, p.y);
+
+                 int finalRow = row;
+                 int finalColumn = column;
+
+                 fuFunctionContextMenu.setOnHiding(event -> {
+                     if(fuFunctionContextMenu.getSelectedFuFunction() != PE.FUFunction.none) {
+                        controller.setPeFunctionStatic(number, finalRow, finalColumn, fuFunctionContextMenu.getSelectedFuFunction());
+                     }
+                 });
+            }
+
+
             // in FU0
             if(
                     xNormalized >= 7*peDrawSizeTwentieth-12-4 &&
@@ -2197,7 +2205,8 @@ public class ConfigurationTab extends ConfiguratorTab {
                     xNormalized >= 3*peDrawSizeTwentieth-6-4 &&
                     xNormalized <= 3*peDrawSizeTwentieth+6+4 &&
                     yNormalized >= 1-4 &&
-                    yNormalized <= 13+4) {
+                    yNormalized <= 13+4 &&
+                    row != 0) {
                 System.out.println("N0");
             }
 
@@ -2206,7 +2215,8 @@ public class ConfigurationTab extends ConfiguratorTab {
                     xNormalized >= 7*peDrawSizeTwentieth-6-4 &&
                     xNormalized <= 7*peDrawSizeTwentieth+6+4 &&
                     yNormalized >= 1-4 &&
-                    yNormalized <= 13+4) {
+                    yNormalized <= 13+4 &&
+                    row != 0) {
                 System.out.println("N1");
             }
 
@@ -2233,7 +2243,8 @@ public class ConfigurationTab extends ConfiguratorTab {
                     xNormalized >= 13*peDrawSizeTwentieth-6-4 &&
                     xNormalized <= 13*peDrawSizeTwentieth+6+4 &&
                     yNormalized >= PE_DRAW_SIZE-13-4 &&
-                    yNormalized <= PE_DRAW_SIZE-1+4) {
+                    yNormalized <= PE_DRAW_SIZE-1+4 &&
+                    row != model.getCrc().getRows()-1) {
                 System.out.println("S0");
             }
 
@@ -2242,7 +2253,8 @@ public class ConfigurationTab extends ConfiguratorTab {
                     xNormalized >= 17*peDrawSizeTwentieth-6-4 &&
                     xNormalized <= 17*peDrawSizeTwentieth+6+4 &&
                     yNormalized >= PE_DRAW_SIZE-13-4 &&
-                    yNormalized <= PE_DRAW_SIZE-1+4) {
+                    yNormalized <= PE_DRAW_SIZE-1+4 &&
+                    row != model.getCrc().getRows()-1) {
                 System.out.println("S1");
             }
         }

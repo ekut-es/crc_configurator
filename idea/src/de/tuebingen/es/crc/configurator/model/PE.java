@@ -43,6 +43,7 @@ public class PE {
     public void setDataFlagOutN0(DataFlagOutDriver dataFlagOutN0) {
         this.dataFlagOutN0 = dataFlagOutN0;
         this.checkSetActive();
+        configuration.notifyAllObservers();
     }
 
     public DataFlagOutDriver getDataFlagOutN1() {
@@ -52,6 +53,7 @@ public class PE {
     public void setDataFlagOutN1(DataFlagOutDriver dataFlagOutN1) {
         this.dataFlagOutN1 = dataFlagOutN1;
         this.checkSetActive();
+        configuration.notifyAllObservers();
     }
 
     public DataFlagOutDriver getDataFlagOutE0() {
@@ -61,6 +63,7 @@ public class PE {
     public void setDataFlagOutE0(DataFlagOutDriver dataFlagOutE0) {
         this.dataFlagOutE0 = dataFlagOutE0;
         this.checkSetActive();
+        configuration.notifyAllObservers();
     }
 
     public DataFlagOutDriver getDataFlagOutE1() {
@@ -70,6 +73,7 @@ public class PE {
     public void setDataFlagOutE1(DataFlagOutDriver dataFlagOutE1) {
         this.dataFlagOutE1 = dataFlagOutE1;
         this.checkSetActive();
+        configuration.notifyAllObservers();
     }
 
     public DataFlagOutDriver getDataFlagOutS0() {
@@ -79,6 +83,7 @@ public class PE {
     public void setDataFlagOutS0(DataFlagOutDriver dataFlagOutS0) {
         this.dataFlagOutS0 = dataFlagOutS0;
         this.checkSetActive();
+        configuration.notifyAllObservers();
     }
 
     public DataFlagOutDriver getDataFlagOutS1() {
@@ -88,6 +93,7 @@ public class PE {
     public void setDataFlagOutS1(DataFlagOutDriver dataFlagOutS1) {
         this.dataFlagOutS1 = dataFlagOutS1;
         this.checkSetActive();
+        configuration.notifyAllObservers();
     }
 
     public DataFlagInFuDriver getDataFlagInFU0() {
@@ -97,6 +103,7 @@ public class PE {
     public void setDataFlagInFU0(DataFlagInFuDriver dataFlagInFU0) {
         this.dataFlagInFU0 = dataFlagInFU0;
         this.checkSetActive();
+        configuration.notifyAllObservers();
     }
 
     public DataFlagInFuDriver getDataFlagInFU1() {
@@ -106,6 +113,7 @@ public class PE {
     public void setDataFlagInFU1(DataFlagInFuDriver dataFlagInFU1) {
         this.dataFlagInFU1 = dataFlagInFU1;
         this.checkSetActive();
+        configuration.notifyAllObservers();
     }
 
     public DataFlagInFuDriver getMuxFlagInFU() {
@@ -115,6 +123,7 @@ public class PE {
     public void setMuxFlagInFU(DataFlagInFuDriver muxFlagInFU) {
         this.muxFlagInFU = muxFlagInFU;
         this.checkSetActive();
+        configuration.notifyAllObservers();
     }
 
     public FUFunction getFUFunction() {
@@ -123,6 +132,7 @@ public class PE {
 
     public void setFUFunction(FUFunction fuFunction) {
         this.fuFunction = fuFunction;
+        configuration.notifyAllObservers();
     }
 
     public PE(Configuration configuration) {
