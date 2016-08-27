@@ -391,6 +391,16 @@ public class Controller {
         model.setSaved(false);
         this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setDataFlagInFU0(dataFlagInFuDriver);
     }
+
+    public void setPeDataFlagInFu1Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagInFuDriver dataFlagInFuDriver) {
+        model.setSaved(false);
+        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setDataFlagInFU1(dataFlagInFuDriver);
+    }
+
+    public void setPeFlagInFuMuxDriver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagInFuDriver dataFlagInFuDriver) {
+        model.setSaved(false);
+        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setFlagInFUMux(dataFlagInFuDriver);
+    }
 }
 
 

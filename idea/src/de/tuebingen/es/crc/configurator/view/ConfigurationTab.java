@@ -2462,7 +2462,10 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 dataFlagInFuDriverContextMenu.show(this.getContent(), p.x, p.y);
 
                 dataFlagInFuDriverContextMenu.setOnHiding(event -> {
-                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() != PE.DataFlagInFuDriver.none) {
+                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfiguration().getPE(finalRow, finalColumn).getDataFlagInFU0()) {
+                        controller.setPeDataFlagInFu0Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagInFuDriver.none);
+                    }
+                    else if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() != PE.DataFlagInFuDriver.none) {
                         controller.setPeDataFlagInFu0Driver(configurationTabType, number, finalRow, finalColumn, dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver());
                     }
                 });
@@ -2475,7 +2478,19 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     xNormalized <= 7*peDrawSizeTwentieth+4 &&
                     yNormalized >= 13*peDrawSizeTwentieth-4 &&
                     yNormalized <= 13*peDrawSizeTwentieth+12+4) {
-                System.out.println("FU1");
+
+                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfiguration().getPE(row, column).getDataFlagInFU1(), model.getCrc().getRows(), row);
+                contextMenu = dataFlagInFuDriverContextMenu;
+                dataFlagInFuDriverContextMenu.show(this.getContent(), p.x, p.y);
+
+                dataFlagInFuDriverContextMenu.setOnHiding(event -> {
+                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfiguration().getPE(finalRow, finalColumn).getDataFlagInFU1()) {
+                        controller.setPeDataFlagInFu1Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagInFuDriver.none);
+                    }
+                    else if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() != PE.DataFlagInFuDriver.none) {
+                        controller.setPeDataFlagInFu1Driver(configurationTabType, number, finalRow, finalColumn, dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver());
+                    }
+                });
             }
 
             // in FUMux
@@ -2484,7 +2499,19 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     xNormalized <= 10*peDrawSizeTwentieth+6+4 &&
                     yNormalized >= 15*peDrawSizeTwentieth &&
                     yNormalized <= 14.5*peDrawSizeTwentieth+12+4) {
-                System.out.println("FUMux");
+
+                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfiguration().getPE(row, column).getFlagInFUMux(), model.getCrc().getRows(), row);
+                contextMenu = dataFlagInFuDriverContextMenu;
+                dataFlagInFuDriverContextMenu.show(this.getContent(), p.x, p.y);
+
+                dataFlagInFuDriverContextMenu.setOnHiding(event -> {
+                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfiguration().getPE(finalRow, finalColumn).getFlagInFUMux()) {
+                        controller.setPeFlagInFuMuxDriver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagInFuDriver.none);
+                    }
+                    else if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() != PE.DataFlagInFuDriver.none) {
+                        controller.setPeFlagInFuMuxDriver(configurationTabType, number, finalRow, finalColumn, dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver());
+                    }
+                });
             }
 
 
