@@ -8,11 +8,11 @@ public class PE {
     private Configuration configuration;
 
     public enum DataFlagOutDriver {
-        NONE, DATA_FLAG_IN_N0, DATA_FLAG_IN_N1, DATA_FLAG_IN_S0, DATA_FLAG_IN_S1, DATA_FLAG_IN_W0, DATA_FLAG_IN_W1, DATA_FLAG_OUT_FU
+        none, data_flag_in_N_0, data_flag_in_N_1, data_flag_in_S_0, data_flag_in_S_1, data_flag_in_W_0, data_flag_in_W_1, data_flag_out_FU
     }
 
     public enum DataFlagInFuDriver {
-        NONE, DATA_FLAG_IN_N0, DATA_FLAG_IN_N1, DATA_FLAG_IN_S0, DATA_FLAG_IN_S1, DATA_FLAG_IN_W0, DATA_FLAG_IN_W1
+        none, data_flag_in_N_0, data_flag_in_N_1, data_flag_in_S_0, data_flag_in_S_1, data_flag_in_W_0, data_flag_in_W_1
     }
 
     public enum FUFunction {
@@ -29,7 +29,7 @@ public class PE {
     private DataFlagOutDriver dataFlagOutS1;
     private DataFlagInFuDriver dataFlagInFU0;
     private DataFlagInFuDriver dataFlagInFU1;
-    private DataFlagInFuDriver muxFlagInFU;
+    private DataFlagInFuDriver flagInFUMux;
     private FUFunction fuFunction;
 
     public boolean isActive() {
@@ -116,12 +116,12 @@ public class PE {
         configuration.notifyAllObservers();
     }
 
-    public DataFlagInFuDriver getMuxFlagInFU() {
-        return muxFlagInFU;
+    public DataFlagInFuDriver getFlagInFUMux() {
+        return flagInFUMux;
     }
 
-    public void setMuxFlagInFU(DataFlagInFuDriver muxFlagInFU) {
-        this.muxFlagInFU = muxFlagInFU;
+    public void setFlagInFUMux(DataFlagInFuDriver flagInFUMux) {
+        this.flagInFUMux = flagInFUMux;
         this.checkSetActive();
         configuration.notifyAllObservers();
     }
@@ -138,19 +138,19 @@ public class PE {
     public PE(Configuration configuration) {
         this.configuration = configuration;
         active = false;
-        dataFlagOutN0 = DataFlagOutDriver.NONE;
-        dataFlagOutN1 = DataFlagOutDriver.NONE;
-        dataFlagOutE0 = DataFlagOutDriver.NONE;
-        dataFlagOutE1 = DataFlagOutDriver.NONE;
-        dataFlagOutS0 = DataFlagOutDriver.NONE;
-        dataFlagOutS1 = DataFlagOutDriver.NONE;
-        dataFlagInFU0 = DataFlagInFuDriver.NONE;
-        dataFlagInFU1 = DataFlagInFuDriver.NONE;
-        muxFlagInFU = DataFlagInFuDriver.NONE;
+        dataFlagOutN0 = DataFlagOutDriver.none;
+        dataFlagOutN1 = DataFlagOutDriver.none;
+        dataFlagOutE0 = DataFlagOutDriver.none;
+        dataFlagOutE1 = DataFlagOutDriver.none;
+        dataFlagOutS0 = DataFlagOutDriver.none;
+        dataFlagOutS1 = DataFlagOutDriver.none;
+        dataFlagInFU0 = DataFlagInFuDriver.none;
+        dataFlagInFU1 = DataFlagInFuDriver.none;
+        flagInFUMux = DataFlagInFuDriver.none;
         fuFunction = FUFunction.none;
     }
 
-    public PE(Configuration configuration, DataFlagOutDriver dataFlagOutN0, DataFlagOutDriver dataFlagOutN1, DataFlagOutDriver dataFlagOutE0, DataFlagOutDriver dataFlagOutE1, DataFlagOutDriver dataFlagOutS0, DataFlagOutDriver dataFlagOutS1, DataFlagInFuDriver dataFlagInFU0, DataFlagInFuDriver dataFlagInFU1, DataFlagInFuDriver muxFlagInFU, FUFunction fuFunction) {
+    public PE(Configuration configuration, DataFlagOutDriver dataFlagOutN0, DataFlagOutDriver dataFlagOutN1, DataFlagOutDriver dataFlagOutE0, DataFlagOutDriver dataFlagOutE1, DataFlagOutDriver dataFlagOutS0, DataFlagOutDriver dataFlagOutS1, DataFlagInFuDriver dataFlagInFU0, DataFlagInFuDriver dataFlagInFU1, DataFlagInFuDriver flagInFUMux, FUFunction fuFunction) {
         this.configuration = configuration;
         this.dataFlagOutN0 = dataFlagOutN0;
         this.dataFlagOutN1 = dataFlagOutN1;
@@ -160,7 +160,7 @@ public class PE {
         this.dataFlagOutS1 = dataFlagOutS1;
         this.dataFlagInFU0 = dataFlagInFU0;
         this.dataFlagInFU1 = dataFlagInFU1;
-        this.muxFlagInFU = muxFlagInFU;
+        this.flagInFUMux = flagInFUMux;
         this.fuFunction = fuFunction;
 
         this.checkSetActive();
@@ -168,7 +168,16 @@ public class PE {
     }
 
     private void checkSetActive()  {
-        if(dataFlagOutN0 == DataFlagOutDriver.NONE && dataFlagOutN1 == DataFlagOutDriver.NONE && dataFlagOutE0 == DataFlagOutDriver.NONE && dataFlagOutE1 == DataFlagOutDriver.NONE && dataFlagOutS0 == DataFlagOutDriver.NONE && dataFlagOutS1 == DataFlagOutDriver.NONE && dataFlagInFU0 == DataFlagInFuDriver.NONE && dataFlagInFU1 == DataFlagInFuDriver.NONE && muxFlagInFU == DataFlagInFuDriver.NONE) {
+        if(
+                dataFlagOutN0 == DataFlagOutDriver.none &&
+                        dataFlagOutN1 == DataFlagOutDriver.none &&
+                        dataFlagOutE0 == DataFlagOutDriver.none &&
+                        dataFlagOutE1 == DataFlagOutDriver.none &&
+                        dataFlagOutS0 == DataFlagOutDriver.none &&
+                        dataFlagOutS1 == DataFlagOutDriver.none &&
+                        dataFlagInFU0 == DataFlagInFuDriver.none &&
+                        dataFlagInFU1 == DataFlagInFuDriver.none &&
+                        flagInFUMux == DataFlagInFuDriver.none) {
             active = false;
         } else {
             active = true;

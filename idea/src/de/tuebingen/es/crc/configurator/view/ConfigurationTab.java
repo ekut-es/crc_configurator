@@ -1,25 +1,20 @@
 package de.tuebingen.es.crc.configurator.view;
 
 import de.tuebingen.es.crc.configurator.Controller;
+import de.tuebingen.es.crc.configurator.model.Configuration;
 import de.tuebingen.es.crc.configurator.model.Model;
 import de.tuebingen.es.crc.configurator.model.PE;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
 import java.awt.*;
-import java.awt.event.PaintEvent;
-import java.util.Map;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 26/07/16.
@@ -93,6 +88,14 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         gc = canvas.getGraphicsContext2D();
     }
 
+    private Configuration getConfiguration() {
+        if(configurationTabType == ConfigurationTabType.STATIC) {
+            return model.getCrc().getStaticConfiguration(number);
+        } else {
+            return model.getCrc().getDynamicConfiguration(number);
+        }
+    }
+
     private void drawConfigurationCrc() {
 
         gc.clearRect(0,0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
@@ -129,7 +132,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawFU(gc, x, y);
 
         // draw function into FU
-        PE.FUFunction fuFunction = model.getCrc().getStaticConfiguration(number).getPE(row, column).getFUFunction();
+        PE.FUFunction fuFunction = this.getConfiguration().getPE(row, column).getFUFunction();
         FuFunctionStringMap fuFunctionStringMap = new FuFunctionStringMap();
 
         String fuFunctionString = fuFunctionStringMap.getString(fuFunction);
@@ -238,6 +241,22 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 4
         );
 
+        gc.fillPolygon(
+                new double[] {
+                        10*peDrawSizeTwentieth+x-6,
+                        10*peDrawSizeTwentieth+x+6,
+                        10*peDrawSizeTwentieth+x+6,
+                        10*peDrawSizeTwentieth+x-6
+                },
+                new double[] {
+                        15*peDrawSizeTwentieth+y+4-1,
+                        15*peDrawSizeTwentieth+y-1,
+                        14.5*peDrawSizeTwentieth+y+12,
+                        14.5*peDrawSizeTwentieth+y+12
+                },
+                4
+        );
+
         gc.setFill(Color.BLACK);
 
 
@@ -331,194 +350,280 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
         }
 
+        /*
+        this.drawInternalConnectionFUtoN0(x, y);
+        this.drawInternalConnectionFUtoN1(x, y);
+        this.drawInternalConnectionFUtoE0(x, y);
+        this.drawInternalConnectionFUtoE1(x, y);
+        this.drawInternalConnectionFUtoS0(x, y);
+        this.drawInternalConnectionFUtoS1(x, y);
+
+        this.drawInternalConnectionN0toInFU0(x, y);
+        this.drawInternalConnectionN0toInFU1(x, y);
+        this.drawInternalConnectionN0toInFUMux(x, y);
+        this.drawInternalConnectionN0toE0(x, y);
+        this.drawInternalConnectionN0toE1(x, y);
+        this.drawInternalConnectionN0toS0(x, y);
+        this.drawInternalConnectionN0toS1(x, y);
+
+        this.drawInternalConnectionN1toInFU0(x, y);
+        this.drawInternalConnectionN1toInFU1(x, y);
+        this.drawInternalConnectionN1toInFUMux(x, y);
+        this.drawInternalConnectionN1toE0(x, y);
+        this.drawInternalConnectionN1toE1(x, y);
+        this.drawInternalConnectionN1toS0(x, y);
+        this.drawInternalConnectionN1toS1(x, y);
+
+        this.drawInternalConnectionS0toInFU0(x, y);
+        this.drawInternalConnectionS0toInFU1(x, y);
+        this.drawInternalConnectionS0toInFUMux(x, y);
+        this.drawInternalConnectionS0toN0(x, y);
+        this.drawInternalConnectionS0toN1(x, y);
+        this.drawInternalConnectionS0toE0(x, y);
+        this.drawInternalConnectionS0toE1(x, y);
+
+        this.drawInternalConnectionS1toInFU0(x, y);
+        this.drawInternalConnectionS1toInFU1(x, y);
+        this.drawInternalConnectionS1toInFUMux(x, y);
+        this.drawInternalConnectionS1toN0(x, y);
+        this.drawInternalConnectionS1toN1(x, y);
+        this.drawInternalConnectionS1toE0(x, y);
+        this.drawInternalConnectionS1toE1(x, y);
+
+        this.drawInternalConnectionW0toInFU0(x, y);
+        this.drawInternalConnectionW0toInFU1(x, y);
+        this.drawInternalConnectionW0toInFUMux(x, y);
+        this.drawInternalConnectionW0toN0(x, y);
+        this.drawInternalConnectionW0toN1(x, y);
+        this.drawInternalConnectionW0toE0(x, y);
+        this.drawInternalConnectionW0toE1(x, y);
+        this.drawInternalConnectionW0toS0(x, y);
+        this.drawInternalConnectionW0toS1(x, y);
+
+        this.drawInternalConnectionW1toInFU0(x, y);
+        this.drawInternalConnectionW1toInFU1(x, y);
+        this.drawInternalConnectionW1toInFUMux(x, y);
+        this.drawInternalConnectionW1toN0(x, y);
+        this.drawInternalConnectionW1toN1(x, y);
+        this.drawInternalConnectionW1toE0(x, y);
+        this.drawInternalConnectionW1toE1(x, y);
+        this.drawInternalConnectionW1toS1(x, y);
+        this.drawInternalConnectionW1toS1(x, y);
+        */
+
         // internal connection
         // * -> FU0
-        PE.DataFlagInFuDriver dataFlagInFu0Driver = model.getCrc().getStaticConfiguration(number).getPE(row, column).getDataFlagInFU0();
+        PE.DataFlagInFuDriver dataFlagInFu0Driver = this.getConfiguration().getPE(row, column).getDataFlagInFU0();
 
         switch (dataFlagInFu0Driver) {
-            case DATA_FLAG_IN_N0:
+            case data_flag_in_N_0:
                 this.drawInternalConnectionN0toInFU0(x, y);
                 break;
-            case DATA_FLAG_IN_N1:
+            case data_flag_in_N_1:
                 this.drawInternalConnectionN1toInFU0(x, y);
                 break;
-            case DATA_FLAG_IN_S0:
+            case data_flag_in_S_0:
                 this.drawInternalConnectionS0toInFU0(x, y);
                 break;
-            case DATA_FLAG_IN_S1:
+            case data_flag_in_S_1:
                 this.drawInternalConnectionS1toInFU0(x, y);
                 break;
-            case DATA_FLAG_IN_W0:
+            case data_flag_in_W_0:
                 this.drawInternalConnectionW0toInFU0(x, y);
                 break;
-            case DATA_FLAG_IN_W1:
+            case data_flag_in_W_1:
                 this.drawInternalConnectionW1toInFU0(x, y);
                 break;
         }
 
         // * -> FU1
-        PE.DataFlagInFuDriver dataFlagInFu1Driver = model.getCrc().getStaticConfiguration(number).getPE(row, column).getDataFlagInFU1();
+        PE.DataFlagInFuDriver dataFlagInFu1Driver = this.getConfiguration().getPE(row, column).getDataFlagInFU1();
 
         switch (dataFlagInFu1Driver) {
-            case DATA_FLAG_IN_N0:
+            case data_flag_in_N_0:
                 this.drawInternalConnectionN0toInFU1(x, y);
                 break;
-            case DATA_FLAG_IN_N1:
+            case data_flag_in_N_1:
                 this.drawInternalConnectionN1toInFU1(x, y);
                 break;
-            case DATA_FLAG_IN_S0:
+            case data_flag_in_S_0:
                 this.drawInternalConnectionS0toInFU1(x, y);
                 break;
-            case DATA_FLAG_IN_S1:
+            case data_flag_in_S_1:
                 this.drawInternalConnectionS1toInFU1(x, y);
                 break;
-            case DATA_FLAG_IN_W0:
+            case data_flag_in_W_0:
                 this.drawInternalConnectionW0toInFU1(x, y);
                 break;
-            case DATA_FLAG_IN_W1:
+            case data_flag_in_W_1:
                 this.drawInternalConnectionW1toInFU1(x, y);
                 break;
         }
 
+        // * -> FUMux
+        PE.DataFlagInFuDriver flagInFuMuxDriver = this.getConfiguration().getPE(row, column).getFlagInFUMux();
+
+        switch (flagInFuMuxDriver) {
+            case data_flag_in_N_0:
+                this.drawInternalConnectionN0toInFUMux(x, y);
+                break;
+            case data_flag_in_N_1:
+                this.drawInternalConnectionN1toInFUMux(x, y);
+                break;
+            case data_flag_in_S_0:
+                this.drawInternalConnectionS0toInFUMux(x, y);
+                break;
+            case data_flag_in_S_1:
+                this.drawInternalConnectionS1toInFUMux(x, y);
+                break;
+            case data_flag_in_W_0:
+                this.drawInternalConnectionW0toInFUMux(x, y);
+                break;
+            case data_flag_in_W_1:
+                this.drawInternalConnectionW1toInFUMux(x, y);
+                break;
+        }
+
         // * -> N0
-        PE.DataFlagOutDriver dataFlagOutN0Driver = model.getCrc().getStaticConfiguration(number).getPE(row, column).getDataFlagOutN0();
+        PE.DataFlagOutDriver dataFlagOutN0Driver = this.getConfiguration().getPE(row, column).getDataFlagOutN0();
 
         switch (dataFlagOutN0Driver) {
-            case DATA_FLAG_OUT_FU:
+            case data_flag_out_FU:
                 this.drawInternalConnectionFUtoN0(x, y);
                 break;
-            case DATA_FLAG_IN_S0:
+            case data_flag_in_S_0:
                 this.drawInternalConnectionS0toN0(x, y);
                 break;
-            case DATA_FLAG_IN_S1:
+            case data_flag_in_S_1:
                 this.drawInternalConnectionS1toN0(x, y);
                 break;
-            case DATA_FLAG_IN_W0:
+            case data_flag_in_W_0:
                 this.drawInternalConnectionW0toN0(x, y);
                 break;
-            case DATA_FLAG_IN_W1:
+            case data_flag_in_W_1:
                 this.drawInternalConnectionW1toN0(x, y);
                 break;
         }
 
         // * -> N1
-        PE.DataFlagOutDriver dataFlagOutN1Driver = model.getCrc().getStaticConfiguration(number).getPE(row, column).getDataFlagOutN1();
+        PE.DataFlagOutDriver dataFlagOutN1Driver = this.getConfiguration().getPE(row, column).getDataFlagOutN1();
 
         switch (dataFlagOutN1Driver) {
-            case DATA_FLAG_OUT_FU:
+            case data_flag_out_FU:
                 this.drawInternalConnectionFUtoN1(x, y);
                 break;
-            case DATA_FLAG_IN_S0:
+            case data_flag_in_S_0:
                 this.drawInternalConnectionS0toN1(x, y);
                 break;
-            case DATA_FLAG_IN_S1:
+            case data_flag_in_S_1:
                 this.drawInternalConnectionS1toN1(x, y);
                 break;
-            case DATA_FLAG_IN_W0:
+            case data_flag_in_W_0:
                 this.drawInternalConnectionW0toN1(x, y);
                 break;
-            case DATA_FLAG_IN_W1:
+            case data_flag_in_W_1:
                 this.drawInternalConnectionW1toN1(x, y);
                 break;
         }
 
         // * -> E0
-        PE.DataFlagOutDriver dataFlagOutE0Driver = model.getCrc().getStaticConfiguration(number).getPE(row, column).getDataFlagOutE0();
+        PE.DataFlagOutDriver dataFlagOutE0Driver = this.getConfiguration().getPE(row, column).getDataFlagOutE0();
 
         switch (dataFlagOutE0Driver) {
-            case DATA_FLAG_OUT_FU:
+            case data_flag_out_FU:
                 this.drawInternalConnectionFUtoE0(x, y);
                 break;
-            case DATA_FLAG_IN_N0:
+            case data_flag_in_N_0:
                 this.drawInternalConnectionN0toE0(x, y);
                 break;
-            case DATA_FLAG_IN_N1:
+            case data_flag_in_N_1:
                 this.drawInternalConnectionN1toE0(x, y);
                 break;
-            case DATA_FLAG_IN_S0:
+            case data_flag_in_S_0:
                 this.drawInternalConnectionS0toN0(x, y);
                 break;
-            case DATA_FLAG_IN_S1:
+            case data_flag_in_S_1:
                 this.drawInternalConnectionS1toE0(x, y);
                 break;
-            case DATA_FLAG_IN_W0:
+            case data_flag_in_W_0:
                 this.drawInternalConnectionW0toE0(x, y);
                 break;
-            case DATA_FLAG_IN_W1:
+            case data_flag_in_W_1:
                 this.drawInternalConnectionW1toE0(x, y);
                 break;
         }
 
         // * -> E1
-        PE.DataFlagOutDriver dataFlagOutE1Driver = model.getCrc().getStaticConfiguration(number).getPE(row, column).getDataFlagOutE1();
+        PE.DataFlagOutDriver dataFlagOutE1Driver = this.getConfiguration().getPE(row, column).getDataFlagOutE1();
 
         switch (dataFlagOutE1Driver) {
-            case DATA_FLAG_OUT_FU:
+            case data_flag_out_FU:
                 this.drawInternalConnectionFUtoE1(x, y);
                 break;
-            case DATA_FLAG_IN_N0:
+            case data_flag_in_N_0:
                 this.drawInternalConnectionN0toE1(x, y);
                 break;
-            case DATA_FLAG_IN_N1:
+            case data_flag_in_N_1:
                 this.drawInternalConnectionN1toE1(x, y);
                 break;
-            case DATA_FLAG_IN_S0:
+            case data_flag_in_S_0:
                 this.drawInternalConnectionS0toN1(x, y);
                 break;
-            case DATA_FLAG_IN_S1:
+            case data_flag_in_S_1:
                 this.drawInternalConnectionS1toE1(x, y);
                 break;
-            case DATA_FLAG_IN_W0:
+            case data_flag_in_W_0:
                 this.drawInternalConnectionW0toE1(x, y);
                 break;
-            case DATA_FLAG_IN_W1:
+            case data_flag_in_W_1:
                 this.drawInternalConnectionW1toE1(x, y);
                 break;
         }
 
         // * -> S0
-        PE.DataFlagOutDriver dataFlagOutS0Driver = model.getCrc().getStaticConfiguration(number).getPE(row, column).getDataFlagOutS0();
+        PE.DataFlagOutDriver dataFlagOutS0Driver = this.getConfiguration().getPE(row, column).getDataFlagOutS0();
 
         switch (dataFlagOutS0Driver) {
-            case DATA_FLAG_OUT_FU:
+            case data_flag_out_FU:
                 this.drawInternalConnectionFUtoS0(x, y);
                 break;
-            case DATA_FLAG_IN_N0:
+            case data_flag_in_N_0:
                 this.drawInternalConnectionN0toS0(x, y);
                 break;
-            case DATA_FLAG_IN_N1:
+            case data_flag_in_N_1:
                 this.drawInternalConnectionN1toS0(x, y);
                 break;
-            case DATA_FLAG_IN_W0:
+            case data_flag_in_W_0:
                 this.drawInternalConnectionW0toS0(x, y);
                 break;
-            case DATA_FLAG_IN_W1:
+            case data_flag_in_W_1:
                 this.drawInternalConnectionW1toS1(x, y);
                 break;
         }
 
         // * -> S1
-        PE.DataFlagOutDriver dataFlagOutS1Driver = model.getCrc().getStaticConfiguration(number).getPE(row, column).getDataFlagOutS1();
+        PE.DataFlagOutDriver dataFlagOutS1Driver = this.getConfiguration().getPE(row, column).getDataFlagOutS1();
 
         switch (dataFlagOutS1Driver) {
-            case DATA_FLAG_OUT_FU:
+            case data_flag_out_FU:
                 this.drawInternalConnectionFUtoS1(x, y);
                 break;
-            case DATA_FLAG_IN_N0:
+            case data_flag_in_N_0:
                 this.drawInternalConnectionN0toS1(x, y);
                 break;
-            case DATA_FLAG_IN_N1:
+            case data_flag_in_N_1:
                 this.drawInternalConnectionN1toS1(x, y);
                 break;
-            case DATA_FLAG_IN_W0:
+            case data_flag_in_W_0:
                 this.drawInternalConnectionW0toS1(x, y);
                 break;
-            case DATA_FLAG_IN_W1:
+            case data_flag_in_W_1:
                 this.drawInternalConnectionW1toS1(x, y);
                 break;
         }
 
-        if(!model.getCrc().getStaticConfiguration(number).getPE(row, column).isActive()) {
+
+        if(!this.getConfiguration().getPE(row, column).isActive()) {
             this.drawInternalConnectionInactive(x, y);
         }
     }
@@ -1008,6 +1113,35 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFU1(x,y);
     }
 
+    private void drawInternalConnectionN0toInFUMux(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+14.5*peDrawSizeTwentieth,
+                        x+14.5*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth
+                },
+                new double[] {
+                        y,
+                        y+2*peDrawSizeTwentieth,
+                        y+2*peDrawSizeTwentieth,
+                        y+17.5*peDrawSizeTwentieth,
+                        y+17.5*peDrawSizeTwentieth,
+                        y+18*peDrawSizeTwentieth,
+                        y+18*peDrawSizeTwentieth,
+                        y+14.5*peDrawSizeTwentieth+12+1
+                },
+                8
+        );
+
+        this.drawArrowTipInFUMux(x,y);
+    }
+
     private void drawInternalConnectionN0toE0(double x, double y) {
 
         gc.strokePolyline(
@@ -1103,6 +1237,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
         this.drawArrowTipS1(x,y);
     }
+
     private void drawInternalConnectionN1toInFU0(double x, double y) {
 
         gc.strokePolyline(
@@ -1147,6 +1282,35 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         );
 
         this.drawArrowTipInFU1(x,y);
+    }
+
+   private void drawInternalConnectionN1toInFUMux(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+17*peDrawSizeTwentieth,
+                        x+17*peDrawSizeTwentieth,
+                        x+15*peDrawSizeTwentieth,
+                        x+15*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+13*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth
+                },
+                new double[] {
+                        y,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+2.5*peDrawSizeTwentieth,
+                        y+17*peDrawSizeTwentieth,
+                        y+17*peDrawSizeTwentieth,
+                        y+17.5*peDrawSizeTwentieth,
+                        y+17.5*peDrawSizeTwentieth,
+                        y+14.5*peDrawSizeTwentieth+12+1
+                },
+                8
+        );
+
+        this.drawArrowTipInFUMux(x,y);
     }
 
     private void drawInternalConnectionN1toE0(double x, double y) {
@@ -1291,6 +1455,27 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFU1(x,y);
     }
 
+    private void drawInternalConnectionS0toInFUMux(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x+3*peDrawSizeTwentieth,
+                        x+3*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth,
+                },
+                new double[]{
+                        y+PE_DRAW_SIZE,
+                        y+18.5*peDrawSizeTwentieth,
+                        y+18.5*peDrawSizeTwentieth,
+                        y+14.5*peDrawSizeTwentieth+12+1,
+                },
+                4
+        );
+
+        this.drawArrowTipInFUMux(x, y);
+    }
+
     private void drawInternalConnectionS0toE0(double x, double y) {
 
         gc.strokePolyline(
@@ -1427,6 +1612,27 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         );
 
         this.drawArrowTipInFU1(x,y);
+    }
+
+    private void drawInternalConnectionS1toInFUMux(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x+7*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth,
+                },
+                new double[]{
+                        y+PE_DRAW_SIZE,
+                        y+19*peDrawSizeTwentieth,
+                        y+19*peDrawSizeTwentieth,
+                        y+14.5*peDrawSizeTwentieth+12+1,
+                },
+                4
+        );
+
+        this.drawArrowTipInFUMux(x, y);
     }
 
     private void drawInternalConnectionS1toE0(double x, double y) {
@@ -1573,6 +1779,29 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         );
 
         this.drawArrowTipInFU1(x, y);
+    }
+
+    private void drawInternalConnectionW0toInFUMux(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x,
+                        x+2*peDrawSizeTwentieth,
+                        x+2*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth
+                },
+                new double[]{
+                        y+8*peDrawSizeTwentieth,
+                        y+8*peDrawSizeTwentieth,
+                        y+17*peDrawSizeTwentieth,
+                        y+17*peDrawSizeTwentieth,
+                        y+14.5*peDrawSizeTwentieth+12+1
+                },
+                5
+        );
+
+        this.drawArrowTipInFUMux(x, y);
     }
 
     private void drawInternalConnectionW0toN0(double x, double y) {
@@ -1769,6 +1998,29 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         );
 
         this.drawArrowTipInFU1(x, y);
+    }
+
+    private void drawInternalConnectionW1toInFUMux(double x, double y) {
+
+        gc.strokePolyline(
+                new double[]{
+                        x,
+                        x+2.5*peDrawSizeTwentieth,
+                        x+2.5*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth
+                },
+                new double[]{
+                        y+12*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth,
+                        y+16.5*peDrawSizeTwentieth,
+                        y+16.5*peDrawSizeTwentieth,
+                        y+14.5*peDrawSizeTwentieth+12+1
+                },
+                5
+        );
+
+        this.drawArrowTipInFUMux(x, y);
     }
 
     private void drawInternalConnectionW1toN0(double x, double y) {
@@ -2047,6 +2299,22 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         );
     }
 
+    private void drawArrowTipInFUMux(double x, double y) {
+        gc.fillPolygon(
+                new double[] {
+                        x+10*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth+4,
+                        x+10*peDrawSizeTwentieth-4
+                },
+                new double[] {
+                        y+14.5*peDrawSizeTwentieth+12,
+                        y+14.5*peDrawSizeTwentieth+12+4,
+                        y+14.5*peDrawSizeTwentieth+12+4
+                },
+                3
+        );
+    }
+
     private void drawInternalConnectionInactive(double x, double y) {
         gc.setStroke(Color.GRAY);
         gc.setLineWidth(4);
@@ -2157,6 +2425,10 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
             int xNormalized = x - xOffset;
             int yNormalized = y - yOffset;
 
+            Point p = MouseInfo.getPointerInfo().getLocation();
+            int finalRow = row;
+            int finalColumn = column;
+
             // check if a pad and which pad was clicked
 
             // FU Function
@@ -2165,18 +2437,14 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     xNormalized <= 12.5*peDrawSizeTwentieth &&
                     yNormalized >= 6.5*peDrawSizeTwentieth &&
                     yNormalized <= 8.5*peDrawSizeTwentieth) {
-                 Point p = MouseInfo.getPointerInfo().getLocation();
 
-                 FuFunctionContextMenu fuFunctionContextMenu = new FuFunctionContextMenu(model.getCrc().getFu(row, column), model.getCrc().getStaticConfiguration(number).getPE(row, column));
+                 FuFunctionContextMenu fuFunctionContextMenu = new FuFunctionContextMenu(model.getCrc().getFu(row, column), this.getConfiguration().getPE(row, column).getFUFunction());
                  contextMenu = fuFunctionContextMenu;
                  fuFunctionContextMenu.show(this.getContent(), p.x, p.y);
 
-                 int finalRow = row;
-                 int finalColumn = column;
-
                  fuFunctionContextMenu.setOnHiding(event -> {
                      if(fuFunctionContextMenu.getSelectedFuFunction() != PE.FUFunction.none) {
-                        controller.setPeFunctionStatic(number, finalRow, finalColumn, fuFunctionContextMenu.getSelectedFuFunction());
+                        controller.setPeFunction(configurationTabType, number, finalRow, finalColumn, fuFunctionContextMenu.getSelectedFuFunction());
                      }
                  });
             }
@@ -2188,7 +2456,17 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     xNormalized <= 7*peDrawSizeTwentieth+4 &&
                     yNormalized >= 6*peDrawSizeTwentieth-4 &&
                     yNormalized <= 6*peDrawSizeTwentieth+12+4) {
-                System.out.println("FU0");
+
+                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfiguration().getPE(row, column).getDataFlagInFU0(), model.getCrc().getRows(), row);
+                contextMenu = dataFlagInFuDriverContextMenu;
+                dataFlagInFuDriverContextMenu.show(this.getContent(), p.x, p.y);
+
+                dataFlagInFuDriverContextMenu.setOnHiding(event -> {
+                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() != PE.DataFlagInFuDriver.none) {
+                        controller.setPeDataFlagInFu0Driver(configurationTabType, number, finalRow, finalColumn, dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver());
+                    }
+                });
+
             }
 
             // in FU1
@@ -2199,6 +2477,16 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized <= 13*peDrawSizeTwentieth+12+4) {
                 System.out.println("FU1");
             }
+
+            // in FUMux
+            if(
+                    xNormalized >= 10*peDrawSizeTwentieth-6-4 &&
+                    xNormalized <= 10*peDrawSizeTwentieth+6+4 &&
+                    yNormalized >= 15*peDrawSizeTwentieth &&
+                    yNormalized <= 14.5*peDrawSizeTwentieth+12+4) {
+                System.out.println("FUMux");
+            }
+
 
             // in N0
             if(

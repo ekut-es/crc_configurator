@@ -3,7 +3,6 @@ package de.tuebingen.es.crc.configurator.model;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -145,7 +144,7 @@ public class CRC {
             pe.setDataFlagOutS1(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutS1").toString()));
             pe.setDataFlagInFU0(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFU0").toString()));
             pe.setDataFlagInFU1(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFU1").toString()));
-            pe.setMuxFlagInFU(PE.DataFlagInFuDriver.valueOf(peJson.get("muxFlagInFU").toString()));
+            pe.setFlagInFUMux(PE.DataFlagInFuDriver.valueOf(peJson.get("flagInFUMux").toString()));
             pe.setFUFunction(PE.FUFunction.valueOf(peJson.get("FUFunction").toString()));
         }
 

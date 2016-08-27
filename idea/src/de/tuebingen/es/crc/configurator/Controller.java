@@ -374,9 +374,22 @@ public class Controller {
         model.getCrc().getFu(row, column).setFunctions(fuFunctions);
     }
 
-    public void setPeFunctionStatic(int configurationNumber, int row, int column, PE.FUFunction fuFunction) {
+    private Configuration getConfiguration(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber) {
+        if(configurationTabType == ConfigurationTab.ConfigurationTabType.STATIC) {
+            return model.getCrc().getStaticConfiguration(configurationNumber);
+        } else {
+            return model.getCrc().getDynamicConfiguration(configurationNumber);
+        }
+    }
+
+    public void setPeFunction(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.FUFunction fuFunction) {
         model.setSaved(false);
-        model.getCrc().getStaticConfiguration(configurationNumber).getPE(row, column).setFUFunction(fuFunction);
+        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setFUFunction(fuFunction);
+    }
+
+    public void setPeDataFlagInFu0Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagInFuDriver dataFlagInFuDriver) {
+        model.setSaved(false);
+        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setDataFlagInFU0(dataFlagInFuDriver);
     }
 }
 
