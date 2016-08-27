@@ -2544,7 +2544,19 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 1-4 &&
                     yNormalized <= 13+4 &&
                     row != 0) {
-                System.out.println("N1");
+
+                DataFlagNorthDriverContextMenu dataFlagNorthDriverContextMenu = new DataFlagNorthDriverContextMenu(this.getConfiguration().getPE(row, column).getDataFlagOutN1(), model.getCrc().getRows(), row);
+                contextMenu = dataFlagNorthDriverContextMenu;
+                dataFlagNorthDriverContextMenu.show(this.getContent(), p.x, p.y);
+
+                dataFlagNorthDriverContextMenu.setOnHiding(event -> {
+                    if(dataFlagNorthDriverContextMenu.getSelectedDataFlagNorthDriver() == this.getConfiguration().getPE(finalRow, finalColumn).getDataFlagOutN1()) {
+                        controller.setPeDataFlagN1Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagOutDriver.none);
+                    }
+                    else if(dataFlagNorthDriverContextMenu.getSelectedDataFlagNorthDriver() != PE.DataFlagOutDriver.none) {
+                        controller.setPeDataFlagN1Driver(configurationTabType, number, finalRow, finalColumn, dataFlagNorthDriverContextMenu.getSelectedDataFlagNorthDriver());
+                    }
+                });
             }
 
             // in E0
