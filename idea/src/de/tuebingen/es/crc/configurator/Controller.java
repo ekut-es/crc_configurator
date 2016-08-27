@@ -426,6 +426,11 @@ public class Controller {
         model.setSaved(false);
         this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setDataFlagOutS0(dataFlagOutDriver);
     }
+
+    public void setPeDataFlagS1Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
+        model.setSaved(false);
+        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setDataFlagOutS1(dataFlagOutDriver);
+    }
 }
 
 
