@@ -597,7 +597,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 this.drawInternalConnectionW0toS0(x, y);
                 break;
             case data_flag_in_W_1:
-                this.drawInternalConnectionW1toS1(x, y);
+                this.drawInternalConnectionW1toS0(x, y);
                 break;
         }
 
@@ -2608,7 +2608,20 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= PE_DRAW_SIZE-13-4 &&
                     yNormalized <= PE_DRAW_SIZE-1+4 &&
                     row != model.getCrc().getRows()-1) {
-                System.out.println("S0");
+
+                DataFlagSouthDriverContextMenu dataFlagSouthDriverContextMenu = new DataFlagSouthDriverContextMenu(this.getConfiguration().getPE(row, column).getDataFlagOutS0(), model.getCrc().getRows(), row);
+                contextMenu = dataFlagSouthDriverContextMenu;
+                dataFlagSouthDriverContextMenu.show(this.getContent(), p.x, p.y);
+
+                dataFlagSouthDriverContextMenu.setOnHiding(event -> {
+                    if(dataFlagSouthDriverContextMenu.getSelectedDataFlagSouthDriver() == this.getConfiguration().getPE(finalRow, finalColumn).getDataFlagOutS0()) {
+                        controller.setPeDataFlagS0Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagOutDriver.none);
+                    }
+                    else if(dataFlagSouthDriverContextMenu.getSelectedDataFlagSouthDriver() != PE.DataFlagOutDriver.none) {
+                        controller.setPeDataFlagS0Driver(configurationTabType, number, finalRow, finalColumn, dataFlagSouthDriverContextMenu.getSelectedDataFlagSouthDriver());
+                    }
+                });
+
             }
 
             // in S1
