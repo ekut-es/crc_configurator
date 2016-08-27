@@ -168,7 +168,7 @@ public class HardwareModelTab extends ConfiguratorTab {
             }
         }
 
-        // it was clicked on PE
+        // if was clicked on PE
         if(row != -1) {
 
             Point p = MouseInfo.getPointerInfo().getLocation();

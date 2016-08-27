@@ -6,11 +6,14 @@ import de.tuebingen.es.crc.configurator.model.PE;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
+import java.awt.event.PaintEvent;
 import java.util.Map;
 
 /**
@@ -62,18 +65,14 @@ public class ConfigurationTab extends ConfiguratorTab {
         canvas.setHeight(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
         canvas.setWidth(2*CANVAS_PADDING+(model.getCrc().getColumns()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+INTER_PE_DISTANCE);
 
-        // listen for double clicks in the hardware model tab
-        /*
+        // listen for right clicks in the hardware model tab
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED,
                 event -> {
-                    if(event.getButton().equals(MouseButton.PRIMARY)) {
-                        if(event.getClickCount() == 2) {
-                            this.handleHardwareModelDoubleClick((int) event.getX(), (int) event.getY());
-                        }
+                    if(event.getButton().equals(MouseButton.SECONDARY)) {
+                        this.handleConfigurationRightClick((int) event.getX(), (int) event.getY());
                     }
                 }
         );
-        */
 
         ScrollPane scrollPane = new ScrollPane(canvas);
         scrollPane.setFitToHeight(true);
@@ -2101,12 +2100,12 @@ public class ConfigurationTab extends ConfiguratorTab {
         // E0 -> W0
         gc.strokePolyline(
                 new double[]{
-                        x,
+                        x+3,
                         x+2*peDrawSizeTwentieth,
                         x+2*peDrawSizeTwentieth,
                         x+15*peDrawSizeTwentieth,
                         x+15*peDrawSizeTwentieth,
-                        x+PE_DRAW_SIZE-12-1
+                        x+PE_DRAW_SIZE-12-5
                 },
                 new double[]{
                         y+8*peDrawSizeTwentieth,
@@ -2122,12 +2121,12 @@ public class ConfigurationTab extends ConfiguratorTab {
         // E1 -> W1
         gc.strokePolyline(
                 new double[]{
-                        x,
+                        x+3,
                         x+2*peDrawSizeTwentieth,
                         x+2*peDrawSizeTwentieth,
                         x+15*peDrawSizeTwentieth,
                         x+15*peDrawSizeTwentieth,
-                        x+PE_DRAW_SIZE-12-1
+                        x+PE_DRAW_SIZE-12-5
                 },
                 new double[]{
                         y+12*peDrawSizeTwentieth,
@@ -2142,5 +2141,110 @@ public class ConfigurationTab extends ConfiguratorTab {
 
         gc.setFill(Color.BLACK);
         gc.setLineWidth(2);
+    }
+
+    private void handleConfigurationRightClick(int x, int y) {
+
+        // decide if the inside of a PE was clicked
+        int row = -1;
+        int column = -1;
+
+        for(int i = 0; i < model.getCrc().getColumns(); i++) {
+
+            if(x >= CANVAS_PADDING+(i*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+INTER_PE_DISTANCE && x <= CANVAS_PADDING+(i*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+PE_DRAW_SIZE+INTER_PE_DISTANCE) {
+
+                column = i;
+
+                for(int j = 0; j < model.getCrc().getRows(); j++) {
+
+                    if(y >= CANVAS_PADDING+(j*(PE_DRAW_SIZE+INTER_PE_DISTANCE)) && y <= CANVAS_PADDING+(j*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+PE_DRAW_SIZE) {
+                        row = j;
+                    }
+                }
+            }
+        }
+
+        // if was clicked on PE
+        if(row != -1) {
+
+            int xOffset = CANVAS_PADDING+INTER_PE_DISTANCE+(column*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
+            int yOffset = CANVAS_PADDING+(row*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
+
+            int xNormalized = x - xOffset;
+            int yNormalized = y - yOffset;
+
+            // check if a pad and which pad was clicked
+            // in FU0
+            if(
+                    xNormalized >= 7*peDrawSizeTwentieth-12-4 &&
+                    xNormalized <= 7*peDrawSizeTwentieth+4 &&
+                    yNormalized >= 6*peDrawSizeTwentieth-4 &&
+                    yNormalized <= 6*peDrawSizeTwentieth+12+4) {
+                System.out.println("FU0");
+            }
+
+            // in FU1
+            if(
+                    xNormalized >= 7*peDrawSizeTwentieth-12-4 &&
+                    xNormalized <= 7*peDrawSizeTwentieth+4 &&
+                    yNormalized >= 13*peDrawSizeTwentieth-4 &&
+                    yNormalized <= 13*peDrawSizeTwentieth+12+4) {
+                System.out.println("FU1");
+            }
+
+            // in N0
+            if(
+                    xNormalized >= 3*peDrawSizeTwentieth-6-4 &&
+                    xNormalized <= 3*peDrawSizeTwentieth+6+4 &&
+                    yNormalized >= 1-4 &&
+                    yNormalized <= 13+4) {
+                System.out.println("N0");
+            }
+
+            // in N1
+            if(
+                    xNormalized >= 7*peDrawSizeTwentieth-6-4 &&
+                    xNormalized <= 7*peDrawSizeTwentieth+6+4 &&
+                    yNormalized >= 1-4 &&
+                    yNormalized <= 13+4) {
+                System.out.println("N1");
+            }
+
+            // in E0
+            if(
+                    xNormalized >= PE_DRAW_SIZE-12-4 &&
+                    xNormalized <= PE_DRAW_SIZE-1+4 &&
+                    yNormalized >= 8*peDrawSizeTwentieth-6-4 &&
+                    yNormalized <= 8*peDrawSizeTwentieth+6+4) {
+                System.out.println("E0");
+            }
+
+            // in E1
+            if(
+                    xNormalized >= PE_DRAW_SIZE-12-4 &&
+                    xNormalized <= PE_DRAW_SIZE-1+4 &&
+                    yNormalized >= 12*peDrawSizeTwentieth-6-4 &&
+                    yNormalized <= 12*peDrawSizeTwentieth+6+4) {
+                System.out.println("E1");
+            }
+
+            // in S0
+            if(
+                    xNormalized >= 13*peDrawSizeTwentieth-6-4 &&
+                    xNormalized <= 13*peDrawSizeTwentieth+6+4 &&
+                    yNormalized >= PE_DRAW_SIZE-13-4 &&
+                    yNormalized <= PE_DRAW_SIZE-1+4) {
+                System.out.println("S0");
+            }
+
+            // in S1
+            if(
+                    xNormalized >= 17*peDrawSizeTwentieth-6-4 &&
+                    xNormalized <= 17*peDrawSizeTwentieth+6+4 &&
+                    yNormalized >= PE_DRAW_SIZE-13-4 &&
+                    yNormalized <= PE_DRAW_SIZE-1+4) {
+                System.out.println("S1");
+            }
+        }
     }
 }
