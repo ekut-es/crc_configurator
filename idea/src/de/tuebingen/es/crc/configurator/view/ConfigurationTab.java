@@ -567,7 +567,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 this.drawInternalConnectionN1toE1(x, y);
                 break;
             case data_flag_in_S_0:
-                this.drawInternalConnectionS0toN1(x, y);
+                this.drawInternalConnectionS0toE1(x, y);
                 break;
             case data_flag_in_S_1:
                 this.drawInternalConnectionS1toE1(x, y);
@@ -2111,8 +2111,8 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                         y+12*peDrawSizeTwentieth,
                         y+16.5*peDrawSizeTwentieth,
                         y+16.5*peDrawSizeTwentieth,
-                        y+8*peDrawSizeTwentieth,
-                        y+8*peDrawSizeTwentieth
+                        y+12*peDrawSizeTwentieth,
+                        y+12*peDrawSizeTwentieth
 
                 },
                 6
@@ -2586,7 +2586,19 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     xNormalized <= PE_DRAW_SIZE-1+4 &&
                     yNormalized >= 12*peDrawSizeTwentieth-6-4 &&
                     yNormalized <= 12*peDrawSizeTwentieth+6+4) {
-                System.out.println("E1");
+
+                DataFlagEastDriverContextMenu dataFlagEastDriverContextMenu = new DataFlagEastDriverContextMenu(this.getConfiguration().getPE(row, column).getDataFlagOutE1(), model.getCrc().getRows(), row);
+                contextMenu = dataFlagEastDriverContextMenu;
+                dataFlagEastDriverContextMenu.show(this.getContent(), p.x, p.y);
+
+                dataFlagEastDriverContextMenu.setOnHiding(event -> {
+                    if(dataFlagEastDriverContextMenu.getSelectedDataFlagEastDriver() == this.getConfiguration().getPE(finalRow, finalColumn).getDataFlagOutE1()) {
+                        controller.setPeDataFlagE1Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagOutDriver.none);
+                    }
+                    else if(dataFlagEastDriverContextMenu.getSelectedDataFlagEastDriver() != PE.DataFlagOutDriver.none) {
+                        controller.setPeDataFlagE1Driver(configurationTabType, number, finalRow, finalColumn, dataFlagEastDriverContextMenu.getSelectedDataFlagEastDriver());
+                    }
+                });
             }
 
             // in S0
