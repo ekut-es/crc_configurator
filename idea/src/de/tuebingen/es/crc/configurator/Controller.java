@@ -38,9 +38,10 @@ public class Controller {
     @FXML
     private MenuItem menuItemClose;
 
-    private Tab hardwareModelTab;
+    private HardwareModelTab hardwareModelTab;
 
-    private ArrayList<Tab> staticConfigurationTabs;
+    private ArrayList<ConfigurationTab> staticConfigurationTabs;
+    private ArrayList<ConfigurationTab> dynamicConfigurationTabs;
 
     /**
      * initializes the model
@@ -52,6 +53,9 @@ public class Controller {
         }
 
         this.model = model;
+
+        staticConfigurationTabs = new ArrayList<>();
+        dynamicConfigurationTabs = new ArrayList<>();
     }
 
     public void setStage(Stage stage) {
@@ -238,6 +242,8 @@ public class Controller {
 
         // display configurations
         this.displayStaticConfigurationTabs();
+        this.displayDynamicConfigurationTabs();
+
     }
 
     /**
@@ -307,7 +313,25 @@ public class Controller {
      */
     public void closeCrcDescriptionFile() {
         tabPane.getTabs().clear();
+
+        // delete hardware model tab
+        model.removeObserver((Observer) hardwareModelTab);
         hardwareModelTab = null;
+
+        // delete static configuration tabs
+        for(ConfigurationTab staticConfigurationTab : staticConfigurationTabs) {
+            model.getCrc().getStaticConfiguration(staticConfigurationTab.getNumber()).removeObserver((Observer) staticConfigurationTab);
+        }
+
+        staticConfigurationTabs.clear();
+
+        // delete dynamic configuration tabs
+        for(ConfigurationTab dynamicConfigurationTab : dynamicConfigurationTabs) {
+            model.getCrc().getDynamicConfiguration(dynamicConfigurationTab.getNumber()).removeObserver((Observer) dynamicConfigurationTab);
+        }
+
+        dynamicConfigurationTabs.clear();
+
         model = new Model();
         menuItemEdit.setDisable(true);
         menuItemSave.setDisable(true);
@@ -330,8 +354,6 @@ public class Controller {
      */
     private void displayStaticConfigurationTabs() {
 
-        staticConfigurationTabs = new ArrayList<>();
-
         for(int i = 0; i < model.getCrc().getStaticConfigLines(); i++) {
             ConfigurationTab staticConfigurationTab = new ConfigurationTab(model, this, ConfigurationTab.ConfigurationTabType.STATIC, i);
             model.attachObserver(staticConfigurationTab);
@@ -341,6 +363,19 @@ public class Controller {
         }
     }
 
+    /**
+     * adds the "Dynamic Configration" tabs to the tab pane
+     */
+    private void displayDynamicConfigurationTabs() {
+
+        for(int i = 0; i < model.getCrc().getDynamicConfigLines(); i++) {
+            ConfigurationTab dynamicConfigurationTab = new ConfigurationTab(model, this, ConfigurationTab.ConfigurationTabType.DYNAMIC, i);
+            model.attachObserver(dynamicConfigurationTab);
+            model.getCrc().getDynamicConfiguration(i).attachObserver((Observer) dynamicConfigurationTab);
+            tabPane.getTabs().add(dynamicConfigurationTab);
+            dynamicConfigurationTabs.add(dynamicConfigurationTab);
+        }
+    }
 
     public void handleEditAction(ActionEvent actionEvent) {
         EditDialog editDialog = new EditDialog(

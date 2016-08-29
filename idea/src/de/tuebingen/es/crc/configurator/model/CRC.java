@@ -119,16 +119,16 @@ public class CRC {
 
     }
 
-    public Configuration readConfigFromJSON(JSONObject staticConfig) throws Exception {
+    public Configuration readConfigFromJSON(JSONObject config) throws Exception {
 
         // read PEs
-        JSONArray pes = (JSONArray) staticConfig.get("PEs");
+        JSONArray pes = (JSONArray) config.get("PEs");
 
         if(pes == null) {
             throw new Exception("CRC description file section staticConfigs does not contain 'PEs'!");
         }
 
-        Configuration configuration = new Configuration(this, Integer.parseInt(staticConfig.get("configNumber").toString()));
+        Configuration configuration = new Configuration(this, Integer.parseInt(config.get("configNumber").toString()));
         Iterator<JSONObject> peIterator = pes.iterator();
 
         while(peIterator.hasNext()) {

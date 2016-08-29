@@ -54,6 +54,10 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
     }
 
+    public int getNumber() {
+        return number;
+    }
+
     @Override
     public void update() {
         if(model.wasCrcResized()) {
