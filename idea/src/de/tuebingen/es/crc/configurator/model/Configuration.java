@@ -33,6 +33,23 @@ public class Configuration implements Observable {
         this.generatePeMatrix();
     }
 
+    public Configuration(CRC crc, int number, Configuration config) {
+        this(crc, number);
+
+        // copy PEs from config
+        ArrayList<ArrayList<PE>> configPEs = config.getPEs();
+
+        for(int i = 0; i < crc.getRows(); i++) {
+            if(i < configPEs.size()) {
+                for(int j = 0; j < crc.getColumns(); j++) {
+                    if(j < configPEs.get(i).size()) {
+                        pes.get(i).get(j).editPE(configPEs.get(i).get(j));
+                    }
+                }
+            }
+        }
+    }
+
     private void generatePeMatrix() {
         pes = new ArrayList<>();
 
@@ -48,6 +65,10 @@ public class Configuration implements Observable {
 
     public PE getPE(int row, int column) {
         return pes.get(row).get(column);
+    }
+
+    public ArrayList<ArrayList<PE>> getPEs() {
+       return pes;
     }
 
     @Override

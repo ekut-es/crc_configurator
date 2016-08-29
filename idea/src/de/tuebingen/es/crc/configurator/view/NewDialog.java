@@ -82,24 +82,28 @@ public class NewDialog extends Stage {
         rowsTextField.setMaxNumbers(2);
         rowsTextField.setMinWidth(40);
         rowsTextField.setMaxWidth(40);
+        rowsTextField.setText("2");
 
         Label columnsLabel = new Label("Columns");
         NumberTextField columnsTextField = new NumberTextField();
         columnsTextField.setMaxNumbers(2);
         columnsTextField.setMinWidth(40);
         columnsTextField.setMaxWidth(40);
+        columnsTextField.setText("2");
 
         Label staticConfigLinesLabel = new Label("Static Conf. Lines");
         NumberTextField staticConfigLinesTextField = new NumberTextField();
         staticConfigLinesTextField.setMaxNumbers(2);
         staticConfigLinesTextField.setMinWidth(40);
         staticConfigLinesTextField.setMaxWidth(40);
+        staticConfigLinesTextField.setText("0");
 
         Label dynamicConfigLinesLabel = new Label("Dynamic Conf. Lines");
         NumberTextField dynamicConfigLinesTextField = new NumberTextField();
         dynamicConfigLinesTextField.setMaxNumbers(2);
         dynamicConfigLinesTextField.setMinWidth(40);
         dynamicConfigLinesTextField.setMaxWidth(40);
+        dynamicConfigLinesTextField.setText("0");
 
         GridPane.setConstraints(rowsLabel, 0, 0);
         GridPane.setConstraints(rowsTextField, 1, 0);
@@ -135,9 +139,9 @@ public class NewDialog extends Stage {
             create = true;
             rows = Integer.parseInt(rowsTextField.getText());
             columns = Integer.parseInt(columnsTextField.getText());
-            // TODO static and dynamic config lines
+            staticConfigLines = Integer.parseInt(staticConfigLinesTextField.getText());
+            dynamicConfigLines = Integer.parseInt(dynamicConfigLinesTextField.getText());
             this.close();
-
         });
 
         HBox buttonHBox = new HBox(2);

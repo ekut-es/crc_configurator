@@ -125,6 +125,8 @@ public class Controller {
 
             stage.setTitle("CRC Configurator (Unnamed File)");
             this.displayHardwareModelTab();
+            this.displayStaticConfigurationTabs();
+            this.displayDynamicConfigurationTabs();
         }
     }
 
@@ -216,6 +218,7 @@ public class Controller {
     }
 
     public void handleQuitAction(ActionEvent actionEvent) {
+        // TODO Mac OS X closes stage at CMD+Q
         this.quitApplication();
     }
 
@@ -273,9 +276,7 @@ public class Controller {
                 model.saveCrcDescriptionFile(crcDescriptionFile.getAbsolutePath());
                 model.setCrcDescriptionFilePath(crcDescriptionFile.getAbsolutePath());
                 menuItemSave.setDisable(false);
-
-                // TODO change main window title and crc description file name in model
-                //stage.setTitle("CRC Configurator (" + crcDescriptionFile.getName() + ")");
+                stage.setTitle("CRC Configurator (" + crcDescriptionFile.getName() + ")");
 
             } catch (Exception e) {
                 showErrorMessage(e.getMessage());
@@ -288,6 +289,7 @@ public class Controller {
      * quits Application
      */
     public void quitApplication() {
+
         if(!model.isSaved()) {
             NotSavedAlert notSavedAlert = new NotSavedAlert();
             NotSavedAlert.ButtonPressed result = notSavedAlert.displayAndWait();
@@ -300,13 +302,12 @@ public class Controller {
                 }
             }
 
-            if(result == NotSavedAlert.ButtonPressed.DONT_SAVE) {
-                System.exit(0);
+            else if(result == NotSavedAlert.ButtonPressed.DONT_SAVE) {
+                //System.exit(0);
             }
 
-            // Cancel do nothing
         } else {
-            System.exit(0);
+            //System.exit(0);
         }
     }
 
@@ -319,20 +320,8 @@ public class Controller {
         // delete hardware model tab
         model.removeObserver((Observer) hardwareModelTab);
         hardwareModelTab = null;
-
-        // delete static configuration tabs
-        for(ConfigurationTab staticConfigurationTab : staticConfigurationTabs) {
-            model.getCrc().getStaticConfiguration(staticConfigurationTab.getNumber()).removeObserver((Observer) staticConfigurationTab);
-        }
-
-        staticConfigurationTabs.clear();
-
-        // delete dynamic configuration tabs
-        for(ConfigurationTab dynamicConfigurationTab : dynamicConfigurationTabs) {
-            model.getCrc().getDynamicConfiguration(dynamicConfigurationTab.getNumber()).removeObserver((Observer) dynamicConfigurationTab);
-        }
-
-        dynamicConfigurationTabs.clear();
+        this.closeAllStaticConfigurationTabs();
+        this.closeAllDynamicConfigurationTabs();
 
         model = new Model();
         menuItemEdit.setDisable(true);
@@ -363,8 +352,20 @@ public class Controller {
             model.attachObserver(staticConfigurationTab);
             model.getCrc().getStaticConfiguration(entry.getKey()).attachObserver((Observer) staticConfigurationTab);
             tabPane.getTabs().add(staticConfigurationTab);
-            dynamicConfigurationTabs.add(staticConfigurationTab);
+            staticConfigurationTabs.add(staticConfigurationTab);
         }
+    }
+
+    private void closeAllStaticConfigurationTabs() {
+
+        // remove as observer from model and from tab pane
+        for(ConfigurationTab staticConfigurationTab : staticConfigurationTabs) {
+            model.removeObserver((Observer) staticConfigurationTab);
+            model.getCrc().getStaticConfiguration(staticConfigurationTab.getNumber()).removeObserver((Observer) staticConfigurationTab);
+            tabPane.getTabs().remove(staticConfigurationTab);
+        }
+
+        staticConfigurationTabs.clear();
     }
 
     /**
@@ -383,6 +384,18 @@ public class Controller {
         }
     }
 
+    private void closeAllDynamicConfigurationTabs() {
+
+        // remove as observer from model
+        for(ConfigurationTab dynamicConfigurationTab : dynamicConfigurationTabs) {
+            model.removeObserver((Observer) dynamicConfigurationTab);
+            model.getCrc().getDynamicConfiguration(dynamicConfigurationTab.getNumber()).removeObserver((Observer) dynamicConfigurationTab);
+            tabPane.getTabs().remove(dynamicConfigurationTab);
+        }
+
+        dynamicConfigurationTabs.clear();
+    }
+
     public void handleEditAction(ActionEvent actionEvent) {
         EditDialog editDialog = new EditDialog(
                 model.getCrc().getRows(),
@@ -395,13 +408,22 @@ public class Controller {
 
 
         if(editDialog.apply) {
+
+            this.closeAllStaticConfigurationTabs();
+            this.closeAllDynamicConfigurationTabs();
+
             model.editCrc(
                     editDialog.getRows(),
                     editDialog.getColumns(),
                     editDialog.getStaticConfigLines(),
                     editDialog.getDynamicConfigLines()
             );
+
+            this.displayStaticConfigurationTabs();
+            this.displayDynamicConfigurationTabs();
         }
+
+
     }
 
     /**

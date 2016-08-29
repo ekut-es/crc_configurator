@@ -99,6 +99,7 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
         gc.strokeRect(x, y, PE_DRAW_SIZE, PE_DRAW_SIZE);
 
         this.drawFU(gc, x, y);
+        gc.fillText(row + "," + column, peDrawSizeTwentieth+x, PE_DRAW_SIZE-(peDrawSizeTwentieth)+y);
     }
 
     /**

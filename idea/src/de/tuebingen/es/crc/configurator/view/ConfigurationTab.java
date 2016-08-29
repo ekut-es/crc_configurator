@@ -71,14 +71,19 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         canvas.setHeight(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
         canvas.setWidth(2*CANVAS_PADDING+(model.getCrc().getColumns()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+INTER_PE_DISTANCE);
 
-        // listen for right clicks in the hardware model tab
+        // listen for right clicks and double clicks in the configuration tab
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED,
                 event -> {
                     if(contextMenu != null && contextMenu.isShowing()) {
                         contextMenu.hide();
                     }
+
                     if(event.getButton().equals(MouseButton.SECONDARY)) {
                         this.handleConfigurationRightClick((int) event.getX(), (int) event.getY());
+                    } else if(event.getButton().equals(MouseButton.PRIMARY)) {
+                        if(event.getClickCount() == 2) {
+                            this.handleConfigurationRightClick((int) event.getX(), (int) event.getY());
+                        }
                     }
                 }
         );

@@ -26,8 +26,8 @@ public class Main extends Application {
         controller.initModel(model);
         controller.setStage(primaryStage);
 
-        int stageWidth = 2*ConfiguratorTab.CANVAS_PADDING+2*ConfiguratorTab.PE_DRAW_SIZE+ConfiguratorTab.INTER_PE_DISTANCE+10;
-        int stageHeight = 2*ConfiguratorTab.CANVAS_PADDING+2*ConfiguratorTab.PE_DRAW_SIZE+ConfiguratorTab.INTER_PE_DISTANCE+110;
+        int stageWidth = 2*ConfiguratorTab.CANVAS_PADDING+2*ConfiguratorTab.PE_DRAW_SIZE+3*ConfiguratorTab.INTER_PE_DISTANCE+10;
+        int stageHeight = 2*ConfiguratorTab.CANVAS_PADDING+2*ConfiguratorTab.PE_DRAW_SIZE+2*ConfiguratorTab.INTER_PE_DISTANCE+110;
 
         primaryStage.setTitle("CRC Configurator");
         primaryStage.setMinWidth(stageWidth);

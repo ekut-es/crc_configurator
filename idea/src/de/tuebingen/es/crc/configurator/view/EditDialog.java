@@ -144,9 +144,10 @@ public class EditDialog extends Stage {
             apply = true;
             this.rows = Integer.parseInt(rowsTextField.getText());
             this.columns = Integer.parseInt(columnsTextField.getText());
-            // TODO static and dynamic config lines
-            this.close();
+            this.staticConfigLines = Integer.parseInt(staticConfigLinesTextField.getText());
+            this.dynamicConfigLines = Integer.parseInt(dynamicConfigLinesTextField.getText());
 
+            this.close();
         });
 
         HBox buttonHBox = new HBox(2);

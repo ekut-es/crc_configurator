@@ -39,7 +39,19 @@ public class CRC {
 
         this.generateFuMatrix();
 
-        // TODO static and dynamic configurations
+        this.staticConfigs = new HashMap<>();
+
+        for(int i = 0; i < this.staticConfigLines; i++) {
+            Configuration staticConfig = new Configuration(this, i);
+            staticConfigs.put(i, staticConfig);
+        }
+
+        this.dynamicConfigs = new HashMap<>();
+
+        for(int i = 0; i < this.dynamicConfigLines; i++) {
+            Configuration dynamicConfig = new Configuration(this, i);
+            dynamicConfigs.put(i, dynamicConfig);
+        }
     }
 
     /**
@@ -184,10 +196,61 @@ public class CRC {
 
         this.rows = rows;
         this.columns = columns;
+
+        int oldStaticConfigLines = this.staticConfigLines;
         this.staticConfigLines = staticConfigLines;
+
+        // save current static configs in temp static configs
+        HashMap<Integer,Configuration> tempStaticConfigs = new HashMap<>();
+
+        for(Map.Entry<Integer,Configuration> entry : staticConfigs.entrySet()) {
+            tempStaticConfigs.put(entry.getKey(), entry.getValue());
+        }
+
+        staticConfigs = new HashMap<>();
+
+        // generate new static configs with saved static configs
+        for(int i = 0; i < this.staticConfigLines; i++) {
+            if(i < oldStaticConfigLines) {
+                staticConfigs.put(i, new Configuration(this, i, tempStaticConfigs.get(i)));
+
+                // set outputs driven by south to none in PEs of last row
+                for(int j = 0; j < columns; j++) {
+                    staticConfigs.get(i).getPE(rows - 1, j).setOutputsDrivenBySouthInputsToNone();
+                }
+
+            } else {
+                staticConfigs.put(i, new Configuration(this, i));
+            }
+        }
+
+
+        int oldDynamicConfigLines = this.dynamicConfigLines;
         this.dynamicConfigLines = dynamicConfigLines;
 
-        // TODO static and dynamic configs
+        // save current static configs in temp dynamic configs
+        HashMap<Integer, Configuration> tempDynamicConfigs = new HashMap<>();
+
+        for(Map.Entry<Integer, Configuration> entry : dynamicConfigs.entrySet()) {
+            tempDynamicConfigs.put(entry.getKey(), entry.getValue());
+        }
+
+        dynamicConfigs = new HashMap<>();
+
+        // generate new dynamic configs with saved dynamic configs
+        for(int i = 0; i < this.dynamicConfigLines; i++) {
+            if(i < oldDynamicConfigLines) {
+                dynamicConfigs.put(i, new Configuration(this, i, tempDynamicConfigs.get(i)));
+
+                // south inputs of PEs in last row to none
+                for(int j = 0; j < columns; j++) {
+                    dynamicConfigs.get(i).getPE(rows - 1, j).setOutputsDrivenBySouthInputsToNone();
+                }
+
+            } else {
+                dynamicConfigs.put(i, new Configuration(this, i));
+            }
+        }
 
         this.notifyAllObservers();
     }

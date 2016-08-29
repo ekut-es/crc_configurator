@@ -167,6 +167,20 @@ public class PE {
 
     }
 
+    public void editPE(PE pe) {
+        this.dataFlagOutN0 = pe.getDataFlagOutN0();
+        this.dataFlagOutN1 = pe.getDataFlagOutN1();
+        this.dataFlagOutE0 = pe.getDataFlagOutE0();
+        this.dataFlagOutE1 = pe.getDataFlagOutE1();
+        this.dataFlagOutS0 = pe.getDataFlagOutS1();
+        this.dataFlagInFU0 = pe.getDataFlagInFU0();
+        this.dataFlagInFU1 = pe.getDataFlagInFU1();
+        this.flagInFUMux = pe.getFlagInFUMux();
+        this.fuFunction = pe.getFUFunction();
+
+        this.checkSetActive();
+    }
+
     private void checkSetActive()  {
         if(
                 dataFlagOutN0 == DataFlagOutDriver.none &&
@@ -182,5 +196,46 @@ public class PE {
         } else {
             active = true;
         }
+    }
+
+    public void setOutputsDrivenBySouthInputsToNone() {
+
+        if(dataFlagOutN0 == DataFlagOutDriver.data_flag_in_S_0 || dataFlagOutN0 == DataFlagOutDriver.data_flag_in_S_1) {
+            dataFlagOutN0 = DataFlagOutDriver.none;
+        }
+
+        if(dataFlagOutN1 == DataFlagOutDriver.data_flag_in_S_0 || dataFlagOutN1 == DataFlagOutDriver.data_flag_in_S_1) {
+            dataFlagOutN1 = DataFlagOutDriver.none;
+        }
+
+        if(dataFlagOutE0 == DataFlagOutDriver.data_flag_in_S_0 || dataFlagOutE0 == DataFlagOutDriver.data_flag_in_S_1) {
+            dataFlagOutE0 = DataFlagOutDriver.none;
+        }
+
+        if(dataFlagOutE1 == DataFlagOutDriver.data_flag_in_S_0 || dataFlagOutE1 == DataFlagOutDriver.data_flag_in_S_1) {
+            dataFlagOutE1 = DataFlagOutDriver.none;
+        }
+
+        if(dataFlagOutS0 == DataFlagOutDriver.data_flag_in_S_0 || dataFlagOutS0 == DataFlagOutDriver.data_flag_in_S_1) {
+            dataFlagOutS0 = DataFlagOutDriver.none;
+        }
+
+        if(dataFlagOutS1 == DataFlagOutDriver.data_flag_in_S_0 || dataFlagOutS1 == DataFlagOutDriver.data_flag_in_S_1) {
+            dataFlagOutS1 = DataFlagOutDriver.none;
+        }
+
+        if(dataFlagInFU0 == DataFlagInFuDriver.data_flag_in_S_0 || dataFlagInFU0 == DataFlagInFuDriver.data_flag_in_S_1) {
+           dataFlagInFU0 = DataFlagInFuDriver.none;
+        }
+
+        if(dataFlagInFU1 == DataFlagInFuDriver.data_flag_in_S_0 || dataFlagInFU1 == DataFlagInFuDriver.data_flag_in_S_1) {
+           dataFlagInFU1 = DataFlagInFuDriver.none;
+        }
+
+        if(flagInFUMux == DataFlagInFuDriver.data_flag_in_S_0 || flagInFUMux == DataFlagInFuDriver.data_flag_in_S_1) {
+            flagInFUMux = DataFlagInFuDriver.none;
+        }
+
+        this.checkSetActive();
     }
 }
