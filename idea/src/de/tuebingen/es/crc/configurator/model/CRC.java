@@ -271,6 +271,57 @@ public class CRC {
         return fuMatrix.get(row).get(column);
     }
 
+    public void setFuFunctions(int row, int column, LinkedHashMap<String, Boolean> fuFunctions) {
+        fuMatrix.get(row).get(column).setFunctions(fuFunctions);
+
+        // check if function was removed which is used by a config and if so set function in config to none
+        // static configs
+        for(Configuration staticConfig : staticConfigs.values()) {
+            this.checkSetFuFunctionInPe(staticConfig.getPE(row, column), fuFunctions);
+        }
+
+        // dynamic configs
+        for(Configuration dynamicConfig : dynamicConfigs.values()) {
+            this.checkSetFuFunctionInPe(dynamicConfig.getPE(row, column), fuFunctions);
+        }
+
+    }
+
+    public void checkSetFuFunctionInPe(PE pe, LinkedHashMap<String, Boolean> fuFunctions) {
+        for(Map.Entry<String, Boolean> entry : fuFunctions.entrySet()) {
+
+            if(!entry.getValue()) {
+
+                if (entry.getKey() != "compare" && entry.getKey() != "multiplex") {
+
+                    if(pe.getFUFunction() == PE.FUFunction.valueOf(entry.getKey())) {
+                        pe.setFUFunction(PE.FUFunction.none);
+                    }
+
+
+                } else if (entry.getKey() == "compare") {
+
+                    if(
+                            pe.getFUFunction() == PE.FUFunction.compare_eq ||
+                            pe.getFUFunction() == PE.FUFunction.compare_neq ||
+                            pe.getFUFunction() == PE.FUFunction.compare_lt ||
+                            pe.getFUFunction() == PE.FUFunction.compare_gt ||
+                            pe.getFUFunction() == PE.FUFunction.compare_leq ||
+                            pe.getFUFunction() == PE.FUFunction.compare_geq) {
+                        pe.setFUFunction(PE.FUFunction.none);
+                    }
+
+
+                } else if (entry.getKey() == "multiplex") {
+
+                    if(pe.getFUFunction() == PE.FUFunction.mux_0 || pe.getFUFunction() == PE.FUFunction.mux_1) {
+                        pe.setFUFunction(PE.FUFunction.none);
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * @return JSONObject containing a description of the CRC
      */

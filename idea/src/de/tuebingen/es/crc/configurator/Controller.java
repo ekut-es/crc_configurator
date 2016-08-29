@@ -412,7 +412,7 @@ public class Controller {
      */
     public void setFuFunctions(int row, int column, LinkedHashMap<String, Boolean> fuFunctions) {
         model.setSaved(false);
-        model.getCrc().getFu(row, column).setFunctions(fuFunctions);
+        model.getCrc().setFuFunctions(row, column, fuFunctions);
     }
 
     private Configuration getConfiguration(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber) {
