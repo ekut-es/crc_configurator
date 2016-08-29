@@ -13,7 +13,9 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Controller {
 
@@ -354,12 +356,14 @@ public class Controller {
      */
     private void displayStaticConfigurationTabs() {
 
-        for(int i = 0; i < model.getCrc().getStaticConfigLines(); i++) {
-            ConfigurationTab staticConfigurationTab = new ConfigurationTab(model, this, ConfigurationTab.ConfigurationTabType.STATIC, i);
+        HashMap<Integer,Configuration> staticConfigs =  model.getCrc().getStaticConfigurations();
+
+        for (Map.Entry<Integer, Configuration> entry : staticConfigs.entrySet()) {
+            ConfigurationTab staticConfigurationTab = new ConfigurationTab(model, this, ConfigurationTab.ConfigurationTabType.STATIC, entry.getKey());
             model.attachObserver(staticConfigurationTab);
-            model.getCrc().getStaticConfiguration(i).attachObserver((Observer) staticConfigurationTab);
+            model.getCrc().getStaticConfiguration(entry.getKey()).attachObserver((Observer) staticConfigurationTab);
             tabPane.getTabs().add(staticConfigurationTab);
-            staticConfigurationTabs.add(staticConfigurationTab);
+            dynamicConfigurationTabs.add(staticConfigurationTab);
         }
     }
 
@@ -368,10 +372,12 @@ public class Controller {
      */
     private void displayDynamicConfigurationTabs() {
 
-        for(int i = 0; i < model.getCrc().getDynamicConfigLines(); i++) {
-            ConfigurationTab dynamicConfigurationTab = new ConfigurationTab(model, this, ConfigurationTab.ConfigurationTabType.DYNAMIC, i);
+        HashMap<Integer,Configuration> dynamicConfigs =  model.getCrc().getDynamicConfigurations();
+
+        for (Map.Entry<Integer, Configuration> entry : dynamicConfigs.entrySet()) {
+            ConfigurationTab dynamicConfigurationTab = new ConfigurationTab(model, this, ConfigurationTab.ConfigurationTabType.DYNAMIC, entry.getKey());
             model.attachObserver(dynamicConfigurationTab);
-            model.getCrc().getDynamicConfiguration(i).attachObserver((Observer) dynamicConfigurationTab);
+            model.getCrc().getDynamicConfiguration(entry.getKey()).attachObserver((Observer) dynamicConfigurationTab);
             tabPane.getTabs().add(dynamicConfigurationTab);
             dynamicConfigurationTabs.add(dynamicConfigurationTab);
         }

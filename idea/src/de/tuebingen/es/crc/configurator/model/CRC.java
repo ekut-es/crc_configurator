@@ -212,6 +212,7 @@ public class CRC {
         this.staticConfigLines = (staticConfigLines < 0 ) ? 0 : staticConfigLines;
     }
 
+
     public int getStaticConfigLines() {
         return staticConfigLines;
     }
@@ -224,8 +225,16 @@ public class CRC {
         return dynamicConfigLines;
     }
 
+    public HashMap<Integer, Configuration> getStaticConfigurations(){
+        return staticConfigs;
+    }
+
     public Configuration getStaticConfiguration(int number) {
         return staticConfigs.get(number);
+    }
+
+    public HashMap<Integer, Configuration> getDynamicConfigurations() {
+        return dynamicConfigs;
     }
 
     public Configuration getDynamicConfiguration(int number) {
@@ -272,6 +281,7 @@ public class CRC {
         jsonCRCDescription.put("staticConfigLines", staticConfigLines);
         jsonCRCDescription.put("dynamicConfigLines", dynamicConfigLines);
 
+        // process PEs
         JSONArray pes = new JSONArray();
 
         for(int i = 0; i < rows; i++) {
@@ -297,12 +307,66 @@ public class CRC {
 
         jsonCRCDescription.put("PEs", pes);
 
-        JSONArray staticConfigs = new JSONArray();
-        JSONArray dynamicConfigs = new JSONArray();
 
-        jsonCRCDescription.put("staticConfigs", staticConfigs);
-        jsonCRCDescription.put("dynamicConfigs", dynamicConfigs);
+        // process static configurations
+        JSONArray staticConfigsJSON = new JSONArray();
+
+        for(Configuration staticConfig : staticConfigs.values()) {
+
+            JSONObject staticConfigJSON = new JSONObject();
+
+            staticConfigJSON.put("configNumber", staticConfig.getNumber());
+            staticConfigJSON.put("PEs", this.configPesToJSON(staticConfig));
+
+            staticConfigsJSON.add(staticConfigJSON);
+        }
+
+        jsonCRCDescription.put("staticConfigs", staticConfigsJSON);
+
+
+        // process dynamic configurations
+        JSONArray dynamicConfigsJSON = new JSONArray();
+
+        for(Configuration dynamicConfig : dynamicConfigs.values()) {
+
+            JSONObject dynamicConfigJSON = new JSONObject();
+
+            dynamicConfigJSON.put("configNumber", dynamicConfig.getNumber());
+            dynamicConfigJSON.put("PEs", this.configPesToJSON(dynamicConfig));
+
+            dynamicConfigsJSON.add(dynamicConfigJSON);
+        }
+
+        jsonCRCDescription.put("dynamicConfigs", dynamicConfigsJSON);
 
         return jsonCRCDescription;
+    }
+
+    private JSONArray configPesToJSON(Configuration config) {
+        JSONArray configPes = new JSONArray();
+
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                PE pe = config.getPE(i,j);
+                JSONObject configPe = new JSONObject();
+
+                configPe.put("row", i);
+                configPe.put("column", j);
+                configPe.put("dataFlagOutN0", pe.getDataFlagOutN0().toString());
+                configPe.put("dataFlagOutN1", pe.getDataFlagOutN1().toString());
+                configPe.put("dataFlagOutE0", pe.getDataFlagOutE0().toString());
+                configPe.put("dataFlagOutE1", pe.getDataFlagOutE1().toString());
+                configPe.put("dataFlagOutS0", pe.getDataFlagOutS0().toString());
+                configPe.put("dataFlagOutS1", pe.getDataFlagOutS1().toString());
+                configPe.put("dataFlagInFU0", pe.getDataFlagInFU0().toString());
+                configPe.put("dataFlagInFU1", pe.getDataFlagInFU1().toString());
+                configPe.put("flagInFUMux", pe.getFlagInFUMux().toString());
+                configPe.put("FUFunction", pe.getFUFunction().toString());
+
+                configPes.add(configPe);
+            }
+        }
+
+        return configPes;
     }
 }
