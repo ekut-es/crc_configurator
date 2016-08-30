@@ -8,6 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -117,8 +120,9 @@ public class EditDialog extends Stage {
         GridPane.setConstraints(dynamicConfigLinesLabel, 0, 3);
         GridPane.setConstraints(dynamicConfigLinesTextField, 1, 3);
 
-        // TODO set font size and font label
         Label warningLabel = new Label("Caution:\nIf you decrease a value \nFU configurations, \nstatic configurations, \nand dynamic configurations \nwill be lost!");
+        warningLabel.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 12));
+        warningLabel.setTextFill(Color.web("#ff0000"));
 
         warningLabel.setWrapText(true);
 
