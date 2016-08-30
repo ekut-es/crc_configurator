@@ -6,8 +6,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.File;
 
 public class Main extends Application {
@@ -30,6 +32,15 @@ public class Main extends Application {
         int stageHeight = 2*ConfiguratorTab.CANVAS_PADDING+2*ConfiguratorTab.PE_DRAW_SIZE+2*ConfiguratorTab.INTER_PE_DISTANCE+110;
 
         primaryStage.setTitle("CRC Configurator");
+        primaryStage.getIcons().add(new Image("icon/icon_512x512.png"));
+
+        if(System.getProperty("os.name").equals("Mac OS X")) {
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "CRC Configurator");
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            com.apple.eawt.Application.getApplication().setDockIconImage(new ImageIcon("icon/icon_512x512.png").getImage());
+        }
+
         primaryStage.setMinWidth(stageWidth);
         primaryStage.setMinHeight(stageHeight);
         primaryStage.setScene(new Scene(root, stageWidth, stageHeight));

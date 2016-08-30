@@ -1,10 +1,15 @@
 package de.tuebingen.es.crc.configurator.view;
 
 import javafx.geometry.Insets;
-import javafx.scene.Group;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -24,12 +29,16 @@ public class AboutDialog extends Stage {
         this.initModality(Modality.APPLICATION_MODAL);
         this.setTitle("About CRC Configurator");
 
-        Group root = new Group();
+        BorderPane border = new BorderPane();
+        border.setPadding(new Insets(10,10,10,10));
 
-        Scene scene = new Scene(root, 250, 160);
+        Scene scene = new Scene(border);
 
-        VBox vBox = new VBox(2);
-        vBox.setPadding(new Insets(10,10,10,10));
+        ImageView icon = new ImageView();
+        icon.setImage(new Image("icon/icon_100x100.png"));
+        icon.setSmooth(true);
+
+        VBox vBox = new VBox(4);
 
         Text aboutText = new Text(
                 "Konstantin Lübeck\n" +
@@ -39,14 +48,32 @@ public class AboutDialog extends Stage {
                         "Version 0.1 (2016)\n"
         );
 
+        Text iconCredit = new Text("The Icon was adapted from FroyoShark");
+
+        Hyperlink creditLink = new Hyperlink();
+        creditLink.setText("http://froyoshark.deviantart.com");
+        creditLink.setFont(Font.font(10));
+
+        Text creativeCommons = new Text("CC-BY 4.0");
+        creativeCommons.setFont(Font.font(10));
+
+        iconCredit.setFont(Font.font(10));
+
         Button closeButton = new Button("Close");
 
         closeButton.setOnAction(event -> this.close());
 
-        vBox.getChildren().addAll(aboutText, closeButton);
+        vBox.getChildren().addAll(aboutText, iconCredit, creditLink, creativeCommons);
 
-        root.getChildren().add(vBox);
+        border.setLeft(icon);
+        border.setCenter(vBox);
+        border.setBottom(closeButton);
+
+        border.setMargin(icon, new Insets(0,10,0,0));
+        border.setMargin(closeButton, new Insets(10,0,0,0));
+        border.setAlignment(closeButton, Pos.CENTER);
 
         this.setScene(scene);
+        this.sizeToScene();
     }
 }
