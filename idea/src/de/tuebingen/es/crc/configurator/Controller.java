@@ -289,7 +289,7 @@ public class Controller {
     }
 
     public void handleExportBitsAction(ActionEvent actionEvent) {
-        ExportBitsDialog exportBitsDialog = new ExportBitsDialog("test");
+        ExportBitsDialog exportBitsDialog = new ExportBitsDialog(model.getCrc());
         exportBitsDialog.showAndWait();
     }
 

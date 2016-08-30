@@ -142,9 +142,8 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
         // draw function into FU
         PE.FUFunction fuFunction = this.getConfiguration().getPE(row, column).getFUFunction();
-        FuFunctionStringMap fuFunctionStringMap = new FuFunctionStringMap();
 
-        String fuFunctionString = fuFunctionStringMap.getString(fuFunction);
+        String fuFunctionString = FuFunctionStringMap.getString(fuFunction);
 
         double fuFunctionStringOffset = 0;
 

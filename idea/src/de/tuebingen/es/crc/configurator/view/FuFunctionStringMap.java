@@ -8,7 +8,7 @@ import de.tuebingen.es.crc.configurator.model.PE;
  */
 public class FuFunctionStringMap {
 
-    public String getString(PE.FUFunction fuFunction) {
+    public static String getString(PE.FUFunction fuFunction) {
 
         switch (fuFunction) {
             case add:

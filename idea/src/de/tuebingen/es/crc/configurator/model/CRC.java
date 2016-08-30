@@ -483,4 +483,104 @@ public class CRC {
 
         return configPes;
     }
+
+    public String getPeOpParametersBits() {
+
+        String bits = new String();
+
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                LinkedHashMap<String, Boolean> fuFunctions =  fuMatrix.get(i).get(j).getFunctions();
+
+                bits += (fuFunctions.get("add") ? "1" : "0");
+                bits += (fuFunctions.get("sub") ? "1" : "0");
+                bits += (fuFunctions.get("mul") ? "1" : "0");
+                bits += (fuFunctions.get("div") ? "1" : "0");
+                bits += (fuFunctions.get("and") ? "1" : "0");
+                bits += (fuFunctions.get("or") ? "1" : "0");
+                bits += (fuFunctions.get("xor") ? "1" : "0");
+                bits += (fuFunctions.get("not") ? "1" : "0");
+                bits += (fuFunctions.get("shift_left") ? "1" : "0");
+                bits += (fuFunctions.get("shift_right") ? "1" : "0");
+                bits += (fuFunctions.get("compare") ? "1" : "0");
+                bits += (fuFunctions.get("multiplex") ? "1" : "0");
+            }
+        }
+
+        return bits;
+    }
+
+    public String getStaticConfigParameterBits() {
+
+        String bits = new String();
+
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                bits += this.getPeStaticConfigParameterBits(i,j);
+            }
+        }
+
+
+        return bits;
+    }
+
+    public String getPeStaticConfigParameterBits(int row, int column) {
+
+        String bits = new String();
+
+        // TODO: sort by key
+        for(Map.Entry<Integer, Configuration> entry : staticConfigs.entrySet()) {
+            bits += this.getPeStaticConfigParameterBits(row,column,entry.getKey());
+        }
+
+        return bits;
+    }
+
+    public String getPeStaticConfigParameterBits(int row, int column, int configNumber) {
+
+        String bits = new String();
+
+        PE pe = staticConfigs.get(configNumber).getPE(row, column);
+
+        bits += (pe.isActive() ? "1" : "0");
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS1());
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS0());
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE0());
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE1());
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE0());
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN1());
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN0());
+
+        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getFlagInFUMux());
+        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFU1());
+        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFU0());
+
+        bits += PeFuFunctionBitsMap.getBits(pe.getFUFunction());
+
+        return bits;
+    }
+
+    public String getPeDynamicConfigParameterBits(int row, int column, int configNumber) {
+
+        String bits = new String();
+
+        PE pe = dynamicConfigs.get(configNumber).getPE(row, column);
+
+        bits += (pe.isActive() ? "1" : "0");
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS1());
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS0());
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE0());
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE1());
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE0());
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN1());
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN0());
+
+        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getFlagInFUMux());
+        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFU1());
+        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFU0());
+
+        bits += PeFuFunctionBitsMap.getBits(pe.getFUFunction());
+
+        return bits;
+    }
 }
