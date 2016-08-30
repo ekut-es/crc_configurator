@@ -38,6 +38,9 @@ public class Controller {
     private MenuItem menuItemSaveAs;
 
     @FXML
+    private MenuItem menuItemExportBits;
+
+    @FXML
     private MenuItem menuItemClose;
 
     private HardwareModelTab hardwareModelTab;
@@ -240,6 +243,7 @@ public class Controller {
         menuItemEdit.setDisable(false);
         menuItemSave.setDisable(false);
         menuItemSaveAs.setDisable(false);
+        menuItemExportBits.setDisable(false);
         menuItemClose.setDisable(false);
 
         stage.setTitle("CRC Configurator (" + crcDescriptionFile.getName() + ")");
@@ -284,6 +288,11 @@ public class Controller {
         }
     }
 
+    public void handleExportBitsAction(ActionEvent actionEvent) {
+        ExportBitsDialog exportBitsDialog = new ExportBitsDialog("test");
+        exportBitsDialog.showAndWait();
+    }
+
     /**
      * checks if file was saved before closing it and presents a warning if necessary
      * quits Application
@@ -303,11 +312,11 @@ public class Controller {
             }
 
             else if(result == NotSavedAlert.ButtonPressed.DONT_SAVE) {
-                //System.exit(0);
+                System.exit(0);
             }
 
         } else {
-            //System.exit(0);
+            System.exit(0);
         }
     }
 
@@ -327,6 +336,7 @@ public class Controller {
         menuItemEdit.setDisable(true);
         menuItemSave.setDisable(true);
         menuItemSaveAs.setDisable(true);
+        menuItemExportBits.setDisable(true);
         menuItemClose.setDisable(true);
         stage.setTitle("CRC Configurator");
     }

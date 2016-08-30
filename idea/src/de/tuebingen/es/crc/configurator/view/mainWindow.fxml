@@ -15,6 +15,7 @@
                     <MenuItem fx:id="menuItemEdit" text="Edit" disable="true" onAction="#handleEditAction"/>
                     <MenuItem fx:id="menuItemSave" text="Save" disable="true" onAction="#handleSaveAction" accelerator="Shortcut+S"/>
                     <MenuItem fx:id="menuItemSaveAs" text="Save As" disable="true" onAction="#handleSaveAsAction" accelerator="Shift+Shortcut+S"/>
+                    <MenuItem fx:id="menuItemExportBits" text="Export Bits" disable="true" onAction="#handleExportBitsAction"/>
                     <MenuItem fx:id="menuItemClose" text="Close" disable="true" onAction="#handleCloseAction" accelerator="Shortcut+W"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="Quit" onAction="#handleQuitAction" accelerator="Shortcut+Q"/>
