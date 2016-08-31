@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CRC Configurator" default="macapp" basedir=".">
+    <taskdef name="bundleapp"
+             classname="com.oracle.appbundler.AppBundlerTask"
+             classpath="lib/appbundler-1.0.jar" />
+    <target name="macapp">
+        <bundleapp outputdirectory="out/mac"
+                   name="CRC Configurator"
+                   displayname="CRC Configurator"
+                   icon="src/icon/icon_512x512.png"
+                   identifier="de.tuebingen.es.crc.configurator"
+                   mainclassname="Main">
+            <classpath file="out/artifacts/idea_jar/idea.jar" />
+        </bundleapp>
+    </target>
+</project>
