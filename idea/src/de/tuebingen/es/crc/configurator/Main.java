@@ -37,13 +37,6 @@ public class Main extends Application {
         primaryStage.setTitle("CRC Configurator");
         primaryStage.getIcons().add(new Image("icon/icon_512x512.png"));
 
-        if(System.getProperty("os.name").equals("Mac OS X")) {
-            System.setProperty("apple.laf.useScreenMenuBar", "true");
-            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "CRC Configurator");
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            com.apple.eawt.Application.getApplication().setDockIconImage(new ImageIcon("icon/icon_512x512.png").getImage());
-        }
-
         primaryStage.setMinWidth(stageWidth);
         primaryStage.setMinHeight(stageHeight);
         primaryStage.setScene(new Scene(root, stageWidth, stageHeight));
