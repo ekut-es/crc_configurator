@@ -15,9 +15,12 @@ import java.io.File;
 public class Main extends Application {
 
     private static String filePath;
+    private static String secondArg;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        // TODO command line version: -e, --export-bits which prints the bits on the command line
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/mainWindow.fxml"));
         Parent root = fxmlLoader.load();
@@ -59,9 +62,15 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 
-        // check if a command line argument was given
-        if(args.length > 0) {
+        // check first command line argument
+        if(args.length == 1) {
             filePath = args[0];
+        }
+
+        // check second command line argument
+        if(args.length == 2) {
+            filePath = args[0];
+            secondArg = args[1];
         }
 
         launch(args);
