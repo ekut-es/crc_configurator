@@ -8,9 +8,9 @@ import javafx.scene.control.ContextMenu;
  */
 public class DataFlagInFuDriverContextMenu extends ContextMenu {
 
-    private PE.DataFlagInFuDriver selectecInFuDriver = PE.DataFlagInFuDriver.none;
+    private PE.DataFlagInFuDriver selectedInFuDriver = PE.DataFlagInFuDriver.none;
 
-    public PE.DataFlagInFuDriver getSelectedDataFlagInFuDriver() { return selectecInFuDriver; }
+    public PE.DataFlagInFuDriver getSelectedDataFlagInFuDriver() { return selectedInFuDriver; }
 
     public DataFlagInFuDriverContextMenu(PE.DataFlagInFuDriver activeDataFlagInFuDriver, int rows, int row) {
 
@@ -32,7 +32,7 @@ public class DataFlagInFuDriverContextMenu extends ContextMenu {
     private void addMenuItem(PE.DataFlagInFuDriver activeDataFlagInFuDriver, String dataFlagInFuDriver) {
         ConfigurationTabContextMenuItem menuItem = new ConfigurationTabContextMenuItem(dataFlagInFuDriver);
         if(activeDataFlagInFuDriver == PE.DataFlagInFuDriver.valueOf(dataFlagInFuDriver)) { menuItem.setSelected(true); }
-        menuItem.setOnAction(event -> selectecInFuDriver = PE.DataFlagInFuDriver.valueOf(dataFlagInFuDriver));
+        menuItem.setOnAction(event -> selectedInFuDriver = PE.DataFlagInFuDriver.valueOf(dataFlagInFuDriver));
         this.getItems().add(menuItem);
     }
 
