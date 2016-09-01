@@ -25,11 +25,11 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         STATIC, DYNAMIC
     }
 
-    private Model model;
-    private Controller controller;
+    private final Model model;
+    private final Controller controller;
     private GraphicsContext gc;
-    private int number;
-    private ConfigurationTabType configurationTabType;
+    private final int number;
+    private final ConfigurationTabType configurationTabType;
 
     private final int peDrawSizeTwentieth = (PE_DRAW_SIZE/20);
 
@@ -50,7 +50,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         }
 
         this.setup();
-        this.drawConfigurationCrc();
+        this.drawCrcConfig();
 
     }
 
@@ -58,14 +58,20 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         return number;
     }
 
+    /**
+     * redraws config
+     */
     @Override
     public void update() {
         if(model.wasCrcResized()) {
             this.setup();
         }
-        this.drawConfigurationCrc();
+        this.drawCrcConfig();
     }
 
+    /**
+     * sets up the drawing canvas and draws config
+     */
     private void setup() {
         Canvas canvas = new Canvas();
         canvas.setHeight(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
@@ -79,10 +85,10 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     }
 
                     if(event.getButton().equals(MouseButton.SECONDARY)) {
-                        this.handleConfigurationRightClick((int) event.getX(), (int) event.getY());
+                        this.handleConfigurationClick((int) event.getX(), (int) event.getY());
                     } else if(event.getButton().equals(MouseButton.PRIMARY)) {
                         if(event.getClickCount() == 2) {
-                            this.handleConfigurationRightClick((int) event.getX(), (int) event.getY());
+                            this.handleConfigurationClick((int) event.getX(), (int) event.getY());
                         }
                     }
                 }
@@ -97,7 +103,11 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         gc = canvas.getGraphicsContext2D();
     }
 
-    private Configuration getConfiguration() {
+    /**
+     * gets the static or dynamic config for this tab
+     * @return Configuration static or dynamic
+     */
+    private Configuration getConfig() {
         if(configurationTabType == ConfigurationTabType.STATIC) {
             return model.getCrc().getStaticConfig(number);
         } else {
@@ -105,7 +115,10 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         }
     }
 
-    private void drawConfigurationCrc() {
+    /**
+     * draws the config
+     */
+    private void drawCrcConfig() {
 
         gc.clearRect(0,0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 
@@ -141,11 +154,11 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawFU(gc, x, y);
 
         // draw function into FU
-        PE.FUFunction fuFunction = this.getConfiguration().getPe(row, column).getFuFunction();
+        PE.FUFunction fuFunction = this.getConfig().getPe(row, column).getFuFunction();
 
         String fuFunctionString = FuFunctionStringMap.getString(fuFunction);
 
-        double fuFunctionStringOffset = 0;
+        double fuFunctionStringOffset;
 
         switch (fuFunction) {
             case add:
@@ -217,6 +230,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         // draw FU pads
         gc.setFill(Color.GRAY);
 
+        //noinspection PointlessArithmeticExpression,PointlessArithmeticExpression,PointlessArithmeticExpression,PointlessArithmeticExpression
         gc.fillPolygon(
                 new double[] {
                         0+7*peDrawSizeTwentieth+x-1,
@@ -233,6 +247,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 4
         );
 
+        //noinspection PointlessArithmeticExpression,PointlessArithmeticExpression,PointlessArithmeticExpression,PointlessArithmeticExpression
         gc.fillPolygon(
                 new double[] {
                         0+7*peDrawSizeTwentieth+x-1,
@@ -271,372 +286,372 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         // draw data paths
         // northwest corner
         if(row == 0 && column == 0) {
-            this.drawConnectionE0toW0(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
-            this.drawConnectionE1toW1(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
+            this.drawConnectionE0ToW0(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
+            this.drawConnectionE1ToW1(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
 
-            this.drawConnectionE0toW0(x, y, false, false);
-            this.drawConnectionE1toW1(x, y, false, false);
-            this.drawConnectionS0toN0(x, y);
-            this.drawConnectionS1toN1(x, y);
+            this.drawConnectionE0ToW0(x, y, false, false);
+            this.drawConnectionE1ToW1(x, y, false, false);
+            this.drawConnectionS0ToN0(x, y);
+            this.drawConnectionS1ToN1(x, y);
         }
 
         // northmost row
         else if(row == 0 && column > 0 && column < model.getCrc().getColumns()-1) {
-            this.drawConnectionE0toW0(x, y, false, false);
-            this.drawConnectionE1toW1(x, y, false, false);
-            this.drawConnectionS0toN0(x, y);
-            this.drawConnectionS1toN1(x, y);
+            this.drawConnectionE0ToW0(x, y, false, false);
+            this.drawConnectionE1ToW1(x, y, false, false);
+            this.drawConnectionS0ToN0(x, y);
+            this.drawConnectionS1ToN1(x, y);
         }
 
         // northeast corner
         else if(row == 0 && column == model.getCrc().getColumns()-1) {
-            this.drawConnectionE0toW0(x, y, true, false);
-            this.drawConnectionE1toW1(x, y, true, false);
-            this.drawConnectionS0toN0(x, y);
-            this.drawConnectionS1toN1(x, y);
+            this.drawConnectionE0ToW0(x, y, true, false);
+            this.drawConnectionE1ToW1(x, y, true, false);
+            this.drawConnectionS0ToN0(x, y);
+            this.drawConnectionS1ToN1(x, y);
         }
 
         // eastmost column
         else if(row > 0 && row < model.getCrc().getRows()-1 && column == model.getCrc().getColumns()-1) {
-            this.drawConnectionE0toW0(x, y, true, false);
-            this.drawConnectionE1toW1(x, y, true, false);
-            this.drawConnectionS0toN0(x, y);
-            this.drawConnectionS1toN1(x, y);
-            this.drawConnectionN0toS0(x, y);
-            this.drawConnectionN1toS1(x, y);
+            this.drawConnectionE0ToW0(x, y, true, false);
+            this.drawConnectionE1ToW1(x, y, true, false);
+            this.drawConnectionS0ToN0(x, y);
+            this.drawConnectionS1ToN1(x, y);
+            this.drawConnectionN0ToS0(x, y);
+            this.drawConnectionN1ToS1(x, y);
         }
 
         // southeast corner
         else if(row == model.getCrc().getRows()-1 && column == model.getCrc().getColumns()-1) {
-            this.drawConnectionE0toW0(x, y, true, false);
-            this.drawConnectionE1toW1(x, y, true, false);
-            this.drawConnectionN0toS0(x, y);
-            this.drawConnectionN1toS1(x, y);
+            this.drawConnectionE0ToW0(x, y, true, false);
+            this.drawConnectionE1ToW1(x, y, true, false);
+            this.drawConnectionN0ToS0(x, y);
+            this.drawConnectionN1ToS1(x, y);
         }
 
         // southmost row
         else if(row == model.getCrc().getRows()-1 && column > 0 && column < model.getCrc().getColumns()-1) {
-            this.drawConnectionE0toW0(x, y, false, false);
-            this.drawConnectionE1toW1(x, y, false, false);
-            this.drawConnectionN0toS0(x, y);
-            this.drawConnectionN1toS1(x, y);
+            this.drawConnectionE0ToW0(x, y, false, false);
+            this.drawConnectionE1ToW1(x, y, false, false);
+            this.drawConnectionN0ToS0(x, y);
+            this.drawConnectionN1ToS1(x, y);
         }
 
         // southwest corner
         else if(row == model.getCrc().getRows()-1 && column == 0) {
-            this.drawConnectionE0toW0(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
-            this.drawConnectionE1toW1(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
+            this.drawConnectionE0ToW0(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
+            this.drawConnectionE1ToW1(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
 
-            this.drawConnectionE0toW0(x, y, false, false);
-            this.drawConnectionE1toW1(x, y, false, false);
-            this.drawConnectionN0toS0(x, y);
-            this.drawConnectionN1toS1(x, y);
+            this.drawConnectionE0ToW0(x, y, false, false);
+            this.drawConnectionE1ToW1(x, y, false, false);
+            this.drawConnectionN0ToS0(x, y);
+            this.drawConnectionN1ToS1(x, y);
         }
 
         // westmost column
         else if(row > 0 && row < model.getCrc().getRows()-1 && column == 0) {
-            this.drawConnectionE0toW0(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
-            this.drawConnectionE1toW1(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
+            this.drawConnectionE0ToW0(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
+            this.drawConnectionE1ToW1(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
 
-            this.drawConnectionE0toW0(x, y, false, false);
-            this.drawConnectionE1toW1(x, y, false, false);
-            this.drawConnectionN0toS0(x, y);
-            this.drawConnectionN1toS1(x, y);
-            this.drawConnectionS0toN0(x, y);
-            this.drawConnectionS1toN1(x, y);
+            this.drawConnectionE0ToW0(x, y, false, false);
+            this.drawConnectionE1ToW1(x, y, false, false);
+            this.drawConnectionN0ToS0(x, y);
+            this.drawConnectionN1ToS1(x, y);
+            this.drawConnectionS0ToN0(x, y);
+            this.drawConnectionS1ToN1(x, y);
         }
 
         // center
         else {
-            this.drawConnectionE0toW0(x, y, false, false);
-            this.drawConnectionE1toW1(x, y, false, false);
-            this.drawConnectionN0toS0(x, y);
-            this.drawConnectionN1toS1(x, y);
-            this.drawConnectionS0toN0(x, y);
-            this.drawConnectionS1toN1(x, y);
+            this.drawConnectionE0ToW0(x, y, false, false);
+            this.drawConnectionE1ToW1(x, y, false, false);
+            this.drawConnectionN0ToS0(x, y);
+            this.drawConnectionN1ToS1(x, y);
+            this.drawConnectionS0ToN0(x, y);
+            this.drawConnectionS1ToN1(x, y);
 
 
         }
 
         /*
-        this.drawInternalConnectionFUtoN0(x, y);
-        this.drawInternalConnectionFUtoN1(x, y);
-        this.drawInternalConnectionFUtoE0(x, y);
-        this.drawInternalConnectionFUtoE1(x, y);
-        this.drawInternalConnectionFUtoS0(x, y);
-        this.drawInternalConnectionFUtoS1(x, y);
+        this.drawInternalConnectionFuToN0(x, y);
+        this.drawInternalConnectionFuToN1(x, y);
+        this.drawInternalConnectionFuToE0(x, y);
+        this.drawInternalConnectionFuToE1(x, y);
+        this.drawInternalConnectionFuToS0(x, y);
+        this.drawInternalConnectionFuToS1(x, y);
 
-        this.drawInternalConnectionN0toInFU0(x, y);
-        this.drawInternalConnectionN0toInFU1(x, y);
-        this.drawInternalConnectionN0toInFUMux(x, y);
-        this.drawInternalConnectionN0toE0(x, y);
-        this.drawInternalConnectionN0toE1(x, y);
-        this.drawInternalConnectionN0toS0(x, y);
-        this.drawInternalConnectionN0toS1(x, y);
+        this.drawInternalConnectionN0ToInFu0(x, y);
+        this.drawInternalConnectionN0ToInFu1(x, y);
+        this.drawInternalConnectionN0ToInFuMux(x, y);
+        this.drawInternalConnectionN0ToE0(x, y);
+        this.drawInternalConnectionN0ToE1(x, y);
+        this.drawInternalConnectionN0ToS0(x, y);
+        this.drawInternalConnectionN0ToS1(x, y);
 
-        this.drawInternalConnectionN1toInFU0(x, y);
-        this.drawInternalConnectionN1toInFU1(x, y);
-        this.drawInternalConnectionN1toInFUMux(x, y);
-        this.drawInternalConnectionN1toE0(x, y);
-        this.drawInternalConnectionN1toE1(x, y);
-        this.drawInternalConnectionN1toS0(x, y);
-        this.drawInternalConnectionN1toS1(x, y);
+        this.drawInternalConnectionN1ToInFu0(x, y);
+        this.drawInternalConnectionN1ToInFu1(x, y);
+        this.drawInternalConnectionN1ToInFuMux(x, y);
+        this.drawInternalConnectionN1ToE0(x, y);
+        this.drawInternalConnectionN1ToE1(x, y);
+        this.drawInternalConnectionN1ToS0(x, y);
+        this.drawInternalConnectionN1ToS1(x, y);
 
-        this.drawInternalConnectionS0toInFU0(x, y);
-        this.drawInternalConnectionS0toInFU1(x, y);
-        this.drawInternalConnectionS0toInFUMux(x, y);
-        this.drawInternalConnectionS0toN0(x, y);
-        this.drawInternalConnectionS0toN1(x, y);
-        this.drawInternalConnectionS0toE0(x, y);
-        this.drawInternalConnectionS0toE1(x, y);
+        this.drawInternalConnectionS0ToInFu0(x, y);
+        this.drawInternalConnectionS0ToInFu1(x, y);
+        this.drawInternalConnectionS0ToInFuMux(x, y);
+        this.drawInternalConnectionS0ToN0(x, y);
+        this.drawInternalConnectionS0ToN1(x, y);
+        this.drawInternalConnectionS0ToE0(x, y);
+        this.drawInternalConnectionS0ToE1(x, y);
 
-        this.drawInternalConnectionS1toInFU0(x, y);
-        this.drawInternalConnectionS1toInFU1(x, y);
+        this.drawInternalConnectionS1ToInFu0(x, y);
+        this.drawInternalConnectionS1ToInFu1(x, y);
         this.drawInternalConnectionS1toInFUMux(x, y);
-        this.drawInternalConnectionS1toN0(x, y);
-        this.drawInternalConnectionS1toN1(x, y);
-        this.drawInternalConnectionS1toE0(x, y);
-        this.drawInternalConnectionS1toE1(x, y);
+        this.drawInternalConnectionS1ToN0(x, y);
+        this.drawInternalConnectionS1ToN1(x, y);
+        this.drawInternalConnectionS1ToE0(x, y);
+        this.drawInternalConnectionS1ToE1(x, y);
 
-        this.drawInternalConnectionW0toInFU0(x, y);
-        this.drawInternalConnectionW0toInFU1(x, y);
-        this.drawInternalConnectionW0toInFUMux(x, y);
-        this.drawInternalConnectionW0toN0(x, y);
-        this.drawInternalConnectionW0toN1(x, y);
-        this.drawInternalConnectionW0toE0(x, y);
-        this.drawInternalConnectionW0toE1(x, y);
-        this.drawInternalConnectionW0toS0(x, y);
-        this.drawInternalConnectionW0toS1(x, y);
+        this.drawInternalConnectionW0ToInFu0(x, y);
+        this.drawInternalConnectionW0ToInFu1(x, y);
+        this.drawInternalConnectionW0ToInFuMux(x, y);
+        this.drawInternalConnectionW0ToN0(x, y);
+        this.drawInternalConnectionW0ToN1(x, y);
+        this.drawInternalConnectionW0ToE0(x, y);
+        this.drawInternalConnectionW0ToE1(x, y);
+        this.drawInternalConnectionW0ToS0(x, y);
+        this.drawInternalConnectionW0ToS1(x, y);
 
-        this.drawInternalConnectionW1toInFU0(x, y);
-        this.drawInternalConnectionW1toInFU1(x, y);
-        this.drawInternalConnectionW1toInFUMux(x, y);
-        this.drawInternalConnectionW1toN0(x, y);
-        this.drawInternalConnectionW1toN1(x, y);
-        this.drawInternalConnectionW1toE0(x, y);
-        this.drawInternalConnectionW1toE1(x, y);
-        this.drawInternalConnectionW1toS1(x, y);
-        this.drawInternalConnectionW1toS1(x, y);
+        this.drawInternalConnectionW1ToInFu0(x, y);
+        this.drawInternalConnectionW1ToInFu1(x, y);
+        this.drawInternalConnectionW1ToInFuMux(x, y);
+        this.drawInternalConnectionW1ToN0(x, y);
+        this.drawInternalConnectionW1ToN1(x, y);
+        this.drawInternalConnectionW1ToE0(x, y);
+        this.drawInternalConnectionW1ToE1(x, y);
+        this.drawInternalConnectionW1ToS1(x, y);
+        this.drawInternalConnectionW1ToS1(x, y);
         */
 
         // internal connection
         // * -> FU0
-        PE.DataFlagInFuDriver dataFlagInFu0Driver = this.getConfiguration().getPe(row, column).getDataFlagInFu0();
+        PE.DataFlagInFuDriver dataFlagInFu0Driver = this.getConfig().getPe(row, column).getDataFlagInFu0();
 
         switch (dataFlagInFu0Driver) {
             case data_flag_in_N_0:
-                this.drawInternalConnectionN0toInFU0(x, y);
+                this.drawInternalConnectionN0ToInFu0(x, y);
                 break;
             case data_flag_in_N_1:
-                this.drawInternalConnectionN1toInFU0(x, y);
+                this.drawInternalConnectionN1ToInFu0(x, y);
                 break;
             case data_flag_in_S_0:
-                this.drawInternalConnectionS0toInFU0(x, y);
+                this.drawInternalConnectionS0ToInFu0(x, y);
                 break;
             case data_flag_in_S_1:
-                this.drawInternalConnectionS1toInFU0(x, y);
+                this.drawInternalConnectionS1ToInFu0(x, y);
                 break;
             case data_flag_in_W_0:
-                this.drawInternalConnectionW0toInFU0(x, y);
+                this.drawInternalConnectionW0ToInFu0(x, y);
                 break;
             case data_flag_in_W_1:
-                this.drawInternalConnectionW1toInFU0(x, y);
+                this.drawInternalConnectionW1ToInFu0(x, y);
                 break;
         }
 
         // * -> FU1
-        PE.DataFlagInFuDriver dataFlagInFu1Driver = this.getConfiguration().getPe(row, column).getDataFlagInFu1();
+        PE.DataFlagInFuDriver dataFlagInFu1Driver = this.getConfig().getPe(row, column).getDataFlagInFu1();
 
         switch (dataFlagInFu1Driver) {
             case data_flag_in_N_0:
-                this.drawInternalConnectionN0toInFU1(x, y);
+                this.drawInternalConnectionN0ToInFu1(x, y);
                 break;
             case data_flag_in_N_1:
-                this.drawInternalConnectionN1toInFU1(x, y);
+                this.drawInternalConnectionN1ToInFu1(x, y);
                 break;
             case data_flag_in_S_0:
-                this.drawInternalConnectionS0toInFU1(x, y);
+                this.drawInternalConnectionS0ToInFu1(x, y);
                 break;
             case data_flag_in_S_1:
-                this.drawInternalConnectionS1toInFU1(x, y);
+                this.drawInternalConnectionS1ToInFu1(x, y);
                 break;
             case data_flag_in_W_0:
-                this.drawInternalConnectionW0toInFU1(x, y);
+                this.drawInternalConnectionW0ToInFu1(x, y);
                 break;
             case data_flag_in_W_1:
-                this.drawInternalConnectionW1toInFU1(x, y);
+                this.drawInternalConnectionW1ToInFu1(x, y);
                 break;
         }
 
         // * -> FUMux
-        PE.DataFlagInFuDriver flagInFuMuxDriver = this.getConfiguration().getPe(row, column).getFlagInFuMux();
+        PE.DataFlagInFuDriver flagInFuMuxDriver = this.getConfig().getPe(row, column).getFlagInFuMux();
 
         switch (flagInFuMuxDriver) {
             case data_flag_in_N_0:
-                this.drawInternalConnectionN0toInFUMux(x, y);
+                this.drawInternalConnectionN0ToInFuMux(x, y);
                 break;
             case data_flag_in_N_1:
-                this.drawInternalConnectionN1toInFUMux(x, y);
+                this.drawInternalConnectionN1ToInFuMux(x, y);
                 break;
             case data_flag_in_S_0:
-                this.drawInternalConnectionS0toInFUMux(x, y);
+                this.drawInternalConnectionS0ToInFuMux(x, y);
                 break;
             case data_flag_in_S_1:
-                this.drawInternalConnectionS1toInFUMux(x, y);
+                this.drawInternalConnectionS1ToInFuMux(x, y);
                 break;
             case data_flag_in_W_0:
-                this.drawInternalConnectionW0toInFUMux(x, y);
+                this.drawInternalConnectionW0ToInFuMux(x, y);
                 break;
             case data_flag_in_W_1:
-                this.drawInternalConnectionW1toInFUMux(x, y);
+                this.drawInternalConnectionW1ToInFuMux(x, y);
                 break;
         }
 
         // * -> N0
-        PE.DataFlagOutDriver dataFlagOutN0Driver = this.getConfiguration().getPe(row, column).getDataFlagOutN0();
+        PE.DataFlagOutDriver dataFlagOutN0Driver = this.getConfig().getPe(row, column).getDataFlagOutN0();
 
         switch (dataFlagOutN0Driver) {
             case data_flag_out_FU:
-                this.drawInternalConnectionFUtoN0(x, y);
+                this.drawInternalConnectionFuToN0(x, y);
                 break;
             case data_flag_in_S_0:
-                this.drawInternalConnectionS0toN0(x, y);
+                this.drawInternalConnectionS0ToN0(x, y);
                 break;
             case data_flag_in_S_1:
-                this.drawInternalConnectionS1toN0(x, y);
+                this.drawInternalConnectionS1ToN0(x, y);
                 break;
             case data_flag_in_W_0:
-                this.drawInternalConnectionW0toN0(x, y);
+                this.drawInternalConnectionW0ToN0(x, y);
                 break;
             case data_flag_in_W_1:
-                this.drawInternalConnectionW1toN0(x, y);
+                this.drawInternalConnectionW1ToN0(x, y);
                 break;
         }
 
         // * -> N1
-        PE.DataFlagOutDriver dataFlagOutN1Driver = this.getConfiguration().getPe(row, column).getDataFlagOutN1();
+        PE.DataFlagOutDriver dataFlagOutN1Driver = this.getConfig().getPe(row, column).getDataFlagOutN1();
 
         switch (dataFlagOutN1Driver) {
             case data_flag_out_FU:
-                this.drawInternalConnectionFUtoN1(x, y);
+                this.drawInternalConnectionFuToN1(x, y);
                 break;
             case data_flag_in_S_0:
-                this.drawInternalConnectionS0toN1(x, y);
+                this.drawInternalConnectionS0ToN1(x, y);
                 break;
             case data_flag_in_S_1:
-                this.drawInternalConnectionS1toN1(x, y);
+                this.drawInternalConnectionS1ToN1(x, y);
                 break;
             case data_flag_in_W_0:
-                this.drawInternalConnectionW0toN1(x, y);
+                this.drawInternalConnectionW0ToN1(x, y);
                 break;
             case data_flag_in_W_1:
-                this.drawInternalConnectionW1toN1(x, y);
+                this.drawInternalConnectionW1ToN1(x, y);
                 break;
         }
 
         // * -> E0
-        PE.DataFlagOutDriver dataFlagOutE0Driver = this.getConfiguration().getPe(row, column).getDataFlagOutE0();
+        PE.DataFlagOutDriver dataFlagOutE0Driver = this.getConfig().getPe(row, column).getDataFlagOutE0();
 
         switch (dataFlagOutE0Driver) {
             case data_flag_out_FU:
-                this.drawInternalConnectionFUtoE0(x, y);
+                this.drawInternalConnectionFuToE0(x, y);
                 break;
             case data_flag_in_N_0:
-                this.drawInternalConnectionN0toE0(x, y);
+                this.drawInternalConnectionN0ToE0(x, y);
                 break;
             case data_flag_in_N_1:
-                this.drawInternalConnectionN1toE0(x, y);
+                this.drawInternalConnectionN1ToE0(x, y);
                 break;
             case data_flag_in_S_0:
-                this.drawInternalConnectionS0toE0(x, y);
+                this.drawInternalConnectionS0ToE0(x, y);
                 break;
             case data_flag_in_S_1:
-                this.drawInternalConnectionS1toE0(x, y);
+                this.drawInternalConnectionS1ToE0(x, y);
                 break;
             case data_flag_in_W_0:
-                this.drawInternalConnectionW0toE0(x, y);
+                this.drawInternalConnectionW0ToE0(x, y);
                 break;
             case data_flag_in_W_1:
-                this.drawInternalConnectionW1toE0(x, y);
+                this.drawInternalConnectionW1ToE0(x, y);
                 break;
         }
 
         // * -> E1
-        PE.DataFlagOutDriver dataFlagOutE1Driver = this.getConfiguration().getPe(row, column).getDataFlagOutE1();
+        PE.DataFlagOutDriver dataFlagOutE1Driver = this.getConfig().getPe(row, column).getDataFlagOutE1();
 
         switch (dataFlagOutE1Driver) {
             case data_flag_out_FU:
-                this.drawInternalConnectionFUtoE1(x, y);
+                this.drawInternalConnectionFuToE1(x, y);
                 break;
             case data_flag_in_N_0:
-                this.drawInternalConnectionN0toE1(x, y);
+                this.drawInternalConnectionN0ToE1(x, y);
                 break;
             case data_flag_in_N_1:
-                this.drawInternalConnectionN1toE1(x, y);
+                this.drawInternalConnectionN1ToE1(x, y);
                 break;
             case data_flag_in_S_0:
-                this.drawInternalConnectionS0toE1(x, y);
+                this.drawInternalConnectionS0ToE1(x, y);
                 break;
             case data_flag_in_S_1:
-                this.drawInternalConnectionS1toE1(x, y);
+                this.drawInternalConnectionS1ToE1(x, y);
                 break;
             case data_flag_in_W_0:
-                this.drawInternalConnectionW0toE1(x, y);
+                this.drawInternalConnectionW0ToE1(x, y);
                 break;
             case data_flag_in_W_1:
-                this.drawInternalConnectionW1toE1(x, y);
+                this.drawInternalConnectionW1ToE1(x, y);
                 break;
         }
 
         // * -> S0
-        PE.DataFlagOutDriver dataFlagOutS0Driver = this.getConfiguration().getPe(row, column).getDataFlagOutS0();
+        PE.DataFlagOutDriver dataFlagOutS0Driver = this.getConfig().getPe(row, column).getDataFlagOutS0();
 
         switch (dataFlagOutS0Driver) {
             case data_flag_out_FU:
-                this.drawInternalConnectionFUtoS0(x, y);
+                this.drawInternalConnectionFuToS0(x, y);
                 break;
             case data_flag_in_N_0:
-                this.drawInternalConnectionN0toS0(x, y);
+                this.drawInternalConnectionN0ToS0(x, y);
                 break;
             case data_flag_in_N_1:
-                this.drawInternalConnectionN1toS0(x, y);
+                this.drawInternalConnectionN1ToS0(x, y);
                 break;
             case data_flag_in_W_0:
-                this.drawInternalConnectionW0toS0(x, y);
+                this.drawInternalConnectionW0ToS0(x, y);
                 break;
             case data_flag_in_W_1:
-                this.drawInternalConnectionW1toS0(x, y);
+                this.drawInternalConnectionW1ToS0(x, y);
                 break;
         }
 
         // * -> S1
-        PE.DataFlagOutDriver dataFlagOutS1Driver = this.getConfiguration().getPe(row, column).getDataFlagOutS1();
+        PE.DataFlagOutDriver dataFlagOutS1Driver = this.getConfig().getPe(row, column).getDataFlagOutS1();
 
         switch (dataFlagOutS1Driver) {
             case data_flag_out_FU:
-                this.drawInternalConnectionFUtoS1(x, y);
+                this.drawInternalConnectionFuToS1(x, y);
                 break;
             case data_flag_in_N_0:
-                this.drawInternalConnectionN0toS1(x, y);
+                this.drawInternalConnectionN0ToS1(x, y);
                 break;
             case data_flag_in_N_1:
-                this.drawInternalConnectionN1toS1(x, y);
+                this.drawInternalConnectionN1ToS1(x, y);
                 break;
             case data_flag_in_W_0:
-                this.drawInternalConnectionW0toS1(x, y);
+                this.drawInternalConnectionW0ToS1(x, y);
                 break;
             case data_flag_in_W_1:
-                this.drawInternalConnectionW1toS1(x, y);
+                this.drawInternalConnectionW1ToS1(x, y);
                 break;
         }
 
 
-        if(!this.getConfiguration().getPe(row, column).isActive()) {
+        if(!this.getConfig().getPe(row, column).isActive()) {
             this.drawInternalConnectionInactive(x, y);
         }
     }
 
-    private void drawConnectionN0toS0(double x, double y) {
+    private void drawConnectionN0ToS0(double x, double y) {
 
         // line
         gc.setStroke(Color.GRAY);
@@ -684,7 +699,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         gc.fillText("S0", x+(peDrawSizeTwentieth/2), y-INTER_PE_DISTANCE+2*peDrawSizeTwentieth);
     }
 
-    private void drawConnectionN1toS1(double x, double y) {
+    private void drawConnectionN1ToS1(double x, double y) {
 
         // line
         gc.setStroke(Color.GRAY);
@@ -732,7 +747,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         gc.fillText("S1", x+4.5*peDrawSizeTwentieth, y-INTER_PE_DISTANCE+2*peDrawSizeTwentieth);
     }
 
-    private void drawConnectionS0toN0(double x, double y) {
+    private void drawConnectionS0ToN0(double x, double y) {
 
         // line
         gc.setStroke(Color.GRAY);
@@ -780,7 +795,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         gc.fillText("S0", x+10.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+2*peDrawSizeTwentieth);
     }
 
-    private void drawConnectionS1toN1(double x, double y) {
+    private void drawConnectionS1ToN1(double x, double y) {
 
         // line
         gc.setStroke(Color.GRAY);
@@ -828,7 +843,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         gc.fillText("S1", x+14.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+2*peDrawSizeTwentieth);
     }
 
-    private void drawConnectionE0toW0(double x, double y, boolean crcOutput, boolean crcInput) {
+    private void drawConnectionE0ToW0(double x, double y, boolean crcOutput, boolean crcInput) {
 
         // line
         gc.setStroke(Color.GRAY);
@@ -885,7 +900,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
     }
 
-    private void drawConnectionE1toW1(double x, double y, boolean crcOutput, boolean crcInput) {
+    private void drawConnectionE1ToW1(double x, double y, boolean crcOutput, boolean crcInput) {
 
         // line
         gc.setStroke(Color.GRAY);
@@ -941,7 +956,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         }
     }
 
-    private void drawInternalConnectionFUtoN0(double x, double y) {
+    private void drawInternalConnectionFuToN0(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -964,7 +979,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipN0(x, y);
     }
 
-    private void drawInternalConnectionFUtoN1(double x, double y) {
+    private void drawInternalConnectionFuToN1(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -987,7 +1002,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipN1(x, y);
     }
 
-    private void drawInternalConnectionFUtoE0(double x, double y) {
+    private void drawInternalConnectionFuToE0(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1008,7 +1023,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipE0(x,y);
     }
 
-    private void drawInternalConnectionFUtoE1(double x, double y) {
+    private void drawInternalConnectionFuToE1(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1029,7 +1044,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipE1(x,y);
     }
 
-    private void drawInternalConnectionFUtoS0(double x, double y) {
+    private void drawInternalConnectionFuToS0(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1052,7 +1067,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipS0(x,y);
     }
 
-    private void drawInternalConnectionFUtoS1(double x, double y) {
+    private void drawInternalConnectionFuToS1(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1075,7 +1090,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipS1(x,y);
     }
 
-    private void drawInternalConnectionN0toInFU0(double x, double y) {
+    private void drawInternalConnectionN0ToInFu0(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1098,7 +1113,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFU0(x,y);
     }
 
-    private void drawInternalConnectionN0toInFU1(double x, double y) {
+    private void drawInternalConnectionN0ToInFu1(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1121,7 +1136,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFU1(x,y);
     }
 
-    private void drawInternalConnectionN0toInFUMux(double x, double y) {
+    private void drawInternalConnectionN0ToInFuMux(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1150,7 +1165,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFUMux(x,y);
     }
 
-    private void drawInternalConnectionN0toE0(double x, double y) {
+    private void drawInternalConnectionN0ToE0(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1173,7 +1188,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipE0(x,y);
     }
 
-    private void drawInternalConnectionN0toE1(double x, double y) {
+    private void drawInternalConnectionN0ToE1(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1196,7 +1211,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipE1(x,y);
     }
 
-    private void drawInternalConnectionN0toS0(double x, double y) {
+    private void drawInternalConnectionN0ToS0(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1221,7 +1236,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipS0(x,y);
     }
 
-    private void drawInternalConnectionN0toS1(double x, double y) {
+    private void drawInternalConnectionN0ToS1(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1246,7 +1261,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipS1(x,y);
     }
 
-    private void drawInternalConnectionN1toInFU0(double x, double y) {
+    private void drawInternalConnectionN1ToInFu0(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1269,7 +1284,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFU0(x,y);
     }
 
-    private void drawInternalConnectionN1toInFU1(double x, double y) {
+    private void drawInternalConnectionN1ToInFu1(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1292,7 +1307,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFU1(x,y);
     }
 
-   private void drawInternalConnectionN1toInFUMux(double x, double y) {
+   private void drawInternalConnectionN1ToInFuMux(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1321,7 +1336,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFUMux(x,y);
     }
 
-    private void drawInternalConnectionN1toE0(double x, double y) {
+    private void drawInternalConnectionN1ToE0(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1344,7 +1359,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipE0(x,y);
     }
 
-    private void drawInternalConnectionN1toE1(double x, double y) {
+    private void drawInternalConnectionN1ToE1(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1367,7 +1382,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipE1(x,y);
     }
 
-    private void drawInternalConnectionN1toS0(double x, double y) {
+    private void drawInternalConnectionN1ToS0(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1392,7 +1407,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipS0(x,y);
     }
 
-    private void drawInternalConnectionN1toS1(double x, double y) {
+    private void drawInternalConnectionN1ToS1(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1417,7 +1432,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipS1(x,y);
     }
 
-    private void drawInternalConnectionS0toInFU0(double x, double y) {
+    private void drawInternalConnectionS0ToInFu0(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1440,7 +1455,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFU0(x,y);
     }
 
-    private void drawInternalConnectionS0toInFU1(double x, double y) {
+    private void drawInternalConnectionS0ToInFu1(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1463,7 +1478,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFU1(x,y);
     }
 
-    private void drawInternalConnectionS0toInFUMux(double x, double y) {
+    private void drawInternalConnectionS0ToInFuMux(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1484,7 +1499,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFUMux(x, y);
     }
 
-    private void drawInternalConnectionS0toE0(double x, double y) {
+    private void drawInternalConnectionS0ToE0(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1511,7 +1526,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipE0(x, y);
     }
 
-    private void drawInternalConnectionS0toE1(double x, double y) {
+    private void drawInternalConnectionS0ToE1(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1538,7 +1553,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipE1(x, y);
     }
 
-    private void drawInternalConnectionS0toN0(double x, double y) {
+    private void drawInternalConnectionS0ToN0(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1555,7 +1570,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipN0(x,y);
     }
 
-    private void drawInternalConnectionS0toN1(double x, double y) {
+    private void drawInternalConnectionS0ToN1(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1576,7 +1591,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipN1(x,y);
     }
 
-    private void drawInternalConnectionS1toInFU0(double x, double y) {
+    private void drawInternalConnectionS1ToInFu0(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1599,7 +1614,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFU0(x,y);
     }
 
-    private void drawInternalConnectionS1toInFU1(double x, double y) {
+    private void drawInternalConnectionS1ToInFu1(double x, double y) {
 
         gc.strokePolyline(
                 new double[] {
@@ -1622,7 +1637,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFU1(x,y);
     }
 
-    private void drawInternalConnectionS1toInFUMux(double x, double y) {
+    private void drawInternalConnectionS1ToInFuMux(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1643,7 +1658,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFUMux(x, y);
     }
 
-    private void drawInternalConnectionS1toE0(double x, double y) {
+    private void drawInternalConnectionS1ToE0(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1670,7 +1685,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipE0(x, y);
     }
 
-    private void drawInternalConnectionS1toE1(double x, double y) {
+    private void drawInternalConnectionS1ToE1(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1697,7 +1712,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipE1(x, y);
     }
 
-    private void drawInternalConnectionS1toN0(double x, double y) {
+    private void drawInternalConnectionS1ToN0(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1722,7 +1737,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipN0(x, y);
     }
 
-    private void drawInternalConnectionS1toN1(double x, double y) {
+    private void drawInternalConnectionS1ToN1(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1747,7 +1762,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipN1(x, y);
     }
 
-    private void drawInternalConnectionW0toInFU0(double x, double y) {
+    private void drawInternalConnectionW0ToInFu0(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1768,7 +1783,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFU0(x, y);
     }
 
-    private void drawInternalConnectionW0toInFU1(double x, double y) {
+    private void drawInternalConnectionW0ToInFu1(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1789,7 +1804,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFU1(x, y);
     }
 
-    private void drawInternalConnectionW0toInFUMux(double x, double y) {
+    private void drawInternalConnectionW0ToInFuMux(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1812,7 +1827,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFUMux(x, y);
     }
 
-    private void drawInternalConnectionW0toN0(double x, double y) {
+    private void drawInternalConnectionW0ToN0(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1835,7 +1850,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipN0(x, y);
     }
 
-    private void drawInternalConnectionW0toN1(double x, double y) {
+    private void drawInternalConnectionW0ToN1(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1858,7 +1873,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipN1(x, y);
     }
 
-    private void drawInternalConnectionW0toE0(double x, double y) {
+    private void drawInternalConnectionW0ToE0(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1887,7 +1902,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipE0(x, y);
     }
 
-    private void drawInternalConnectionW0toE1(double x, double y) {
+    private void drawInternalConnectionW0ToE1(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1916,7 +1931,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipE1(x, y);
     }
 
-    private void drawInternalConnectionW0toS0(double x, double y) {
+    private void drawInternalConnectionW0ToS0(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1939,7 +1954,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipS0(x, y);
     }
 
-    private void drawInternalConnectionW0toS1(double x, double y) {
+    private void drawInternalConnectionW0ToS1(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1966,7 +1981,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipS1(x, y);
     }
 
-    private void drawInternalConnectionW1toInFU0(double x, double y) {
+    private void drawInternalConnectionW1ToInFu0(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -1987,7 +2002,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFU0(x, y);
     }
 
-    private void drawInternalConnectionW1toInFU1(double x, double y) {
+    private void drawInternalConnectionW1ToInFu1(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -2008,7 +2023,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFU1(x, y);
     }
 
-    private void drawInternalConnectionW1toInFUMux(double x, double y) {
+    private void drawInternalConnectionW1ToInFuMux(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -2031,7 +2046,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipInFUMux(x, y);
     }
 
-    private void drawInternalConnectionW1toN0(double x, double y) {
+    private void drawInternalConnectionW1ToN0(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -2054,7 +2069,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipN0(x, y);
     }
 
-    private void drawInternalConnectionW1toN1(double x, double y) {
+    private void drawInternalConnectionW1ToN1(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -2077,7 +2092,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipN1(x, y);
     }
 
-    private void drawInternalConnectionW1toE0(double x, double y) {
+    private void drawInternalConnectionW1ToE0(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -2103,7 +2118,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipE0(x, y);
     }
 
-    private void drawInternalConnectionW1toE1(double x, double y) {
+    private void drawInternalConnectionW1ToE1(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -2129,7 +2144,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipE1(x, y);
     }
 
-    private void drawInternalConnectionW1toS0(double x, double y) {
+    private void drawInternalConnectionW1ToS0(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -2156,7 +2171,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipS0(x, y);
     }
 
-    private void drawInternalConnectionW1toS1(double x, double y) {
+    private void drawInternalConnectionW1ToS1(double x, double y) {
 
         gc.strokePolyline(
                 new double[]{
@@ -2403,7 +2418,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         gc.setLineWidth(2);
     }
 
-    private void handleConfigurationRightClick(int x, int y) {
+    /**
+     * displays a context menu for the component which was clicked
+     * @param x
+     * @param y
+     */
+    private void handleConfigurationClick(int x, int y) {
 
         // decide if the inside of a PE was clicked
         int row = -1;
@@ -2446,7 +2466,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 6.5*peDrawSizeTwentieth &&
                     yNormalized <= 8.5*peDrawSizeTwentieth) {
 
-                 FuFunctionContextMenu fuFunctionContextMenu = new FuFunctionContextMenu(model.getCrc().getFu(row, column), this.getConfiguration().getPe(row, column).getFuFunction());
+                 FuFunctionContextMenu fuFunctionContextMenu = new FuFunctionContextMenu(model.getCrc().getFu(row, column), this.getConfig().getPe(row, column).getFuFunction());
                  contextMenu = fuFunctionContextMenu;
                  fuFunctionContextMenu.show(this.getContent(), p.x, p.y);
 
@@ -2465,12 +2485,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 6*peDrawSizeTwentieth-4 &&
                     yNormalized <= 6*peDrawSizeTwentieth+12+4) {
 
-                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfiguration().getPe(row, column).getDataFlagInFu0(), model.getCrc().getRows(), row);
+                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagInFu0(), model.getCrc().getRows(), row);
                 contextMenu = dataFlagInFuDriverContextMenu;
                 dataFlagInFuDriverContextMenu.show(this.getContent(), p.x, p.y);
 
                 dataFlagInFuDriverContextMenu.setOnHiding(event -> {
-                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getDataFlagInFu0()) {
+                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfig().getPe(finalRow, finalColumn).getDataFlagInFu0()) {
                         controller.setPeDataFlagInFu0Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagInFuDriver.none);
                     }
                     else if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() != PE.DataFlagInFuDriver.none) {
@@ -2487,12 +2507,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 13*peDrawSizeTwentieth-4 &&
                     yNormalized <= 13*peDrawSizeTwentieth+12+4) {
 
-                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfiguration().getPe(row, column).getDataFlagInFu1(), model.getCrc().getRows(), row);
+                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagInFu1(), model.getCrc().getRows(), row);
                 contextMenu = dataFlagInFuDriverContextMenu;
                 dataFlagInFuDriverContextMenu.show(this.getContent(), p.x, p.y);
 
                 dataFlagInFuDriverContextMenu.setOnHiding(event -> {
-                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getDataFlagInFu1()) {
+                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfig().getPe(finalRow, finalColumn).getDataFlagInFu1()) {
                         controller.setPeDataFlagInFu1Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagInFuDriver.none);
                     }
                     else if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() != PE.DataFlagInFuDriver.none) {
@@ -2508,12 +2528,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 15*peDrawSizeTwentieth &&
                     yNormalized <= 14.5*peDrawSizeTwentieth+12+4) {
 
-                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfiguration().getPe(row, column).getFlagInFuMux(), model.getCrc().getRows(), row);
+                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfig().getPe(row, column).getFlagInFuMux(), model.getCrc().getRows(), row);
                 contextMenu = dataFlagInFuDriverContextMenu;
                 dataFlagInFuDriverContextMenu.show(this.getContent(), p.x, p.y);
 
                 dataFlagInFuDriverContextMenu.setOnHiding(event -> {
-                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getFlagInFuMux()) {
+                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfig().getPe(finalRow, finalColumn).getFlagInFuMux()) {
                         controller.setPeFlagInFuMuxDriver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagInFuDriver.none);
                     }
                     else if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() != PE.DataFlagInFuDriver.none) {
@@ -2531,12 +2551,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized <= 13+4 &&
                     row != 0) {
 
-                DataFlagNorthDriverContextMenu dataFlagNorthDriverContextMenu = new DataFlagNorthDriverContextMenu(this.getConfiguration().getPe(row, column).getDataFlagOutN0(), model.getCrc().getRows(), row);
+                DataFlagNorthDriverContextMenu dataFlagNorthDriverContextMenu = new DataFlagNorthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutN0(), model.getCrc().getRows(), row);
                 contextMenu = dataFlagNorthDriverContextMenu;
                 dataFlagNorthDriverContextMenu.show(this.getContent(), p.x, p.y);
 
                 dataFlagNorthDriverContextMenu.setOnHiding(event -> {
-                    if(dataFlagNorthDriverContextMenu.getSelectedDataFlagNorthDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getDataFlagOutN0()) {
+                    if(dataFlagNorthDriverContextMenu.getSelectedDataFlagNorthDriver() == this.getConfig().getPe(finalRow, finalColumn).getDataFlagOutN0()) {
                         controller.setPeDataFlagN0Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagOutDriver.none);
                     }
                     else if(dataFlagNorthDriverContextMenu.getSelectedDataFlagNorthDriver() != PE.DataFlagOutDriver.none) {
@@ -2553,12 +2573,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized <= 13+4 &&
                     row != 0) {
 
-                DataFlagNorthDriverContextMenu dataFlagNorthDriverContextMenu = new DataFlagNorthDriverContextMenu(this.getConfiguration().getPe(row, column).getDataFlagOutN1(), model.getCrc().getRows(), row);
+                DataFlagNorthDriverContextMenu dataFlagNorthDriverContextMenu = new DataFlagNorthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutN1(), model.getCrc().getRows(), row);
                 contextMenu = dataFlagNorthDriverContextMenu;
                 dataFlagNorthDriverContextMenu.show(this.getContent(), p.x, p.y);
 
                 dataFlagNorthDriverContextMenu.setOnHiding(event -> {
-                    if(dataFlagNorthDriverContextMenu.getSelectedDataFlagNorthDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getDataFlagOutN1()) {
+                    if(dataFlagNorthDriverContextMenu.getSelectedDataFlagNorthDriver() == this.getConfig().getPe(finalRow, finalColumn).getDataFlagOutN1()) {
                         controller.setPeDataFlagN1Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagOutDriver.none);
                     }
                     else if(dataFlagNorthDriverContextMenu.getSelectedDataFlagNorthDriver() != PE.DataFlagOutDriver.none) {
@@ -2574,12 +2594,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 8*peDrawSizeTwentieth-6-4 &&
                     yNormalized <= 8*peDrawSizeTwentieth+6+4) {
 
-                DataFlagEastDriverContextMenu dataFlagEastDriverContextMenu = new DataFlagEastDriverContextMenu(this.getConfiguration().getPe(row, column).getDataFlagOutE0(), model.getCrc().getRows(), row);
+                DataFlagEastDriverContextMenu dataFlagEastDriverContextMenu = new DataFlagEastDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutE0(), model.getCrc().getRows(), row);
                 contextMenu = dataFlagEastDriverContextMenu;
                 dataFlagEastDriverContextMenu.show(this.getContent(), p.x, p.y);
 
                 dataFlagEastDriverContextMenu.setOnHiding(event -> {
-                    if(dataFlagEastDriverContextMenu.getSelectedDataFlagEastDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getDataFlagOutE0()) {
+                    if(dataFlagEastDriverContextMenu.getSelectedDataFlagEastDriver() == this.getConfig().getPe(finalRow, finalColumn).getDataFlagOutE0()) {
                         controller.setPeDataFlagE0Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagOutDriver.none);
                     }
                     else if(dataFlagEastDriverContextMenu.getSelectedDataFlagEastDriver() != PE.DataFlagOutDriver.none) {
@@ -2595,12 +2615,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 12*peDrawSizeTwentieth-6-4 &&
                     yNormalized <= 12*peDrawSizeTwentieth+6+4) {
 
-                DataFlagEastDriverContextMenu dataFlagEastDriverContextMenu = new DataFlagEastDriverContextMenu(this.getConfiguration().getPe(row, column).getDataFlagOutE1(), model.getCrc().getRows(), row);
+                DataFlagEastDriverContextMenu dataFlagEastDriverContextMenu = new DataFlagEastDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutE1(), model.getCrc().getRows(), row);
                 contextMenu = dataFlagEastDriverContextMenu;
                 dataFlagEastDriverContextMenu.show(this.getContent(), p.x, p.y);
 
                 dataFlagEastDriverContextMenu.setOnHiding(event -> {
-                    if(dataFlagEastDriverContextMenu.getSelectedDataFlagEastDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getDataFlagOutE1()) {
+                    if(dataFlagEastDriverContextMenu.getSelectedDataFlagEastDriver() == this.getConfig().getPe(finalRow, finalColumn).getDataFlagOutE1()) {
                         controller.setPeDataFlagE1Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagOutDriver.none);
                     }
                     else if(dataFlagEastDriverContextMenu.getSelectedDataFlagEastDriver() != PE.DataFlagOutDriver.none) {
@@ -2617,12 +2637,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized <= PE_DRAW_SIZE-1+4 &&
                     row != model.getCrc().getRows()-1) {
 
-                DataFlagSouthDriverContextMenu dataFlagSouthDriverContextMenu = new DataFlagSouthDriverContextMenu(this.getConfiguration().getPe(row, column).getDataFlagOutS0(), model.getCrc().getRows(), row);
+                DataFlagSouthDriverContextMenu dataFlagSouthDriverContextMenu = new DataFlagSouthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutS0(), model.getCrc().getRows(), row);
                 contextMenu = dataFlagSouthDriverContextMenu;
                 dataFlagSouthDriverContextMenu.show(this.getContent(), p.x, p.y);
 
                 dataFlagSouthDriverContextMenu.setOnHiding(event -> {
-                    if(dataFlagSouthDriverContextMenu.getSelectedDataFlagSouthDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getDataFlagOutS0()) {
+                    if(dataFlagSouthDriverContextMenu.getSelectedDataFlagSouthDriver() == this.getConfig().getPe(finalRow, finalColumn).getDataFlagOutS0()) {
                         controller.setPeDataFlagS0Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagOutDriver.none);
                     }
                     else if(dataFlagSouthDriverContextMenu.getSelectedDataFlagSouthDriver() != PE.DataFlagOutDriver.none) {
@@ -2640,12 +2660,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized <= PE_DRAW_SIZE-1+4 &&
                     row != model.getCrc().getRows()-1) {
 
-                DataFlagSouthDriverContextMenu dataFlagSouthDriverContextMenu = new DataFlagSouthDriverContextMenu(this.getConfiguration().getPe(row, column).getDataFlagOutS1(), model.getCrc().getRows(), row);
+                DataFlagSouthDriverContextMenu dataFlagSouthDriverContextMenu = new DataFlagSouthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutS1(), model.getCrc().getRows(), row);
                 contextMenu = dataFlagSouthDriverContextMenu;
                 dataFlagSouthDriverContextMenu.show(this.getContent(), p.x, p.y);
 
                 dataFlagSouthDriverContextMenu.setOnHiding(event -> {
-                    if(dataFlagSouthDriverContextMenu.getSelectedDataFlagSouthDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getDataFlagOutS1()) {
+                    if(dataFlagSouthDriverContextMenu.getSelectedDataFlagSouthDriver() == this.getConfig().getPe(finalRow, finalColumn).getDataFlagOutS1()) {
                         controller.setPeDataFlagS1Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagOutDriver.none);
                     }
                     else if(dataFlagSouthDriverContextMenu.getSelectedDataFlagSouthDriver() != PE.DataFlagOutDriver.none) {
