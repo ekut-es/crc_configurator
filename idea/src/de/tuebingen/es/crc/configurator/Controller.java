@@ -128,8 +128,8 @@ public class Controller {
 
             stage.setTitle("CRC Configurator (Unnamed File)");
             this.displayHardwareModelTab();
-            this.displayStaticConfigurationTabs();
-            this.displayDynamicConfigurationTabs();
+            this.displayStaticConfigTabs();
+            this.displayDynamicConfigTabs();
         }
     }
 
@@ -250,15 +250,15 @@ public class Controller {
         this.displayHardwareModelTab();
 
         // display configurations
-        this.displayStaticConfigurationTabs();
-        this.displayDynamicConfigurationTabs();
+        this.displayStaticConfigTabs();
+        this.displayDynamicConfigTabs();
 
     }
 
     /**
      * saves data stored in model to file path stored in model
      */
-    public void saveCrcDescriptionFile() {
+    private void saveCrcDescriptionFile() {
         try {
             model.saveCrcDescriptionFile();
         }
@@ -270,7 +270,7 @@ public class Controller {
     /**
      * shows a file chooser dialog to save the file to a specific location
      */
-    public void saveAsCrcDescriptionFile() {
+    private void saveAsCrcDescriptionFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save CRC Description File");
         File crcDescriptionFile = fileChooser.showSaveDialog(mainVBox.getScene().getWindow());
@@ -323,14 +323,14 @@ public class Controller {
     /**
      * removes all tabs from tab pane, adjusts menu, and resets model
      */
-    public void closeCrcDescriptionFile() {
+    private void closeCrcDescriptionFile() {
         tabPane.getTabs().clear();
 
         // delete hardware model tab
-        model.removeObserver((Observer) hardwareModelTab);
+        model.removeObserver(hardwareModelTab);
         hardwareModelTab = null;
-        this.closeAllStaticConfigurationTabs();
-        this.closeAllDynamicConfigurationTabs();
+        this.closeAllStaticConfigTabs();
+        this.closeAllDynamicConfigTabs();
 
         model = new Model();
         menuItemEdit.setDisable(true);
@@ -346,32 +346,32 @@ public class Controller {
      */
     private void displayHardwareModelTab() {
         hardwareModelTab = new HardwareModelTab(model, this);
-        model.attachObserver((Observer) hardwareModelTab);
+        model.attachObserver(hardwareModelTab);
         tabPane.getTabs().add(hardwareModelTab);
     }
 
     /**
      * adds the "Static Configration" tabs to the tab pane
      */
-    private void displayStaticConfigurationTabs() {
+    private void displayStaticConfigTabs() {
 
         HashMap<Integer,Configuration> staticConfigs =  model.getCrc().getStaticConfigs();
 
         for (Map.Entry<Integer, Configuration> entry : staticConfigs.entrySet()) {
             ConfigurationTab staticConfigurationTab = new ConfigurationTab(model, this, ConfigurationTab.ConfigurationTabType.STATIC, entry.getKey());
             model.attachObserver(staticConfigurationTab);
-            model.getCrc().getStaticConfig(entry.getKey()).attachObserver((Observer) staticConfigurationTab);
+            model.getCrc().getStaticConfig(entry.getKey()).attachObserver(staticConfigurationTab);
             tabPane.getTabs().add(staticConfigurationTab);
             staticConfigurationTabs.add(staticConfigurationTab);
         }
     }
 
-    private void closeAllStaticConfigurationTabs() {
+    private void closeAllStaticConfigTabs() {
 
         // remove as observer from model and from tab pane
         for(ConfigurationTab staticConfigurationTab : staticConfigurationTabs) {
-            model.removeObserver((Observer) staticConfigurationTab);
-            model.getCrc().getStaticConfig(staticConfigurationTab.getNumber()).removeObserver((Observer) staticConfigurationTab);
+            model.removeObserver(staticConfigurationTab);
+            model.getCrc().getStaticConfig(staticConfigurationTab.getNumber()).removeObserver(staticConfigurationTab);
             tabPane.getTabs().remove(staticConfigurationTab);
         }
 
@@ -381,25 +381,25 @@ public class Controller {
     /**
      * adds the "Dynamic Configration" tabs to the tab pane
      */
-    private void displayDynamicConfigurationTabs() {
+    private void displayDynamicConfigTabs() {
 
         HashMap<Integer,Configuration> dynamicConfigs =  model.getCrc().getDynamicConfigs();
 
         for (Map.Entry<Integer, Configuration> entry : dynamicConfigs.entrySet()) {
             ConfigurationTab dynamicConfigurationTab = new ConfigurationTab(model, this, ConfigurationTab.ConfigurationTabType.DYNAMIC, entry.getKey());
             model.attachObserver(dynamicConfigurationTab);
-            model.getCrc().getDynamicConfig(entry.getKey()).attachObserver((Observer) dynamicConfigurationTab);
+            model.getCrc().getDynamicConfig(entry.getKey()).attachObserver(dynamicConfigurationTab);
             tabPane.getTabs().add(dynamicConfigurationTab);
             dynamicConfigurationTabs.add(dynamicConfigurationTab);
         }
     }
 
-    private void closeAllDynamicConfigurationTabs() {
+    private void closeAllDynamicConfigTabs() {
 
         // remove as observer from model
         for(ConfigurationTab dynamicConfigurationTab : dynamicConfigurationTabs) {
-            model.removeObserver((Observer) dynamicConfigurationTab);
-            model.getCrc().getDynamicConfig(dynamicConfigurationTab.getNumber()).removeObserver((Observer) dynamicConfigurationTab);
+            model.removeObserver(dynamicConfigurationTab);
+            model.getCrc().getDynamicConfig(dynamicConfigurationTab.getNumber()).removeObserver(dynamicConfigurationTab);
             tabPane.getTabs().remove(dynamicConfigurationTab);
         }
 
@@ -419,8 +419,8 @@ public class Controller {
 
         if(editDialog.apply) {
 
-            this.closeAllStaticConfigurationTabs();
-            this.closeAllDynamicConfigurationTabs();
+            this.closeAllStaticConfigTabs();
+            this.closeAllDynamicConfigTabs();
 
             model.editCrc(
                     editDialog.getRows(),
@@ -429,8 +429,8 @@ public class Controller {
                     editDialog.getDynamicConfigLines()
             );
 
-            this.displayStaticConfigurationTabs();
-            this.displayDynamicConfigurationTabs();
+            this.displayStaticConfigTabs();
+            this.displayDynamicConfigTabs();
         }
 
 
@@ -447,7 +447,7 @@ public class Controller {
         model.getCrc().setFuFunctions(row, column, fuFunctions);
     }
 
-    private Configuration getConfiguration(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber) {
+    private Configuration getConfig(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber) {
         if(configurationTabType == ConfigurationTab.ConfigurationTabType.STATIC) {
             return model.getCrc().getStaticConfig(configurationNumber);
         } else {
@@ -457,52 +457,52 @@ public class Controller {
 
     public void setPeFunction(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.FUFunction fuFunction) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setFuFunction(fuFunction);
+        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setFuFunction(fuFunction);
     }
 
     public void setPeDataFlagInFu0Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagInFuDriver dataFlagInFuDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagInFu0(dataFlagInFuDriver);
+        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setDataFlagInFu0(dataFlagInFuDriver);
     }
 
     public void setPeDataFlagInFu1Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagInFuDriver dataFlagInFuDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagInFu1(dataFlagInFuDriver);
+        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setDataFlagInFu1(dataFlagInFuDriver);
     }
 
     public void setPeFlagInFuMuxDriver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagInFuDriver dataFlagInFuDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setFlagInFuMux(dataFlagInFuDriver);
+        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setFlagInFuMux(dataFlagInFuDriver);
     }
 
     public void setPeDataFlagN0Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutN0(dataFlagOutDriver);
+        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutN0(dataFlagOutDriver);
     }
 
     public void setPeDataFlagN1Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutN1(dataFlagOutDriver);
+        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutN1(dataFlagOutDriver);
     }
 
     public void setPeDataFlagE0Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutE0(dataFlagOutDriver);
+        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutE0(dataFlagOutDriver);
     }
 
     public void setPeDataFlagE1Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutE1(dataFlagOutDriver);
+        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutE1(dataFlagOutDriver);
     }
 
     public void setPeDataFlagS0Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutS0(dataFlagOutDriver);
+        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutS0(dataFlagOutDriver);
     }
 
     public void setPeDataFlagS1Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutS1(dataFlagOutDriver);
+        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutS1(dataFlagOutDriver);
     }
 }
 
