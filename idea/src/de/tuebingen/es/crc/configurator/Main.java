@@ -9,13 +9,11 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.io.File;
 
 public class Main extends Application {
 
     private static String filePath;
-    private static String secondArg;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -63,7 +61,7 @@ public class Main extends Application {
         // check second command line argument
         if(args.length == 2) {
             filePath = args[0];
-            secondArg = args[1];
+            String secondArg = args[1];
         }
 
         launch(args);
