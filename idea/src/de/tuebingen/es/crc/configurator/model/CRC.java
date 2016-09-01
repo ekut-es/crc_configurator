@@ -4,13 +4,14 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 25/07/16.
  */
 public class CRC {
 
-    private Model model;
+    private final Model model;
 
     private int rows;
     private int columns;
@@ -22,14 +23,24 @@ public class CRC {
 
     private ArrayList<ArrayList<FU>> fuMatrix;
 
-    public CRC(Model model) {
-        this.model = model;
-        rows = 2;
-        columns = 2;
-        staticConfigLines = 0;
-        dynamicConfigLines = 0;
-    }
+// --Commented out by Inspection START (01/09/16 13:47):
+//    public CRC(Model model) {
+//        this.model = model;
+//        rows = 2;
+//        columns = 2;
+//        staticConfigLines = 0;
+//        dynamicConfigLines = 0;
+//    }
+// --Commented out by Inspection STOP (01/09/16 13:47)
 
+    /**
+     * generates a CRC object with the given parameters
+     * @param rows
+     * @param columns
+     * @param staticConfigLines
+     * @param dynamicConfigLines
+     * @param model
+     */
     public CRC(int rows, int columns, int staticConfigLines, int dynamicConfigLines, Model model) {
         this.model = model;
         this.setRows(rows);
@@ -80,18 +91,15 @@ public class CRC {
             throw new Exception("CRC description file does not contain 'PEs'!");
         }
 
-        Iterator<JSONObject> peIterator = pes.iterator();
-
         // set functions in all FUs
-        while(peIterator.hasNext()) {
-            JSONObject pe = peIterator.next();
+        //noinspection unchecked
+        for (JSONObject pe : (Iterable<JSONObject>) pes) {
             FU fu = getFu(Integer.parseInt(pe.get("row").toString()), Integer.parseInt(pe.get("column").toString()));
             JSONArray fuFunctions = (JSONArray) pe.get("FUFunctions");
 
-            Iterator<String> fuFunctionIterator = fuFunctions.iterator();
-
-            while(fuFunctionIterator.hasNext()) {
-                fu.setFunction(fuFunctionIterator.next(), true);
+            //noinspection unchecked
+            for (String fuFunction : (Iterable<String>) fuFunctions) {
+                fu.setFunction(fuFunction, true);
             }
         }
 
@@ -102,11 +110,8 @@ public class CRC {
             throw new Exception("CRC description file does not contain 'staticConfigs'!");
         }
 
-        Iterator<JSONObject> staticConfigsIterator = staticConfigs.iterator();
-
-        while(staticConfigsIterator.hasNext()) {
-            JSONObject staticConfig = staticConfigsIterator.next();
-
+        //noinspection unchecked
+        for (JSONObject staticConfig : (Iterable<JSONObject>) staticConfigs) {
             Configuration configuration = this.readConfigFromJSON(staticConfig);
 
             this.staticConfigs.put(configuration.getNumber(), configuration);
@@ -119,11 +124,8 @@ public class CRC {
             throw new Exception("CRC description file does not contain 'dynamicConfigs'!");
         }
 
-        Iterator<JSONObject> dynamicConfigsIterator = dynamicConfigs.iterator();
-
-        while(dynamicConfigsIterator.hasNext()) {
-            JSONObject dynamicConfig = dynamicConfigsIterator.next();
-
+        //noinspection unchecked
+        for (JSONObject dynamicConfig : (Iterable<JSONObject>) dynamicConfigs) {
             Configuration configuration = this.readConfigFromJSON(dynamicConfig);
 
             this.dynamicConfigs.put(configuration.getNumber(), configuration);
@@ -131,7 +133,13 @@ public class CRC {
 
     }
 
-    public Configuration readConfigFromJSON(JSONObject config) throws Exception {
+    /**
+     * reads a config from JSON
+     * @param config
+     * @return Configuration config
+     * @throws Exception
+     */
+    private Configuration readConfigFromJSON(JSONObject config) throws Exception {
 
         // read PEs
         JSONArray pes = (JSONArray) config.get("PEs");
@@ -141,11 +149,9 @@ public class CRC {
         }
 
         Configuration configuration = new Configuration(this, Integer.parseInt(config.get("configNumber").toString()));
-        Iterator<JSONObject> peIterator = pes.iterator();
 
-        while(peIterator.hasNext()) {
-            JSONObject peJson = peIterator.next();
-
+        //noinspection unchecked
+        for (JSONObject peJson : (Iterable<JSONObject>) pes) {
             PE pe = configuration.getPe(Integer.parseInt(peJson.get("row").toString()), Integer.parseInt(peJson.get("column").toString()));
 
             pe.setDataFlagOutN0(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutN0").toString()));
@@ -163,7 +169,14 @@ public class CRC {
         return configuration;
     }
 
-    public void editCrc(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
+    /**
+     * edits CRC (old settings of PEs, FUs and configs will be copied to new objects)
+     * @param rows
+     * @param columns
+     * @param staticConfigLines
+     * @param dynamicConfigLines
+     */
+    public void edit(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
 
         // save current FU matrix in temp FU matrix
         ArrayList<ArrayList<FU>> tempFuMatrix = new ArrayList<>();
@@ -255,7 +268,7 @@ public class CRC {
         this.notifyAllObservers();
     }
 
-    public void setRows(int rows) {
+    private void setRows(int rows) {
         this.rows = (rows < 2) ? 2 : rows;
     }
 
@@ -263,7 +276,7 @@ public class CRC {
         return rows;
     }
 
-    public void setColumns(int columns) {
+    private void setColumns(int columns) {
         this.columns = (columns < 2) ? 2 : columns;
     }
 
@@ -271,7 +284,7 @@ public class CRC {
         return columns;
     }
 
-    public void setStaticConfigLines(int staticConfigLines) {
+    private void setStaticConfigLines(int staticConfigLines) {
         this.staticConfigLines = (staticConfigLines < 0 ) ? 0 : staticConfigLines;
     }
 
@@ -280,7 +293,7 @@ public class CRC {
         return staticConfigLines;
     }
 
-    public void setDynamicConfigLines(int dynamicConfigLines) {
+    private void setDynamicConfigLines(int dynamicConfigLines) {
         this.dynamicConfigLines = (dynamicConfigLines < 0) ? 0 : dynamicConfigLines;
     }
 
@@ -288,19 +301,19 @@ public class CRC {
         return dynamicConfigLines;
     }
 
-    public HashMap<Integer, Configuration> getStaticConfigurations(){
+    public HashMap<Integer, Configuration> getStaticConfigs(){
         return staticConfigs;
     }
 
-    public Configuration getStaticConfiguration(int number) {
+    public Configuration getStaticConfig(int number) {
         return staticConfigs.get(number);
     }
 
-    public HashMap<Integer, Configuration> getDynamicConfigurations() {
+    public HashMap<Integer, Configuration> getDynamicConfigs() {
         return dynamicConfigs;
     }
 
-    public Configuration getDynamicConfiguration(int number) {
+    public Configuration getDynamicConfig(int number) {
         return dynamicConfigs.get(number);
     }
 
@@ -350,49 +363,57 @@ public class CRC {
 
     }
 
-    public void checkSetFuFunctionInPe(PE pe, LinkedHashMap<String, Boolean> fuFunctions) {
-        for(Map.Entry<String, Boolean> entry : fuFunctions.entrySet()) {
+    /**
+     * if the hardware model of the CRC was edited (enable or disabling of a FU function) it will be checked if a
+     * disabled FU functions is used in a PE and in set to NOP if necessary
+     * @param pe
+     * @param fuFunctions
+     */
+    private void checkSetFuFunctionInPe(PE pe, LinkedHashMap<String, Boolean> fuFunctions) {
+        fuFunctions.entrySet().stream().filter(entry -> !entry.getValue()).forEachOrdered(entry -> {
 
-            if(!entry.getValue()) {
+            if (!Objects.equals(entry.getKey(), "compare") && !Objects.equals(entry.getKey(), "multiplex")) {
 
-                if (entry.getKey() != "compare" && entry.getKey() != "multiplex") {
-
-                    if(pe.getFUFunction() == PE.FUFunction.valueOf(entry.getKey())) {
-                        pe.setFUFunction(PE.FUFunction.none);
-                    }
-
-
-                } else if (entry.getKey() == "compare") {
-
-                    if(
-                            pe.getFUFunction() == PE.FUFunction.compare_eq ||
-                            pe.getFUFunction() == PE.FUFunction.compare_neq ||
-                            pe.getFUFunction() == PE.FUFunction.compare_lt ||
-                            pe.getFUFunction() == PE.FUFunction.compare_gt ||
-                            pe.getFUFunction() == PE.FUFunction.compare_leq ||
-                            pe.getFUFunction() == PE.FUFunction.compare_geq) {
-                        pe.setFUFunction(PE.FUFunction.none);
-                    }
+                if (pe.getFUFunction() == PE.FUFunction.valueOf(entry.getKey())) {
+                    pe.setFUFunction(PE.FUFunction.none);
+                }
 
 
-                } else if (entry.getKey() == "multiplex") {
+            } else if (Objects.equals(entry.getKey(), "compare")) {
 
-                    if(pe.getFUFunction() == PE.FUFunction.mux_0 || pe.getFUFunction() == PE.FUFunction.mux_1) {
-                        pe.setFUFunction(PE.FUFunction.none);
-                    }
+                if (
+                        pe.getFUFunction() == PE.FUFunction.compare_eq ||
+                                pe.getFUFunction() == PE.FUFunction.compare_neq ||
+                                pe.getFUFunction() == PE.FUFunction.compare_lt ||
+                                pe.getFUFunction() == PE.FUFunction.compare_gt ||
+                                pe.getFUFunction() == PE.FUFunction.compare_leq ||
+                                pe.getFUFunction() == PE.FUFunction.compare_geq) {
+                    pe.setFUFunction(PE.FUFunction.none);
+                }
+
+
+            } else if (Objects.equals(entry.getKey(), "multiplex")) {
+
+                if (pe.getFUFunction() == PE.FUFunction.mux_0 || pe.getFUFunction() == PE.FUFunction.mux_1) {
+                    pe.setFUFunction(PE.FUFunction.none);
                 }
             }
-        }
+        });
     }
 
     /**
+     * JSON description of CRC
      * @return JSONObject containing a description of the CRC
      */
     public JSONObject toJSON() {
         JSONObject jsonCRCDescription = new JSONObject();
+        //noinspection unchecked
         jsonCRCDescription.put("rows", rows);
+        //noinspection unchecked
         jsonCRCDescription.put("columns", columns);
+        //noinspection unchecked
         jsonCRCDescription.put("staticConfigLines", staticConfigLines);
+        //noinspection unchecked
         jsonCRCDescription.put("dynamicConfigLines", dynamicConfigLines);
 
         // process PEs
@@ -401,24 +422,26 @@ public class CRC {
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
                 JSONObject pe = new JSONObject();
+                //noinspection unchecked
                 pe.put("row", i);
+                //noinspection unchecked
                 pe.put("column", j);
 
                 JSONArray fuFunctions = new JSONArray();
 
                 LinkedHashMap<String, Boolean> fuFunctionsMap = this.getFu(i,j).getFunctions();
 
-                for(Map.Entry<String, Boolean> function : fuFunctionsMap.entrySet()) {
-                    if(function.getValue()) {
-                        fuFunctions.add(function.getKey());
-                    }
-                }
+                //noinspection unchecked
+                fuFunctions.addAll(fuFunctionsMap.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toList()));
 
+                //noinspection unchecked
                 pe.put("FUFunctions", fuFunctions);
+                //noinspection unchecked
                 pes.add(pe);
             }
         }
 
+        //noinspection unchecked
         jsonCRCDescription.put("PEs", pes);
 
 
@@ -429,12 +452,16 @@ public class CRC {
 
             JSONObject staticConfigJSON = new JSONObject();
 
+            //noinspection unchecked
             staticConfigJSON.put("configNumber", staticConfig.getNumber());
+            //noinspection unchecked
             staticConfigJSON.put("PEs", this.configPesToJSON(staticConfig));
 
+            //noinspection unchecked
             staticConfigsJSON.add(staticConfigJSON);
         }
 
+        //noinspection unchecked
         jsonCRCDescription.put("staticConfigs", staticConfigsJSON);
 
 
@@ -445,17 +472,26 @@ public class CRC {
 
             JSONObject dynamicConfigJSON = new JSONObject();
 
+            //noinspection unchecked
             dynamicConfigJSON.put("configNumber", dynamicConfig.getNumber());
+            //noinspection unchecked
             dynamicConfigJSON.put("PEs", this.configPesToJSON(dynamicConfig));
 
+            //noinspection unchecked
             dynamicConfigsJSON.add(dynamicConfigJSON);
         }
 
+        //noinspection unchecked
         jsonCRCDescription.put("dynamicConfigs", dynamicConfigsJSON);
 
         return jsonCRCDescription;
     }
 
+    /**
+     * JSON description of PEs of a config
+     * @param config
+     * @return JSONArray containing a JSON description of all PEs of a config
+     */
     private JSONArray configPesToJSON(Configuration config) {
         JSONArray configPes = new JSONArray();
 
@@ -464,19 +500,32 @@ public class CRC {
                 PE pe = config.getPe(i,j);
                 JSONObject configPe = new JSONObject();
 
+                //noinspection unchecked
                 configPe.put("row", i);
+                //noinspection unchecked
                 configPe.put("column", j);
+                //noinspection unchecked
                 configPe.put("dataFlagOutN0", pe.getDataFlagOutN0().toString());
+                //noinspection unchecked
                 configPe.put("dataFlagOutN1", pe.getDataFlagOutN1().toString());
+                //noinspection unchecked
                 configPe.put("dataFlagOutE0", pe.getDataFlagOutE0().toString());
+                //noinspection unchecked
                 configPe.put("dataFlagOutE1", pe.getDataFlagOutE1().toString());
+                //noinspection unchecked
                 configPe.put("dataFlagOutS0", pe.getDataFlagOutS0().toString());
+                //noinspection unchecked
                 configPe.put("dataFlagOutS1", pe.getDataFlagOutS1().toString());
+                //noinspection unchecked
                 configPe.put("dataFlagInFU0", pe.getDataFlagInFU0().toString());
+                //noinspection unchecked
                 configPe.put("dataFlagInFU1", pe.getDataFlagInFU1().toString());
+                //noinspection unchecked
                 configPe.put("flagInFUMux", pe.getFlagInFUMux().toString());
+                //noinspection unchecked
                 configPe.put("FUFunction", pe.getFUFunction().toString());
 
+                //noinspection unchecked
                 configPes.add(configPe);
             }
         }
@@ -484,9 +533,13 @@ public class CRC {
         return configPes;
     }
 
+    /**
+     * bits for enabled PE operations for all PEs
+     * @return String bit 0/1
+     */
     public String getPeOpParametersBits() {
 
-        String bits = new String();
+        String bits = "";
 
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
@@ -510,9 +563,13 @@ public class CRC {
         return bits;
     }
 
+    /**
+     * bits for all static configs
+     * @return String bits
+     */
     public String getStaticConfigParameterBits() {
 
-        String bits = new String();
+        String bits = "";
 
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
@@ -524,9 +581,15 @@ public class CRC {
         return bits;
     }
 
+    /**
+     * bits for all static configs of a PE
+     * @param row
+     * @param column
+     * @return String bits
+     */
     public String getPeStaticConfigParameterBits(int row, int column) {
 
-        String bits = new String();
+        String bits = "";
 
         // TODO: sort by key
         for(Map.Entry<Integer, Configuration> entry : staticConfigs.entrySet()) {
@@ -536,9 +599,16 @@ public class CRC {
         return bits;
     }
 
-    public String getPeStaticConfigParameterBits(int row, int column, int configNumber) {
+    /**
+     * bits for a static config of a PE
+     * @param row
+     * @param column
+     * @param configNumber
+     * @return String bits
+     */
+    private String getPeStaticConfigParameterBits(int row, int column, int configNumber) {
 
-        String bits = new String();
+        String bits = "";
 
         PE pe = staticConfigs.get(configNumber).getPe(row, column);
 
@@ -560,9 +630,16 @@ public class CRC {
         return bits;
     }
 
+    /**
+     * bits for a dynamic config of a PE
+     * @param row
+     * @param column
+     * @param configNumber
+     * @return String bits
+     */
     public String getPeDynamicConfigParameterBits(int row, int column, int configNumber) {
 
-        String bits = new String();
+        String bits = "";
 
         PE pe = dynamicConfigs.get(configNumber).getPe(row, column);
 

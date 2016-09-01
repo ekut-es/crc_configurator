@@ -99,9 +99,9 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
     private Configuration getConfiguration() {
         if(configurationTabType == ConfigurationTabType.STATIC) {
-            return model.getCrc().getStaticConfiguration(number);
+            return model.getCrc().getStaticConfig(number);
         } else {
-            return model.getCrc().getDynamicConfiguration(number);
+            return model.getCrc().getDynamicConfig(number);
         }
     }
 

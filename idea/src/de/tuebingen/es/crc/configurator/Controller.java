@@ -355,12 +355,12 @@ public class Controller {
      */
     private void displayStaticConfigurationTabs() {
 
-        HashMap<Integer,Configuration> staticConfigs =  model.getCrc().getStaticConfigurations();
+        HashMap<Integer,Configuration> staticConfigs =  model.getCrc().getStaticConfigs();
 
         for (Map.Entry<Integer, Configuration> entry : staticConfigs.entrySet()) {
             ConfigurationTab staticConfigurationTab = new ConfigurationTab(model, this, ConfigurationTab.ConfigurationTabType.STATIC, entry.getKey());
             model.attachObserver(staticConfigurationTab);
-            model.getCrc().getStaticConfiguration(entry.getKey()).attachObserver((Observer) staticConfigurationTab);
+            model.getCrc().getStaticConfig(entry.getKey()).attachObserver((Observer) staticConfigurationTab);
             tabPane.getTabs().add(staticConfigurationTab);
             staticConfigurationTabs.add(staticConfigurationTab);
         }
@@ -371,7 +371,7 @@ public class Controller {
         // remove as observer from model and from tab pane
         for(ConfigurationTab staticConfigurationTab : staticConfigurationTabs) {
             model.removeObserver((Observer) staticConfigurationTab);
-            model.getCrc().getStaticConfiguration(staticConfigurationTab.getNumber()).removeObserver((Observer) staticConfigurationTab);
+            model.getCrc().getStaticConfig(staticConfigurationTab.getNumber()).removeObserver((Observer) staticConfigurationTab);
             tabPane.getTabs().remove(staticConfigurationTab);
         }
 
@@ -383,12 +383,12 @@ public class Controller {
      */
     private void displayDynamicConfigurationTabs() {
 
-        HashMap<Integer,Configuration> dynamicConfigs =  model.getCrc().getDynamicConfigurations();
+        HashMap<Integer,Configuration> dynamicConfigs =  model.getCrc().getDynamicConfigs();
 
         for (Map.Entry<Integer, Configuration> entry : dynamicConfigs.entrySet()) {
             ConfigurationTab dynamicConfigurationTab = new ConfigurationTab(model, this, ConfigurationTab.ConfigurationTabType.DYNAMIC, entry.getKey());
             model.attachObserver(dynamicConfigurationTab);
-            model.getCrc().getDynamicConfiguration(entry.getKey()).attachObserver((Observer) dynamicConfigurationTab);
+            model.getCrc().getDynamicConfig(entry.getKey()).attachObserver((Observer) dynamicConfigurationTab);
             tabPane.getTabs().add(dynamicConfigurationTab);
             dynamicConfigurationTabs.add(dynamicConfigurationTab);
         }
@@ -399,7 +399,7 @@ public class Controller {
         // remove as observer from model
         for(ConfigurationTab dynamicConfigurationTab : dynamicConfigurationTabs) {
             model.removeObserver((Observer) dynamicConfigurationTab);
-            model.getCrc().getDynamicConfiguration(dynamicConfigurationTab.getNumber()).removeObserver((Observer) dynamicConfigurationTab);
+            model.getCrc().getDynamicConfig(dynamicConfigurationTab.getNumber()).removeObserver((Observer) dynamicConfigurationTab);
             tabPane.getTabs().remove(dynamicConfigurationTab);
         }
 
@@ -449,9 +449,9 @@ public class Controller {
 
     private Configuration getConfiguration(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber) {
         if(configurationTabType == ConfigurationTab.ConfigurationTabType.STATIC) {
-            return model.getCrc().getStaticConfiguration(configurationNumber);
+            return model.getCrc().getStaticConfig(configurationNumber);
         } else {
-            return model.getCrc().getDynamicConfiguration(configurationNumber);
+            return model.getCrc().getDynamicConfig(configurationNumber);
         }
     }
 

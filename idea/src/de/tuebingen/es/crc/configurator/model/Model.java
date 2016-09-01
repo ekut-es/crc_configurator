@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.tuebingen.es.crc.configurator.view.ConfiguratorTab;
 import de.tuebingen.es.crc.configurator.view.Observer;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -145,7 +144,7 @@ public class Model implements Observable {
     public void editCrc(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
         saved = false;
         crcWasResized = true;
-        crc.editCrc(rows, columns, staticConfigLines, dynamicConfigLines);
+        crc.edit(rows, columns, staticConfigLines, dynamicConfigLines);
         crcWasResized = false;
     }
 }

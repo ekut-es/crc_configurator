@@ -43,7 +43,7 @@ public class ExportBitsDialog extends Stage {
                 text += "static_config_content:\n";
                 text += crc.getPeStaticConfigParameterBits(i,j) + "\n\n";
 
-                HashMap<Integer, Configuration> dynamicConfigs = crc.getDynamicConfigurations();
+                HashMap<Integer, Configuration> dynamicConfigs = crc.getDynamicConfigs();
 
                 for(Map.Entry<Integer, Configuration> entry : dynamicConfigs.entrySet()) {
                     text += "dynamic_config_content_" + entry.getKey() + ":\n";
