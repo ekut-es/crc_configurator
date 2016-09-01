@@ -21,13 +21,13 @@ import java.util.Map;
 public class FuFunctionsDialog extends Stage {
 
     public boolean modelHasChanged;
-    private LinkedHashMap<String, Boolean> fuFunctions;
-    private LinkedHashMap<String, CheckBox> fuFunctionCheckboxes;
+    private final LinkedHashMap<String, Boolean> fuFunctions;
+    private final LinkedHashMap<String, CheckBox> fuFunctionCheckboxes;
 
     public FuFunctionsDialog(int row, int column, LinkedHashMap<String, Boolean> fuFunctions) {
 
         super();
-        this.fuFunctions = new LinkedHashMap<String, Boolean>();
+        this.fuFunctions = new LinkedHashMap<>();
         this.fuFunctions.putAll(fuFunctions);
 
         fuFunctionCheckboxes = new LinkedHashMap<>();
