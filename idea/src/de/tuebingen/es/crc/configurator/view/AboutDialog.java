@@ -69,9 +69,9 @@ public class AboutDialog extends Stage {
         border.setCenter(vBox);
         border.setBottom(closeButton);
 
-        border.setMargin(icon, new Insets(0,10,0,0));
-        border.setMargin(closeButton, new Insets(10,0,0,0));
-        border.setAlignment(closeButton, Pos.CENTER);
+        BorderPane.setMargin(icon, new Insets(0,10,0,0));
+        BorderPane.setMargin(closeButton, new Insets(10,0,0,0));
+        BorderPane.setAlignment(closeButton, Pos.CENTER);
 
         this.setScene(scene);
         this.sizeToScene();
