@@ -457,52 +457,52 @@ public class Controller {
 
     public void setPeFunction(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.FUFunction fuFunction) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setFUFunction(fuFunction);
+        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setFUFunction(fuFunction);
     }
 
     public void setPeDataFlagInFu0Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagInFuDriver dataFlagInFuDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setDataFlagInFU0(dataFlagInFuDriver);
+        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagInFU0(dataFlagInFuDriver);
     }
 
     public void setPeDataFlagInFu1Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagInFuDriver dataFlagInFuDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setDataFlagInFU1(dataFlagInFuDriver);
+        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagInFU1(dataFlagInFuDriver);
     }
 
     public void setPeFlagInFuMuxDriver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagInFuDriver dataFlagInFuDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setFlagInFUMux(dataFlagInFuDriver);
+        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setFlagInFUMux(dataFlagInFuDriver);
     }
 
     public void setPeDataFlagN0Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setDataFlagOutN0(dataFlagOutDriver);
+        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutN0(dataFlagOutDriver);
     }
 
     public void setPeDataFlagN1Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setDataFlagOutN1(dataFlagOutDriver);
+        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutN1(dataFlagOutDriver);
     }
 
     public void setPeDataFlagE0Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setDataFlagOutE0(dataFlagOutDriver);
+        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutE0(dataFlagOutDriver);
     }
 
     public void setPeDataFlagE1Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setDataFlagOutE1(dataFlagOutDriver);
+        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutE1(dataFlagOutDriver);
     }
 
     public void setPeDataFlagS0Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setDataFlagOutS0(dataFlagOutDriver);
+        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutS0(dataFlagOutDriver);
     }
 
     public void setPeDataFlagS1Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPE(row, column).setDataFlagOutS1(dataFlagOutDriver);
+        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutS1(dataFlagOutDriver);
     }
 }
 

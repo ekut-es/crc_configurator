@@ -16,7 +16,7 @@ public class Configuration implements Observable {
     private ArrayList<ArrayList<PE>> pes;
     private List<Observer> observers;
 
-    public int getNumber() {
+    int getNumber() {
         return number;
     }
 
@@ -24,20 +24,19 @@ public class Configuration implements Observable {
         this.number = number;
     }
 
-    public Configuration(CRC crc, int number) {
+    Configuration(CRC crc, int number) {
         this.crc = crc;
         this.number = number;
-        //configurationType = ConfigurationType.STATIC;
-        observers = new ArrayList<Observer>();
+        observers = new ArrayList<>();
 
         this.generatePeMatrix();
     }
 
-    public Configuration(CRC crc, int number, Configuration config) {
+    Configuration(CRC crc, int number, Configuration config) {
         this(crc, number);
 
         // copy PEs from config
-        ArrayList<ArrayList<PE>> configPEs = config.getPEs();
+        ArrayList<ArrayList<PE>> configPEs = config.getPes();
 
         for(int i = 0; i < crc.getRows(); i++) {
             if(i < configPEs.size()) {
@@ -63,11 +62,11 @@ public class Configuration implements Observable {
         }
     }
 
-    public PE getPE(int row, int column) {
+    public PE getPe(int row, int column) {
         return pes.get(row).get(column);
     }
 
-    public ArrayList<ArrayList<PE>> getPEs() {
+    private ArrayList<ArrayList<PE>> getPes() {
        return pes;
     }
 
@@ -83,8 +82,6 @@ public class Configuration implements Observable {
 
     @Override
     public void notifyAllObservers() {
-        for(Observer observer : observers) {
-           observer.update();
-        }
+        observers.forEach(Observer::update);
     }
 }

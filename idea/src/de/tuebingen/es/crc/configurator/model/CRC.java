@@ -146,7 +146,7 @@ public class CRC {
         while(peIterator.hasNext()) {
             JSONObject peJson = peIterator.next();
 
-            PE pe = configuration.getPE(Integer.parseInt(peJson.get("row").toString()), Integer.parseInt(peJson.get("column").toString()));
+            PE pe = configuration.getPe(Integer.parseInt(peJson.get("row").toString()), Integer.parseInt(peJson.get("column").toString()));
 
             pe.setDataFlagOutN0(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutN0").toString()));
             pe.setDataFlagOutN1(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutN1").toString()));
@@ -216,7 +216,7 @@ public class CRC {
 
                 // set outputs driven by south to none in PEs of last row
                 for(int j = 0; j < columns; j++) {
-                    staticConfigs.get(i).getPE(rows - 1, j).setOutputsDrivenBySouthInputsToNone();
+                    staticConfigs.get(i).getPe(rows - 1, j).setOutputsDrivenBySouthInputsToNone();
                 }
 
             } else {
@@ -244,7 +244,7 @@ public class CRC {
 
                 // south inputs of PEs in last row to none
                 for(int j = 0; j < columns; j++) {
-                    dynamicConfigs.get(i).getPE(rows - 1, j).setOutputsDrivenBySouthInputsToNone();
+                    dynamicConfigs.get(i).getPe(rows - 1, j).setOutputsDrivenBySouthInputsToNone();
                 }
 
             } else {
@@ -340,12 +340,12 @@ public class CRC {
         // check if function was removed which is used by a config and if so set function in config to none
         // static configs
         for(Configuration staticConfig : staticConfigs.values()) {
-            this.checkSetFuFunctionInPe(staticConfig.getPE(row, column), fuFunctions);
+            this.checkSetFuFunctionInPe(staticConfig.getPe(row, column), fuFunctions);
         }
 
         // dynamic configs
         for(Configuration dynamicConfig : dynamicConfigs.values()) {
-            this.checkSetFuFunctionInPe(dynamicConfig.getPE(row, column), fuFunctions);
+            this.checkSetFuFunctionInPe(dynamicConfig.getPe(row, column), fuFunctions);
         }
 
     }
@@ -461,7 +461,7 @@ public class CRC {
 
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
-                PE pe = config.getPE(i,j);
+                PE pe = config.getPe(i,j);
                 JSONObject configPe = new JSONObject();
 
                 configPe.put("row", i);
@@ -540,7 +540,7 @@ public class CRC {
 
         String bits = new String();
 
-        PE pe = staticConfigs.get(configNumber).getPE(row, column);
+        PE pe = staticConfigs.get(configNumber).getPe(row, column);
 
         bits += (pe.isActive() ? "1" : "0");
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS1());
@@ -564,7 +564,7 @@ public class CRC {
 
         String bits = new String();
 
-        PE pe = dynamicConfigs.get(configNumber).getPE(row, column);
+        PE pe = dynamicConfigs.get(configNumber).getPe(row, column);
 
         bits += (pe.isActive() ? "1" : "0");
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS1());
