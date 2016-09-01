@@ -8,9 +8,9 @@ import javafx.scene.control.ContextMenu;
  */
 public class DataFlagNorthDriverContextMenu extends ContextMenu {
 
-    private PE.DataFlagOutDriver selectecNorthDriver = PE.DataFlagOutDriver.none;
+    private PE.DataFlagOutDriver selectedNorthDriver = PE.DataFlagOutDriver.none;
 
-    public PE.DataFlagOutDriver getSelectedDataFlagNorthDriver() { return selectecNorthDriver; }
+    public PE.DataFlagOutDriver getSelectedDataFlagNorthDriver() { return selectedNorthDriver; }
 
     public DataFlagNorthDriverContextMenu(PE.DataFlagOutDriver activeDataFlagNorthDriver, int rows, int row) {
 
@@ -28,7 +28,7 @@ public class DataFlagNorthDriverContextMenu extends ContextMenu {
     private void addMenuItem(PE.DataFlagOutDriver activeDataFlagNorthDriver, String dataFlagNorthDriver) {
         ConfigurationTabContextMenuItem menuItem = new ConfigurationTabContextMenuItem(dataFlagNorthDriver);
         if(activeDataFlagNorthDriver == PE.DataFlagOutDriver.valueOf(dataFlagNorthDriver)) { menuItem.setSelected(true); }
-        menuItem.setOnAction(event -> selectecNorthDriver = PE.DataFlagOutDriver.valueOf(dataFlagNorthDriver));
+        menuItem.setOnAction(event -> selectedNorthDriver = PE.DataFlagOutDriver.valueOf(dataFlagNorthDriver));
         this.getItems().add(menuItem);
     }
 
