@@ -42,7 +42,7 @@ public class Configuration implements Observable {
             if(i < configPEs.size()) {
                 for(int j = 0; j < crc.getColumns(); j++) {
                     if(j < configPEs.get(i).size()) {
-                        pes.get(i).get(j).editPE(configPEs.get(i).get(j));
+                        pes.get(i).get(j).copy(configPEs.get(i).get(j));
                     }
                 }
             }

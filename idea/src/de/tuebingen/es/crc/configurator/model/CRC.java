@@ -160,10 +160,10 @@ public class CRC {
             pe.setDataFlagOutE1(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutE1").toString()));
             pe.setDataFlagOutS0(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutS0").toString()));
             pe.setDataFlagOutS1(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutS1").toString()));
-            pe.setDataFlagInFU0(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFU0").toString()));
-            pe.setDataFlagInFU1(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFU1").toString()));
-            pe.setFlagInFUMux(PE.DataFlagInFuDriver.valueOf(peJson.get("flagInFUMux").toString()));
-            pe.setFUFunction(PE.FUFunction.valueOf(peJson.get("FUFunction").toString()));
+            pe.setDataFlagInFu0(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFU0").toString()));
+            pe.setDataFlagInFu1(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFU1").toString()));
+            pe.setFlagInFuMux(PE.DataFlagInFuDriver.valueOf(peJson.get("flagInFUMux").toString()));
+            pe.setFuFunction(PE.FUFunction.valueOf(peJson.get("FUFunction").toString()));
         }
 
         return configuration;
@@ -374,28 +374,28 @@ public class CRC {
 
             if (!Objects.equals(entry.getKey(), "compare") && !Objects.equals(entry.getKey(), "multiplex")) {
 
-                if (pe.getFUFunction() == PE.FUFunction.valueOf(entry.getKey())) {
-                    pe.setFUFunction(PE.FUFunction.none);
+                if (pe.getFuFunction() == PE.FUFunction.valueOf(entry.getKey())) {
+                    pe.setFuFunction(PE.FUFunction.none);
                 }
 
 
             } else if (Objects.equals(entry.getKey(), "compare")) {
 
                 if (
-                        pe.getFUFunction() == PE.FUFunction.compare_eq ||
-                                pe.getFUFunction() == PE.FUFunction.compare_neq ||
-                                pe.getFUFunction() == PE.FUFunction.compare_lt ||
-                                pe.getFUFunction() == PE.FUFunction.compare_gt ||
-                                pe.getFUFunction() == PE.FUFunction.compare_leq ||
-                                pe.getFUFunction() == PE.FUFunction.compare_geq) {
-                    pe.setFUFunction(PE.FUFunction.none);
+                        pe.getFuFunction() == PE.FUFunction.compare_eq ||
+                                pe.getFuFunction() == PE.FUFunction.compare_neq ||
+                                pe.getFuFunction() == PE.FUFunction.compare_lt ||
+                                pe.getFuFunction() == PE.FUFunction.compare_gt ||
+                                pe.getFuFunction() == PE.FUFunction.compare_leq ||
+                                pe.getFuFunction() == PE.FUFunction.compare_geq) {
+                    pe.setFuFunction(PE.FUFunction.none);
                 }
 
 
             } else if (Objects.equals(entry.getKey(), "multiplex")) {
 
-                if (pe.getFUFunction() == PE.FUFunction.mux_0 || pe.getFUFunction() == PE.FUFunction.mux_1) {
-                    pe.setFUFunction(PE.FUFunction.none);
+                if (pe.getFuFunction() == PE.FUFunction.mux_0 || pe.getFuFunction() == PE.FUFunction.mux_1) {
+                    pe.setFuFunction(PE.FUFunction.none);
                 }
             }
         });
@@ -517,13 +517,13 @@ public class CRC {
                 //noinspection unchecked
                 configPe.put("dataFlagOutS1", pe.getDataFlagOutS1().toString());
                 //noinspection unchecked
-                configPe.put("dataFlagInFU0", pe.getDataFlagInFU0().toString());
+                configPe.put("dataFlagInFU0", pe.getDataFlagInFu0().toString());
                 //noinspection unchecked
-                configPe.put("dataFlagInFU1", pe.getDataFlagInFU1().toString());
+                configPe.put("dataFlagInFU1", pe.getDataFlagInFu1().toString());
                 //noinspection unchecked
-                configPe.put("flagInFUMux", pe.getFlagInFUMux().toString());
+                configPe.put("flagInFUMux", pe.getFlagInFuMux().toString());
                 //noinspection unchecked
-                configPe.put("FUFunction", pe.getFUFunction().toString());
+                configPe.put("FUFunction", pe.getFuFunction().toString());
 
                 //noinspection unchecked
                 configPes.add(configPe);
@@ -621,11 +621,11 @@ public class CRC {
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN1());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN0());
 
-        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getFlagInFUMux());
-        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFU1());
-        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFU0());
+        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getFlagInFuMux());
+        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFu1());
+        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFu0());
 
-        bits += PeFuFunctionBitsMap.getBits(pe.getFUFunction());
+        bits += PeFuFunctionBitsMap.getBits(pe.getFuFunction());
 
         return bits;
     }
@@ -652,11 +652,11 @@ public class CRC {
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN1());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN0());
 
-        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getFlagInFUMux());
-        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFU1());
-        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFU0());
+        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getFlagInFuMux());
+        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFu1());
+        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFu0());
 
-        bits += PeFuFunctionBitsMap.getBits(pe.getFUFunction());
+        bits += PeFuFunctionBitsMap.getBits(pe.getFuFunction());
 
         return bits;
     }

@@ -141,7 +141,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawFU(gc, x, y);
 
         // draw function into FU
-        PE.FUFunction fuFunction = this.getConfiguration().getPe(row, column).getFUFunction();
+        PE.FUFunction fuFunction = this.getConfiguration().getPe(row, column).getFuFunction();
 
         String fuFunctionString = FuFunctionStringMap.getString(fuFunction);
 
@@ -421,7 +421,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
         // internal connection
         // * -> FU0
-        PE.DataFlagInFuDriver dataFlagInFu0Driver = this.getConfiguration().getPe(row, column).getDataFlagInFU0();
+        PE.DataFlagInFuDriver dataFlagInFu0Driver = this.getConfiguration().getPe(row, column).getDataFlagInFu0();
 
         switch (dataFlagInFu0Driver) {
             case data_flag_in_N_0:
@@ -445,7 +445,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         }
 
         // * -> FU1
-        PE.DataFlagInFuDriver dataFlagInFu1Driver = this.getConfiguration().getPe(row, column).getDataFlagInFU1();
+        PE.DataFlagInFuDriver dataFlagInFu1Driver = this.getConfiguration().getPe(row, column).getDataFlagInFu1();
 
         switch (dataFlagInFu1Driver) {
             case data_flag_in_N_0:
@@ -469,7 +469,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         }
 
         // * -> FUMux
-        PE.DataFlagInFuDriver flagInFuMuxDriver = this.getConfiguration().getPe(row, column).getFlagInFUMux();
+        PE.DataFlagInFuDriver flagInFuMuxDriver = this.getConfiguration().getPe(row, column).getFlagInFuMux();
 
         switch (flagInFuMuxDriver) {
             case data_flag_in_N_0:
@@ -2446,7 +2446,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 6.5*peDrawSizeTwentieth &&
                     yNormalized <= 8.5*peDrawSizeTwentieth) {
 
-                 FuFunctionContextMenu fuFunctionContextMenu = new FuFunctionContextMenu(model.getCrc().getFu(row, column), this.getConfiguration().getPe(row, column).getFUFunction());
+                 FuFunctionContextMenu fuFunctionContextMenu = new FuFunctionContextMenu(model.getCrc().getFu(row, column), this.getConfiguration().getPe(row, column).getFuFunction());
                  contextMenu = fuFunctionContextMenu;
                  fuFunctionContextMenu.show(this.getContent(), p.x, p.y);
 
@@ -2465,12 +2465,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 6*peDrawSizeTwentieth-4 &&
                     yNormalized <= 6*peDrawSizeTwentieth+12+4) {
 
-                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfiguration().getPe(row, column).getDataFlagInFU0(), model.getCrc().getRows(), row);
+                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfiguration().getPe(row, column).getDataFlagInFu0(), model.getCrc().getRows(), row);
                 contextMenu = dataFlagInFuDriverContextMenu;
                 dataFlagInFuDriverContextMenu.show(this.getContent(), p.x, p.y);
 
                 dataFlagInFuDriverContextMenu.setOnHiding(event -> {
-                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getDataFlagInFU0()) {
+                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getDataFlagInFu0()) {
                         controller.setPeDataFlagInFu0Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagInFuDriver.none);
                     }
                     else if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() != PE.DataFlagInFuDriver.none) {
@@ -2487,12 +2487,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 13*peDrawSizeTwentieth-4 &&
                     yNormalized <= 13*peDrawSizeTwentieth+12+4) {
 
-                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfiguration().getPe(row, column).getDataFlagInFU1(), model.getCrc().getRows(), row);
+                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfiguration().getPe(row, column).getDataFlagInFu1(), model.getCrc().getRows(), row);
                 contextMenu = dataFlagInFuDriverContextMenu;
                 dataFlagInFuDriverContextMenu.show(this.getContent(), p.x, p.y);
 
                 dataFlagInFuDriverContextMenu.setOnHiding(event -> {
-                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getDataFlagInFU1()) {
+                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getDataFlagInFu1()) {
                         controller.setPeDataFlagInFu1Driver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagInFuDriver.none);
                     }
                     else if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() != PE.DataFlagInFuDriver.none) {
@@ -2508,12 +2508,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 15*peDrawSizeTwentieth &&
                     yNormalized <= 14.5*peDrawSizeTwentieth+12+4) {
 
-                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfiguration().getPe(row, column).getFlagInFUMux(), model.getCrc().getRows(), row);
+                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfiguration().getPe(row, column).getFlagInFuMux(), model.getCrc().getRows(), row);
                 contextMenu = dataFlagInFuDriverContextMenu;
                 dataFlagInFuDriverContextMenu.show(this.getContent(), p.x, p.y);
 
                 dataFlagInFuDriverContextMenu.setOnHiding(event -> {
-                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getFlagInFUMux()) {
+                    if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() == this.getConfiguration().getPe(finalRow, finalColumn).getFlagInFuMux()) {
                         controller.setPeFlagInFuMuxDriver(configurationTabType, number, finalRow, finalColumn, PE.DataFlagInFuDriver.none);
                     }
                     else if(dataFlagInFuDriverContextMenu.getSelectedDataFlagInFuDriver() != PE.DataFlagInFuDriver.none) {

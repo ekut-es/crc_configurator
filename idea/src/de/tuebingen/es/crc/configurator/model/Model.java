@@ -150,7 +150,7 @@ public class Model implements Observable {
     }
 
     /**
-     * call edit on CRC and sets saved to true
+     * call copy on CRC and sets saved to true
      * @param rows
      * @param columns
      * @param staticConfigLines

@@ -457,22 +457,22 @@ public class Controller {
 
     public void setPeFunction(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.FUFunction fuFunction) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setFUFunction(fuFunction);
+        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setFuFunction(fuFunction);
     }
 
     public void setPeDataFlagInFu0Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagInFuDriver dataFlagInFuDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagInFU0(dataFlagInFuDriver);
+        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagInFu0(dataFlagInFuDriver);
     }
 
     public void setPeDataFlagInFu1Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagInFuDriver dataFlagInFuDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagInFU1(dataFlagInFuDriver);
+        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setDataFlagInFu1(dataFlagInFuDriver);
     }
 
     public void setPeFlagInFuMuxDriver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagInFuDriver dataFlagInFuDriver) {
         model.setSaved(false);
-        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setFlagInFUMux(dataFlagInFuDriver);
+        this.getConfiguration(configurationTabType, configurationNumber).getPe(row, column).setFlagInFuMux(dataFlagInFuDriver);
     }
 
     public void setPeDataFlagN0Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {

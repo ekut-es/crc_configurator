@@ -96,41 +96,41 @@ public class PE {
         configuration.notifyAllObservers();
     }
 
-    public DataFlagInFuDriver getDataFlagInFU0() {
+    public DataFlagInFuDriver getDataFlagInFu0() {
         return dataFlagInFU0;
     }
 
-    public void setDataFlagInFU0(DataFlagInFuDriver dataFlagInFU0) {
+    public void setDataFlagInFu0(DataFlagInFuDriver dataFlagInFU0) {
         this.dataFlagInFU0 = dataFlagInFU0;
         this.checkSetActive();
         configuration.notifyAllObservers();
     }
 
-    public DataFlagInFuDriver getDataFlagInFU1() {
+    public DataFlagInFuDriver getDataFlagInFu1() {
         return dataFlagInFU1;
     }
 
-    public void setDataFlagInFU1(DataFlagInFuDriver dataFlagInFU1) {
+    public void setDataFlagInFu1(DataFlagInFuDriver dataFlagInFU1) {
         this.dataFlagInFU1 = dataFlagInFU1;
         this.checkSetActive();
         configuration.notifyAllObservers();
     }
 
-    public DataFlagInFuDriver getFlagInFUMux() {
+    public DataFlagInFuDriver getFlagInFuMux() {
         return flagInFUMux;
     }
 
-    public void setFlagInFUMux(DataFlagInFuDriver flagInFUMux) {
+    public void setFlagInFuMux(DataFlagInFuDriver flagInFUMux) {
         this.flagInFUMux = flagInFUMux;
         this.checkSetActive();
         configuration.notifyAllObservers();
     }
 
-    public FUFunction getFUFunction() {
+    public FUFunction getFuFunction() {
         return fuFunction;
     }
 
-    public void setFUFunction(FUFunction fuFunction) {
+    public void setFuFunction(FUFunction fuFunction) {
         this.fuFunction = fuFunction;
         configuration.notifyAllObservers();
     }
@@ -167,20 +167,27 @@ public class PE {
 
     }
 
-    public void editPE(PE pe) {
+    /**
+     * copies content of another PE
+     * @param pe
+     */
+    public void copy(PE pe) {
         this.dataFlagOutN0 = pe.getDataFlagOutN0();
         this.dataFlagOutN1 = pe.getDataFlagOutN1();
         this.dataFlagOutE0 = pe.getDataFlagOutE0();
         this.dataFlagOutE1 = pe.getDataFlagOutE1();
         this.dataFlagOutS0 = pe.getDataFlagOutS1();
-        this.dataFlagInFU0 = pe.getDataFlagInFU0();
-        this.dataFlagInFU1 = pe.getDataFlagInFU1();
-        this.flagInFUMux = pe.getFlagInFUMux();
-        this.fuFunction = pe.getFUFunction();
+        this.dataFlagInFU0 = pe.getDataFlagInFu0();
+        this.dataFlagInFU1 = pe.getDataFlagInFu1();
+        this.flagInFUMux = pe.getFlagInFuMux();
+        this.fuFunction = pe.getFuFunction();
 
         this.checkSetActive();
     }
 
+    /**
+     * checks if the PE is active
+     */
     private void checkSetActive()  {
         if(
                 dataFlagOutN0 == DataFlagOutDriver.none &&
@@ -198,6 +205,9 @@ public class PE {
         }
     }
 
+    /**
+     * set all outputs driven by south inputs to none
+     */
     public void setOutputsDrivenBySouthInputsToNone() {
 
         if(dataFlagOutN0 == DataFlagOutDriver.data_flag_in_S_0 || dataFlagOutN0 == DataFlagOutDriver.data_flag_in_S_1) {
