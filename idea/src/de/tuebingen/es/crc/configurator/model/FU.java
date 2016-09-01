@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
  */
 public class FU {
     private LinkedHashMap<String, Boolean> functions;
-    private CRC crc;
+    private final CRC crc;
 
     public FU(CRC crc) {
 
@@ -68,7 +68,7 @@ public class FU {
      * @param functions
      */
     public void setFunctions(LinkedHashMap<String, Boolean> functions) {
-        this.functions = new LinkedHashMap<String, Boolean>();
+        this.functions = new LinkedHashMap<>();
         this.functions.putAll(functions);
         crc.notifyAllObservers();
     }
