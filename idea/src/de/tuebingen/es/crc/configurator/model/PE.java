@@ -5,7 +5,7 @@ package de.tuebingen.es.crc.configurator.model;
  */
 public class PE {
 
-    private Configuration configuration;
+    private final Configuration configuration;
 
     public enum DataFlagOutDriver {
         none, data_flag_in_N_0, data_flag_in_N_1, data_flag_in_S_0, data_flag_in_S_1, data_flag_in_W_0, data_flag_in_W_1, data_flag_out_FU
@@ -150,22 +150,24 @@ public class PE {
         fuFunction = FUFunction.none;
     }
 
-    public PE(Configuration configuration, DataFlagOutDriver dataFlagOutN0, DataFlagOutDriver dataFlagOutN1, DataFlagOutDriver dataFlagOutE0, DataFlagOutDriver dataFlagOutE1, DataFlagOutDriver dataFlagOutS0, DataFlagOutDriver dataFlagOutS1, DataFlagInFuDriver dataFlagInFU0, DataFlagInFuDriver dataFlagInFU1, DataFlagInFuDriver flagInFUMux, FUFunction fuFunction) {
-        this.configuration = configuration;
-        this.dataFlagOutN0 = dataFlagOutN0;
-        this.dataFlagOutN1 = dataFlagOutN1;
-        this.dataFlagOutE0 = dataFlagOutE0;
-        this.dataFlagOutE1 = dataFlagOutE1;
-        this.dataFlagOutS0 = dataFlagOutS0;
-        this.dataFlagOutS1 = dataFlagOutS1;
-        this.dataFlagInFU0 = dataFlagInFU0;
-        this.dataFlagInFU1 = dataFlagInFU1;
-        this.flagInFUMux = flagInFUMux;
-        this.fuFunction = fuFunction;
-
-        this.checkSetActive();
-
-    }
+// --Commented out by Inspection START (01/09/16 14:35):
+//    public PE(Configuration configuration, DataFlagOutDriver dataFlagOutN0, DataFlagOutDriver dataFlagOutN1, DataFlagOutDriver dataFlagOutE0, DataFlagOutDriver dataFlagOutE1, DataFlagOutDriver dataFlagOutS0, DataFlagOutDriver dataFlagOutS1, DataFlagInFuDriver dataFlagInFU0, DataFlagInFuDriver dataFlagInFU1, DataFlagInFuDriver flagInFUMux, FUFunction fuFunction) {
+//        this.configuration = configuration;
+//        this.dataFlagOutN0 = dataFlagOutN0;
+//        this.dataFlagOutN1 = dataFlagOutN1;
+//        this.dataFlagOutE0 = dataFlagOutE0;
+//        this.dataFlagOutE1 = dataFlagOutE1;
+//        this.dataFlagOutS0 = dataFlagOutS0;
+//        this.dataFlagOutS1 = dataFlagOutS1;
+//        this.dataFlagInFU0 = dataFlagInFU0;
+//        this.dataFlagInFU1 = dataFlagInFU1;
+//        this.flagInFUMux = flagInFUMux;
+//        this.fuFunction = fuFunction;
+//
+//        this.checkSetActive();
+//
+//    }
+// --Commented out by Inspection STOP (01/09/16 14:35)
 
     /**
      * copies content of another PE
