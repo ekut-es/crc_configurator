@@ -272,6 +272,8 @@ public class Controller {
      */
     private void saveAsCrcDescriptionFile() {
         FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON (*.json)", "*.json"));
+        fileChooser.setInitialFileName("*.json");
         fileChooser.setTitle("Save CRC Description File");
         File crcDescriptionFile = fileChooser.showSaveDialog(mainVBox.getScene().getWindow());
 
