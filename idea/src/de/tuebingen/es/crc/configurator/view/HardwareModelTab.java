@@ -19,8 +19,8 @@ import java.util.Map;
  */
 public class HardwareModelTab extends ConfiguratorTab implements Observer {
 
-    private Model model;
-    private Controller controller;
+    private final Model model;
+    private final Controller controller;
     private GraphicsContext gc;
 
     public HardwareModelTab(Model model, Controller controller) {
@@ -32,18 +32,24 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
         this.setText("Hardware Model");
 
         this.setup();
-        this.drawHardwareModelCrc();
+        this.drawCrcHardwareModel();
 
     }
 
+    /**
+     * redraws config
+     */
     @Override
     public void update() {
         if(model.wasCrcResized()) {
             this.setup();
         }
-        this.drawHardwareModelCrc();
+        this.drawCrcHardwareModel();
     }
 
+    /**
+     * sets up the drawing canvas and draws config
+     */
     private void setup() {
         Canvas canvas = new Canvas();
         canvas.setHeight(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE)));
@@ -69,7 +75,10 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
         gc = canvas.getGraphicsContext2D();
     }
 
-    private void drawHardwareModelCrc() {
+    /**
+     * draws CRC hardware model
+     */
+    private void drawCrcHardwareModel() {
 
         gc.clearRect(0,0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 
