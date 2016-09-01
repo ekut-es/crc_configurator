@@ -7,27 +7,25 @@
 
 <VBox fx:id="mainVBox" prefHeight="500" prefWidth="500" xmlns:fx="http://javafx.com/fxml" fx:controller="de.tuebingen.es.crc.configurator.Controller">
     <MenuBar fx:id="mainMenuBar">
-        <menus>
-            <Menu fx:id="menuFile" text="File">
-                <items>
-                    <MenuItem text="New" onAction="#handleNewAction" accelerator="Shortcut+N"/>
-                    <MenuItem text="Open" onAction="#handleOpenAction" accelerator="Shortcut+O"/>
-                    <MenuItem fx:id="menuItemEdit" text="Edit" disable="true" onAction="#handleEditAction"/>
-                    <MenuItem fx:id="menuItemSave" text="Save" disable="true" onAction="#handleSaveAction" accelerator="Shortcut+S"/>
-                    <MenuItem fx:id="menuItemSaveAs" text="Save As" disable="true" onAction="#handleSaveAsAction" accelerator="Shift+Shortcut+S"/>
-                    <MenuItem fx:id="menuItemExportBits" text="Export Bits" disable="true" onAction="#handleExportBitsAction"/>
-                    <MenuItem fx:id="menuItemClose" text="Close" disable="true" onAction="#handleCloseAction" accelerator="Shortcut+W"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem text="Quit" onAction="#handleQuitAction" accelerator="Shortcut+Q"/>
-                </items>
-            </Menu>
-            <Menu fx:id="menuText" text="Help">
-                <items>
-                    <MenuItem text="Documentation"/>
-                    <MenuItem text="About" onAction="#handleAboutAction"/>
-                </items>
-            </Menu>
-        </menus>
+        <Menu fx:id="menuFile" text="File">
+            <MenuItem text="New" onAction="#handleNewAction" accelerator="Shortcut+N"/>
+            <MenuItem text="Open" onAction="#handleOpenAction" accelerator="Shortcut+O"/>
+            <MenuItem fx:id="menuItemEdit" text="Edit" disable="true" onAction="#handleEditAction"/>
+            <MenuItem fx:id="menuItemSave" text="Save" disable="true" onAction="#handleSaveAction"
+                      accelerator="Shortcut+S"/>
+            <MenuItem fx:id="menuItemSaveAs" text="Save As" disable="true" onAction="#handleSaveAsAction"
+                      accelerator="Shift+Shortcut+S"/>
+            <MenuItem fx:id="menuItemExportBits" text="Export Bits" disable="true"
+                      onAction="#handleExportBitsAction"/>
+            <MenuItem fx:id="menuItemClose" text="Close" disable="true" onAction="#handleCloseAction"
+                      accelerator="Shortcut+W"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="Quit" onAction="#handleQuitAction" accelerator="Shortcut+Q"/>
+        </Menu>
+        <Menu fx:id="menuText" text="Help">
+            <MenuItem text="Documentation"/>
+            <MenuItem text="About" onAction="#handleAboutAction"/>
+        </Menu>
     </MenuBar>
     <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
     </TabPane>
