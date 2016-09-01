@@ -2637,7 +2637,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized <= PE_DRAW_SIZE-1+4 &&
                     row != model.getCrc().getRows()-1) {
 
-                DataFlagSouthDriverContextMenu dataFlagSouthDriverContextMenu = new DataFlagSouthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutS0(), model.getCrc().getRows(), row);
+                DataFlagSouthDriverContextMenu dataFlagSouthDriverContextMenu = new DataFlagSouthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutS0(), row);
                 contextMenu = dataFlagSouthDriverContextMenu;
                 dataFlagSouthDriverContextMenu.show(this.getContent(), p.x, p.y);
 
@@ -2660,7 +2660,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized <= PE_DRAW_SIZE-1+4 &&
                     row != model.getCrc().getRows()-1) {
 
-                DataFlagSouthDriverContextMenu dataFlagSouthDriverContextMenu = new DataFlagSouthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutS1(), model.getCrc().getRows(), row);
+                DataFlagSouthDriverContextMenu dataFlagSouthDriverContextMenu = new DataFlagSouthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutS1(), row);
                 contextMenu = dataFlagSouthDriverContextMenu;
                 dataFlagSouthDriverContextMenu.show(this.getContent(), p.x, p.y);
 
