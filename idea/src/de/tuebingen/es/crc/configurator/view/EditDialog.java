@@ -29,32 +29,16 @@ public class EditDialog extends Stage {
         return rows;
     }
 
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
     public int getColumns() {
         return columns;
-    }
-
-    public void setColumns(int columns) {
-        this.columns = columns;
     }
 
     public int getStaticConfigLines() {
         return staticConfigLines;
     }
 
-    public void setStaticConfigLines(int staticConfigLines) {
-        this.staticConfigLines = staticConfigLines;
-    }
-
     public int getDynamicConfigLines() {
         return dynamicConfigLines;
-    }
-
-    public void setDynamicConfigLines(int dynamicConfigLines) {
-        this.dynamicConfigLines = dynamicConfigLines;
     }
 
     public boolean apply;
