@@ -17,13 +17,13 @@ public class Model implements Observable {
     private boolean saved;
     private String crcDescriptionFilePath;
 
-    private List<Observer> observers;
+    private final List<Observer> observers;
 
     private boolean crcWasResized;
 
     public Model() {
         saved = true;
-        observers = new ArrayList<Observer>();
+        observers = new ArrayList<>();
         crcDescriptionFilePath = "";
         crcWasResized = false;
     }
@@ -64,9 +64,7 @@ public class Model implements Observable {
 
     @Override
     public void notifyAllObservers() {
-        for(Observer observer : observers) {
-           observer.update();
-        }
+        observers.forEach(Observer::update);
     }
 
     /**
@@ -75,9 +73,8 @@ public class Model implements Observable {
      * @param columns
      * @param staticConfigLines
      * @param dynamicConfigLines
-     * @throws Exception
      */
-    public void createCrcDescriptionFile(int rows, int columns, int staticConfigLines, int dynamicConfigLines) throws Exception {
+    public void createCrcDescriptionFile(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
         crc = new CRC(rows, columns, staticConfigLines, dynamicConfigLines, this);
         saved = false;
     }
@@ -117,10 +114,19 @@ public class Model implements Observable {
         crcDescriptionFilePath = crcDescriptionFile.getAbsolutePath();
     }
 
+    /**
+     * wrapper which inserts file path of CRC description file
+     * @throws Exception
+     */
     public void saveCrcDescriptionFile() throws Exception {
         this.saveCrcDescriptionFile(crcDescriptionFilePath);
     }
 
+    /**
+     * saves CRC description file as JSON to the given file path
+     * @param filePath
+     * @throws Exception
+     */
     public void saveCrcDescriptionFile(String filePath) throws Exception {
 
         File crcDescriptionFile = new File(filePath);
@@ -136,11 +142,20 @@ public class Model implements Observable {
         } catch (Exception e) {
             throw new Exception("Can't write to file '" + filePath + "'!");
         } finally {
+            //noinspection ThrowFromFinallyBlock
             fw.flush();
+            //noinspection ThrowFromFinallyBlock
             fw.close();
         }
     }
 
+    /**
+     * call edit on CRC and sets saved to true
+     * @param rows
+     * @param columns
+     * @param staticConfigLines
+     * @param dynamicConfigLines
+     */
     public void editCrc(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
         saved = false;
         crcWasResized = true;
