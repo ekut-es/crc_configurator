@@ -20,14 +20,10 @@ import java.util.Map;
  */
 public class ExportBitsDialog extends Stage {
 
-    private CRC crc;
-
     public ExportBitsDialog(CRC crc) {
         super();
 
-        this.crc = crc;
-
-        String text = new String();
+        String text = "";
 
         text += "Bits for the CRC Core Verilog Module (crc_core.v)\n\n";
         text += "PE_OP_PARAMETERS:\n";
@@ -74,7 +70,7 @@ public class ExportBitsDialog extends Stage {
         closeButton.setOnAction(event -> this.close());
 
         border.setCenter(textArea);
-        border.setMargin(textArea, new Insets(0,0,10,0));
+        BorderPane.setMargin(textArea, new Insets(0,0,10,0));
         border.setBottom(closeButton);
 
         this.setScene(scene);
