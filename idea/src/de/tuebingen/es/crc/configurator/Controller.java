@@ -232,18 +232,24 @@ public class Controller {
 
     public void handleDocumentationAction(ActionEvent actionEvent) {
 
-        try {
-            String inputPdf = "doc/documentation.pdf";
-            InputStream manualAsStream = getClass().getClassLoader().getResourceAsStream(inputPdf);
-            Path tempOutput = Files.createTempFile("documentation", ".pdf");
-            tempOutput.toFile().deleteOnExit();
-            Files.copy(manualAsStream, tempOutput, StandardCopyOption.REPLACE_EXISTING);
-            File userManual = new File (tempOutput.toFile().getPath());
-            if (userManual.exists()) {
-                Desktop.getDesktop().open(userManual);
-            }
-        } catch (Exception e) {
-            this.showErrorMessage(e.getMessage());
+        if(Desktop.isDesktopSupported()) {
+            new Thread(() -> {
+                try {
+                    String inputPdf = "doc/documentation.pdf";
+                    InputStream manualAsStream = getClass().getClassLoader().getResourceAsStream(inputPdf);
+                    Path tempOutput = Files.createTempFile("documentation", ".pdf");
+                    tempOutput.toFile().deleteOnExit();
+                    Files.copy(manualAsStream, tempOutput, StandardCopyOption.REPLACE_EXISTING);
+                    File userManual = new File(tempOutput.toFile().getPath());
+                    if (userManual.exists()) {
+                        Desktop.getDesktop().open(userManual);
+                    }
+                } catch (Exception e) {
+                    this.showErrorMessage(e.getMessage());
+                }
+            }).start();
+        } else {
+            this.showErrorMessage("This computer does not support opening PDFs!");
         }
     }
 
