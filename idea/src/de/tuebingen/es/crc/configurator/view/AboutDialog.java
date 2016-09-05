@@ -24,6 +24,7 @@ public class AboutDialog extends Stage {
 
         super();
 
+        this.setTitle("About CRC Configurator");
         this.setResizable(false);
         this.initStyle(StageStyle.UNIFIED);
         this.initModality(Modality.APPLICATION_MODAL);

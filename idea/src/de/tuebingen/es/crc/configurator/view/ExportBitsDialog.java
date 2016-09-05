@@ -48,6 +48,7 @@ public class ExportBitsDialog extends Stage {
             }
         }
 
+        this.setTitle("Export Bits");
         this.initStyle(StageStyle.UNIFIED);
         this.initModality(Modality.APPLICATION_MODAL);
 

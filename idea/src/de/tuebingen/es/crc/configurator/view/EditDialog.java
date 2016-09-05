@@ -46,6 +46,7 @@ public class EditDialog extends Stage {
     public EditDialog(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
         super();
 
+        this.setTitle("Edit CRC");
         this.setResizable(false);
         this.initStyle(StageStyle.UNIFIED);
         this.initModality(Modality.APPLICATION_MODAL);

@@ -7,11 +7,20 @@ import de.tuebingen.es.crc.configurator.view.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -124,6 +133,7 @@ public class Controller {
             // show "Edit", "Save As", and "Close" in menu bar
             menuItemEdit.setDisable(false);
             menuItemSaveAs.setDisable(false);
+            menuItemExportBits.setDisable(false);
             menuItemClose.setDisable(false);
 
             stage.setTitle("CRC Configurator (Unnamed File)");
@@ -218,6 +228,23 @@ public class Controller {
     public void handleAboutAction(ActionEvent actionEvent) {
         AboutDialog aboutDialog = new AboutDialog();
         aboutDialog.showAndWait();
+    }
+
+    public void handleDocumentationAction(ActionEvent actionEvent) {
+
+        try {
+            String inputPdf = "doc/documentation.pdf";
+            InputStream manualAsStream = getClass().getClassLoader().getResourceAsStream(inputPdf);
+            Path tempOutput = Files.createTempFile("documentation", ".pdf");
+            tempOutput.toFile().deleteOnExit();
+            Files.copy(manualAsStream, tempOutput, StandardCopyOption.REPLACE_EXISTING);
+            File userManual = new File (tempOutput.toFile().getPath());
+            if (userManual.exists()) {
+                Desktop.getDesktop().open(userManual);
+            }
+        } catch (Exception e) {
+            this.showErrorMessage(e.getMessage());
+        }
     }
 
     public void handleQuitAction(ActionEvent actionEvent) {
@@ -506,6 +533,8 @@ public class Controller {
         model.setSaved(false);
         this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutS1(dataFlagOutDriver);
     }
+
+
 }
 
 

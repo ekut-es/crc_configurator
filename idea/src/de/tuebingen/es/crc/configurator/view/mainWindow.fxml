@@ -23,7 +23,7 @@
             <MenuItem text="Quit" onAction="#handleQuitAction" accelerator="Shortcut+Q"/>
         </Menu>
         <Menu fx:id="menuText" text="Help">
-            <MenuItem text="Documentation"/>
+            <MenuItem text="Documentation" onAction="#handleDocumentationAction"/>
             <MenuItem text="About" onAction="#handleAboutAction"/>
         </Menu>
     </MenuBar>
