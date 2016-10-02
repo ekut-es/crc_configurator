@@ -32,10 +32,12 @@ public class Model implements Observable {
         return crc;
     }
 
+    @SuppressWarnings("SameParameterValue")
     public void setSaved(boolean saved) {
         this.saved = saved;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isSaved() {
         return saved;
     }

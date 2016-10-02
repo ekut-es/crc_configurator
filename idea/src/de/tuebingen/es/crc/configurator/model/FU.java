@@ -59,6 +59,7 @@ public class FU {
      * @param key
      * @param value
      */
+    @SuppressWarnings("SameParameterValue")
     public void setFunction(String key, boolean value) {
         this.functions.replace(key, value);
     }

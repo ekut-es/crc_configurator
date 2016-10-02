@@ -18,6 +18,8 @@ public class CRC {
     private int staticConfigLines;
     private int dynamicConfigLines;
 
+    private String comment;
+
     private HashMap<Integer, Configuration> staticConfigs;
     private HashMap<Integer, Configuration> dynamicConfigs;
 
@@ -79,6 +81,7 @@ public class CRC {
         this.setColumns(Integer.parseInt(jsonCrcDescription.get("columns").toString()));
         this.setStaticConfigLines(Integer.parseInt(jsonCrcDescription.get("staticConfigLines").toString()));
         this.setDynamicConfigLines(Integer.parseInt(jsonCrcDescription.get("dynamicConfigLines").toString()));
+        this.setComment(jsonCrcDescription.get("comment").toString());
 
         this.generateFuMatrix();
 
@@ -302,6 +305,14 @@ public class CRC {
         return dynamicConfigLines;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public HashMap<Integer, Configuration> getStaticConfigs(){
         return staticConfigs;
     }
@@ -420,6 +431,8 @@ public class CRC {
         jsonCRCDescription.put("staticConfigLines", staticConfigLines);
         //noinspection unchecked
         jsonCRCDescription.put("dynamicConfigLines", dynamicConfigLines);
+        //noinspection unchecked
+        jsonCRCDescription.put("comment", comment);
 
         // process PEs
         JSONArray pes = new JSONArray();

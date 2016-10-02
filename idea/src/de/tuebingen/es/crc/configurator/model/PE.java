@@ -204,20 +204,15 @@ public class PE {
      * checks if the PE is active
      */
     private void checkSetActive()  {
-        if(
-                dataFlagOutN0 == DataFlagOutDriver.none &&
-                        dataFlagOutN1 == DataFlagOutDriver.none &&
-                        dataFlagOutE0 == DataFlagOutDriver.none &&
-                        dataFlagOutE1 == DataFlagOutDriver.none &&
-                        dataFlagOutS0 == DataFlagOutDriver.none &&
-                        dataFlagOutS1 == DataFlagOutDriver.none &&
-                        dataFlagInFU0 == DataFlagInFuDriver.none &&
-                        dataFlagInFU1 == DataFlagInFuDriver.none &&
-                        flagInFUMux == DataFlagInFuDriver.none) {
-            active = false;
-        } else {
-            active = true;
-        }
+        active = !(dataFlagOutN0 == DataFlagOutDriver.none &&
+                dataFlagOutN1 == DataFlagOutDriver.none &&
+                dataFlagOutE0 == DataFlagOutDriver.none &&
+                dataFlagOutE1 == DataFlagOutDriver.none &&
+                dataFlagOutS0 == DataFlagOutDriver.none &&
+                dataFlagOutS1 == DataFlagOutDriver.none &&
+                dataFlagInFU0 == DataFlagInFuDriver.none &&
+                dataFlagInFU1 == DataFlagInFuDriver.none &&
+                flagInFUMux == DataFlagInFuDriver.none);
     }
 
     /**

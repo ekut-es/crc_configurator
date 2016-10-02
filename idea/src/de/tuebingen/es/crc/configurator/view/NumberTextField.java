@@ -14,6 +14,7 @@ public class NumberTextField extends TextField {
         maxNumbers = 0;
     }
 
+    @SuppressWarnings("SameParameterValue")
     public void setMaxNumbers(int maxNumbers) {
         this.maxNumbers = maxNumbers;
     }

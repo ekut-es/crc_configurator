@@ -545,6 +545,10 @@ public class Controller {
         this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutS1(dataFlagOutDriver);
     }
 
+    public void setCrcComment(String comment) {
+        model.setSaved(false);
+        model.getCrc().setComment(comment);
+    }
 
 }
 
