@@ -151,7 +151,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         gc.fillText(row + "," + column, peDrawSizeTwentieth+x, PE_DRAW_SIZE-(peDrawSizeTwentieth)+y);
 
         // draw FU
-        this.drawFU(gc, x, y);
+        this.drawFU(gc, x, y, false);
 
         // draw function into FU
         PE.FUFunction fuFunction = this.getConfig().getPe(row, column).getFuFunction();
@@ -226,6 +226,15 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         gc.setFont(fontBold);
         gc.fillText(fuFunctionString, 7*peDrawSizeTwentieth+fuFunctionStringOffset+x, 8*peDrawSizeTwentieth+y);
         gc.setFont(defaultFont);
+
+        // draw singed or unsigned
+        boolean signedData = this.getConfig().getPe(row, column).isSignedData();
+
+        if(!signedData) {
+            gc.fillText("unsigned", 7.2*peDrawSizeTwentieth+x, 13*peDrawSizeTwentieth+y);
+        } else {
+            gc.fillText("signed", 8*peDrawSizeTwentieth+x, 13*peDrawSizeTwentieth+y);
+        }
 
         // draw FU pads
         gc.setFill(Color.GRAY);
@@ -2477,6 +2486,21 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                  });
             }
 
+            // FU signedness
+            if(
+                    xNormalized >= 6*peDrawSizeTwentieth &&
+                    xNormalized <= 13*peDrawSizeTwentieth &&
+                    yNormalized >= 11.5*peDrawSizeTwentieth &&
+                    yNormalized <= 13.5*peDrawSizeTwentieth) {
+
+                FuSignednessContextMenu fuSignednessContextMenu = new FuSignednessContextMenu(model.getCrc().getFu(row, column), this.getConfig().getPe(row, column).isSignedData());
+                contextMenu = fuSignednessContextMenu;
+                fuSignednessContextMenu.show(this.getContent(), p.x, p.y);
+
+                fuSignednessContextMenu.setOnHiding(event -> {
+                    controller.setFuSignedness(configurationTabType, number, finalRow, finalColumn, fuSignednessContextMenu.getSelectFuSignedness());
+                });
+            }
 
             // in FU0
             if(

@@ -482,6 +482,11 @@ public class Controller {
         model.getCrc().setFuFunctions(row, column, fuFunctions);
     }
 
+    public void setFuSignedness(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, boolean fuSingedness) {
+        model.setSaved(false);
+        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setSignedData(fuSingedness);
+    }
+
     private Configuration getConfig(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber) {
         if(configurationTabType == ConfigurationTab.ConfigurationTabType.STATIC) {
             return model.getCrc().getStaticConfig(configurationNumber);

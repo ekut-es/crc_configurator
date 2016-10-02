@@ -21,6 +21,8 @@ public class PE {
 
     private boolean active;
 
+    private boolean signedData;
+
     private DataFlagOutDriver dataFlagOutN0;
     private DataFlagOutDriver dataFlagOutN1;
     private DataFlagOutDriver dataFlagOutE0;
@@ -34,6 +36,15 @@ public class PE {
 
     public boolean isActive() {
         return active;
+    }
+
+    public boolean isSignedData() {
+        return signedData;
+    }
+
+    public void setSignedData(boolean signedData) {
+        this.signedData = signedData;
+        configuration.notifyAllObservers();
     }
 
     public DataFlagOutDriver getDataFlagOutN0() {
@@ -138,6 +149,7 @@ public class PE {
     public PE(Configuration configuration) {
         this.configuration = configuration;
         active = false;
+        signedData = false;
         dataFlagOutN0 = DataFlagOutDriver.none;
         dataFlagOutN1 = DataFlagOutDriver.none;
         dataFlagOutE0 = DataFlagOutDriver.none;
@@ -174,6 +186,7 @@ public class PE {
      * @param pe
      */
     public void copy(PE pe) {
+        this.signedData = pe.isSignedData();
         this.dataFlagOutN0 = pe.getDataFlagOutN0();
         this.dataFlagOutN1 = pe.getDataFlagOutN1();
         this.dataFlagOutE0 = pe.getDataFlagOutE0();

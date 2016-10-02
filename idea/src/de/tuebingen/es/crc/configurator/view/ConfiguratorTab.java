@@ -19,7 +19,7 @@ public abstract class ConfiguratorTab extends Tab {
 
     public abstract void update();
 
-    protected void drawFU(GraphicsContext gc, double x, double y) {
+    protected void drawFU(GraphicsContext gc, double x, double y, boolean showFUText) {
 
         gc.strokePolygon(
                 new double[] {
@@ -43,7 +43,8 @@ public abstract class ConfiguratorTab extends Tab {
                 7
         );
 
-        gc.fillText("FU", 9*peDrawSizeTwentieth+x, 13*peDrawSizeTwentieth+y);
-
-    }
+        if(showFUText) {
+            gc.fillText("FU", 9 * peDrawSizeTwentieth + x, 13 * peDrawSizeTwentieth + y);
+        }
+   }
 }

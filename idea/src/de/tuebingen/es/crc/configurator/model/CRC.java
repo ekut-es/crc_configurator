@@ -164,6 +164,7 @@ public class CRC {
             pe.setDataFlagInFu1(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFU1").toString()));
             pe.setFlagInFuMux(PE.DataFlagInFuDriver.valueOf(peJson.get("flagInFUMux").toString()));
             pe.setFuFunction(PE.FUFunction.valueOf(peJson.get("FUFunction").toString()));
+            pe.setSignedData(peJson.get("FUSignedness").toString().equals("signed"));
         }
 
         return configuration;
@@ -363,6 +364,10 @@ public class CRC {
 
     }
 
+    public void setFuSignedness(int row, int column, boolean fuSingedness) {
+
+    }
+
     /**
      * if the hardware model of the CRC was edited (enable or disabling of a FU function) it will be checked if a
      * disabled FU functions is used in a PE and in set to NOP if necessary
@@ -524,6 +529,8 @@ public class CRC {
                 configPe.put("flagInFUMux", pe.getFlagInFuMux().toString());
                 //noinspection unchecked
                 configPe.put("FUFunction", pe.getFuFunction().toString());
+                //noinspection unchecked
+                configPe.put("FUSignedness", pe.isSignedData() ? "signed" : "unsigned");
 
                 //noinspection unchecked
                 configPes.add(configPe);
@@ -613,11 +620,11 @@ public class CRC {
         PE pe = staticConfigs.get(configNumber).getPe(row, column);
 
         bits += (pe.isActive() ? "1" : "0");
+        bits += (pe.isSignedData() ? "1" : "0");
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS1());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS0());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE0());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE1());
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE0());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN1());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN0());
 
@@ -644,11 +651,11 @@ public class CRC {
         PE pe = dynamicConfigs.get(configNumber).getPe(row, column);
 
         bits += (pe.isActive() ? "1" : "0");
+        bits += (pe.isSignedData() ? "1" : "0");
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS1());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS0());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE0());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE1());
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE0());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN1());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN0());
 
