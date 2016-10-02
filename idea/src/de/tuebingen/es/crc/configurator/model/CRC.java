@@ -152,6 +152,7 @@ public class CRC {
         }
 
         Configuration configuration = new Configuration(this, Integer.parseInt(config.get("configNumber").toString()));
+        configuration.setComment(config.get("comment").toString());
 
         //noinspection unchecked
         for (JSONObject peJson : (Iterable<JSONObject>) pes) {
@@ -473,6 +474,8 @@ public class CRC {
             //noinspection unchecked
             staticConfigJSON.put("configNumber", staticConfig.getNumber());
             //noinspection unchecked
+            staticConfigJSON.put("comment", staticConfig.getComment());
+            //noinspection unchecked
             staticConfigJSON.put("PEs", this.configPesToJSON(staticConfig));
 
             //noinspection unchecked
@@ -492,6 +495,8 @@ public class CRC {
 
             //noinspection unchecked
             dynamicConfigJSON.put("configNumber", dynamicConfig.getNumber());
+            //noinspection unchecked
+            dynamicConfigJSON.put("comment", dynamicConfig.getComment());
             //noinspection unchecked
             dynamicConfigJSON.put("PEs", this.configPesToJSON(dynamicConfig));
 

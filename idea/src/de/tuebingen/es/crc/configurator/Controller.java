@@ -550,6 +550,11 @@ public class Controller {
         model.getCrc().setComment(comment);
     }
 
+    public void setConfigurationComment(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, String comment) {
+        model.setSaved(false);
+        this.getConfig(configurationTabType, configurationNumber).setComment(comment);
+    }
+
 }
 
 

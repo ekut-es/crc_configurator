@@ -13,6 +13,8 @@ public class Configuration implements Observable {
     private CRC crc;
 
     private int number;
+    private String comment;
+
     private ArrayList<ArrayList<PE>> pes;
     private List<Observer> observers;
 
@@ -64,6 +66,14 @@ public class Configuration implements Observable {
 
     public PE getPe(int row, int column) {
         return pes.get(row).get(column);
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     private ArrayList<ArrayList<PE>> getPes() {

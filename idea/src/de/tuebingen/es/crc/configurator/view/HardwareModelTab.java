@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 26/07/16.
@@ -83,34 +84,15 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
 
         outerVBox.getChildren().add(scrollPane);
 
-        VBox innerVBox = new VBox(2);
-        innerVBox.setPadding(new Insets(10,10,10,10));
-
-        Label commentLabel = new Label("Comment");
-
-        innerVBox.getChildren().add(commentLabel);
-
-        TextArea commentTextArea = new TextArea();
-        commentTextArea.setFont(Font.font("Courier", 14));
+        TextArea commentTextArea = this.addCommentTextArea(outerVBox);
+        commentTextArea.textProperty().addListener((observable, oldValue, newValue) -> controller.setCrcComment(newValue));
         commentTextArea.setText(model.getCrc().getComment());
-        commentTextArea.wrapTextProperty().set(true);
-        commentTextArea.setMinHeight(60);
-
-        commentTextArea.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                controller.setCrcComment(newValue);
-            }
-        });
-
-        innerVBox.getChildren().add(commentTextArea);
-
-        outerVBox.getChildren().add(innerVBox);
 
         this.setContent(outerVBox);
 
         gc = canvas.getGraphicsContext2D();
     }
+
 
     /**
      * draws CRC hardware model

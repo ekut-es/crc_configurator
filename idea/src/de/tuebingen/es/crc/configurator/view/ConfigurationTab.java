@@ -6,10 +6,12 @@ import de.tuebingen.es.crc.configurator.model.Model;
 import de.tuebingen.es.crc.configurator.model.PE;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ContextMenu;
+import javafx.scene.control.*;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -73,6 +75,9 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
      * sets up the drawing canvas and draws config
      */
     private void setup() {
+
+        VBox outerVBox = new VBox(2);
+
         Canvas canvas = new Canvas();
         canvas.setHeight(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
         canvas.setWidth(2*CANVAS_PADDING+(model.getCrc().getColumns()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+INTER_PE_DISTANCE);
@@ -98,7 +103,13 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
 
-        this.setContent(scrollPane);
+        outerVBox.getChildren().add(scrollPane);
+
+        TextArea commentTextArea = this.addCommentTextArea(outerVBox);
+        commentTextArea.textProperty().addListener((observable, oldValue, newValue) -> controller.setConfigurationComment(configurationTabType, number, newValue));
+        commentTextArea.setText(this.getConfig().getComment());
+
+        this.setContent(outerVBox);
 
         gc = canvas.getGraphicsContext2D();
     }

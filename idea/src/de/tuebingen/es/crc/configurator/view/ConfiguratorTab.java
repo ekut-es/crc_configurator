@@ -1,8 +1,13 @@
 package de.tuebingen.es.crc.configurator.view;
 
 import de.tuebingen.es.crc.configurator.model.Model;
+import javafx.geometry.Insets;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 26/07/16.
@@ -47,4 +52,26 @@ public abstract class ConfiguratorTab extends Tab {
             gc.fillText("FU", 9 * peDrawSizeTwentieth + x, 13 * peDrawSizeTwentieth + y);
         }
    }
+
+   protected TextArea addCommentTextArea(VBox outerVBox) {
+        VBox innerVBox = new VBox(2);
+        innerVBox.setPadding(new Insets(10,10,10,10));
+
+        Label commentLabel = new Label("Comment");
+
+        innerVBox.getChildren().add(commentLabel);
+
+        TextArea commentTextArea = new TextArea();
+        commentTextArea.setFont(Font.font("Courier", 14));
+        commentTextArea.wrapTextProperty().set(true);
+        commentTextArea.setMinHeight(100);
+        commentTextArea.setMaxHeight(100);
+
+        innerVBox.getChildren().add(commentTextArea);
+
+        outerVBox.getChildren().add(innerVBox);
+
+        return commentTextArea;
+    }
+
 }
