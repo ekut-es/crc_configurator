@@ -641,8 +641,8 @@ public class CRC {
         bits += (pe.isSignedData() ? "1" : "0");
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS1());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS0());
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE0());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE1());
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE0());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN1());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN0());
 
@@ -672,8 +672,8 @@ public class CRC {
         bits += (pe.isSignedData() ? "1" : "0");
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS1());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS0());
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE0());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE1());
+        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE0());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN1());
         bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN0());
 
