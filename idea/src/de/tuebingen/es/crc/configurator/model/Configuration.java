@@ -30,6 +30,7 @@ public class Configuration implements Observable {
         this.crc = crc;
         this.number = number;
         observers = new ArrayList<>();
+        comment = "";
 
         this.generatePeMatrix();
     }

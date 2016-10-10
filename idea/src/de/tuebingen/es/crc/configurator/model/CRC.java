@@ -49,6 +49,7 @@ public class CRC {
         this.setColumns(columns);
         this.setStaticConfigLines(staticConfigLines);
         this.setDynamicConfigLines(dynamicConfigLines);
+        this.comment = "";
 
         this.generateFuMatrix();
 
