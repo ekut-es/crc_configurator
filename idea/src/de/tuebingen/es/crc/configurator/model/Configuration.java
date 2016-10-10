@@ -38,6 +38,8 @@ public class Configuration implements Observable {
     Configuration(CRC crc, int number, Configuration config) {
         this(crc, number);
 
+        comment = config.getComment();
+
         // copy PEs from config
         ArrayList<ArrayList<PE>> configPEs = config.getPes();
 
