@@ -4,6 +4,8 @@ import de.tuebingen.es.crc.configurator.Controller;
 import de.tuebingen.es.crc.configurator.model.Configuration;
 import de.tuebingen.es.crc.configurator.model.Model;
 import de.tuebingen.es.crc.configurator.model.PE;
+import javafx.event.*;
+import javafx.event.Event;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -30,6 +32,9 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
     private final Model model;
     private final Controller controller;
     private GraphicsContext gc;
+    private ScrollPane scrollPane;
+    private double scrollPaneVvalue;
+    private double scrollPaneHvalue;
     private final int number;
     private final ConfigurationTabType configurationTabType;
 
@@ -51,6 +56,9 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
             this.setText("Dynamic Configuration " + number);
         }
 
+        this.scrollPaneVvalue = 0.0;
+        this.scrollPaneHvalue = 0.0;
+
         this.setup();
         this.drawCrcConfig();
 
@@ -60,15 +68,25 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         return number;
     }
 
+    protected void selectionChanged() {
+        if(!this.isSelected()) {
+            scrollPaneVvalue = scrollPane.getVvalue();
+            scrollPaneHvalue = scrollPane.getHvalue();
+            gc = null;
+        } else {
+            this.update();
+        }
+    }
+
     /**
      * redraws config
      */
     @Override
     public void update() {
-        if(model.wasCrcResized()) {
+        if(this.isSelected()) {
             this.setup();
+            this.drawCrcConfig();
         }
-        this.drawCrcConfig();
     }
 
     /**
@@ -99,7 +117,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 }
         );
 
-        ScrollPane scrollPane = new ScrollPane(canvas);
+        scrollPane = new ScrollPane(canvas);
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
 
@@ -110,6 +128,9 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         commentTextArea.setText(this.getConfig().getComment());
 
         this.setContent(outerVBox);
+
+        scrollPane.setHvalue(scrollPaneHvalue);
+        scrollPane.setVvalue(scrollPaneVvalue);
 
         gc = canvas.getGraphicsContext2D();
     }
@@ -2444,6 +2465,8 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
      * @param y
      */
     private void handleConfigurationClick(int x, int y) {
+        scrollPaneVvalue = scrollPane.getVvalue();
+        scrollPaneHvalue = scrollPane.getHvalue();
 
         // decide if the inside of a PE was clicked
         int row = -1;

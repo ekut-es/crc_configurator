@@ -1,6 +1,8 @@
 package de.tuebingen.es.crc.configurator.view;
 
 import de.tuebingen.es.crc.configurator.model.Model;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -16,11 +18,18 @@ public abstract class ConfiguratorTab extends Tab {
 
     protected Model model;
 
+
     public static final int PE_DRAW_SIZE = 200;
     public static final int CANVAS_PADDING = 40;
     public static final int INTER_PE_DISTANCE = 80;
 
     protected final int peDrawSizeTwentieth = (PE_DRAW_SIZE/20);
+
+    public ConfiguratorTab() {
+        this.setOnSelectionChanged(event -> selectionChanged());
+    }
+
+    protected abstract void selectionChanged();
 
     public abstract void update();
 

@@ -3,25 +3,18 @@ package de.tuebingen.es.crc.configurator.view;
 import de.tuebingen.es.crc.configurator.Controller;
 import de.tuebingen.es.crc.configurator.model.FU;
 import de.tuebingen.es.crc.configurator.model.Model;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.geometry.Insets;
-import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
 
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 26/07/16.
@@ -31,6 +24,9 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
     private final Model model;
     private final Controller controller;
     private GraphicsContext gc;
+    private ScrollPane scrollPane;
+    private double scrollPaneVvalue;
+    private double scrollPaneHvalue;
 
     public HardwareModelTab(Model model, Controller controller) {
         super();
@@ -40,9 +36,22 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
 
         this.setText("Hardware Model");
 
+        this.scrollPaneVvalue = 0.0;
+        this.scrollPaneHvalue = 0.0;
+
         this.setup();
         this.drawCrcHardwareModel();
 
+    }
+
+    protected void selectionChanged() {
+        if(!this.isSelected()) {
+            scrollPaneVvalue = scrollPane.getVvalue();
+            scrollPaneHvalue = scrollPane.getHvalue();
+            gc = null;
+        } else {
+            this.update();
+        }
     }
 
     /**
@@ -50,10 +59,11 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
      */
     @Override
     public void update() {
-        if(model.wasCrcResized()) {
+
+        if(this.isSelected()) {
             this.setup();
+            this.drawCrcHardwareModel();
         }
-        this.drawCrcHardwareModel();
     }
 
     /**
@@ -78,7 +88,7 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
                 }
         );
 
-        ScrollPane scrollPane = new ScrollPane(canvas);
+        scrollPane = new ScrollPane(canvas);
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
 
@@ -90,7 +100,11 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
 
         this.setContent(outerVBox);
 
+        scrollPane.setVvalue(scrollPaneVvalue);
+        scrollPane.setHvalue(scrollPaneHvalue);
+
         gc = canvas.getGraphicsContext2D();
+
     }
 
 
