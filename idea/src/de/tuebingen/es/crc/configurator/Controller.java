@@ -546,12 +546,14 @@ public class Controller {
     }
 
     public void setCrcComment(String comment) {
-        model.setSaved(false);
+        // TODO
+        //model.setSaved(false);  System.out.println("549");
         model.getCrc().setComment(comment);
     }
 
     public void setConfigurationComment(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, String comment) {
-        model.setSaved(false);
+        // TODO
+        //model.setSaved(false); System.out.println("554");
         this.getConfig(configurationTabType, configurationNumber).setComment(comment);
     }
 

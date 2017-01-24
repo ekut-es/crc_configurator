@@ -566,23 +566,28 @@ public class CRC {
     public String getPeOpParametersBits() {
 
         String bits = "";
+        String peBits = "";
 
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
                 LinkedHashMap<String, Boolean> fuFunctions =  fuMatrix.get(i).get(j).getFunctions();
 
-                bits += (fuFunctions.get("add") ? "1" : "0");
-                bits += (fuFunctions.get("sub") ? "1" : "0");
-                bits += (fuFunctions.get("mul") ? "1" : "0");
-                bits += (fuFunctions.get("div") ? "1" : "0");
-                bits += (fuFunctions.get("and") ? "1" : "0");
-                bits += (fuFunctions.get("or") ? "1" : "0");
-                bits += (fuFunctions.get("xor") ? "1" : "0");
-                bits += (fuFunctions.get("not") ? "1" : "0");
-                bits += (fuFunctions.get("shift_left") ? "1" : "0");
-                bits += (fuFunctions.get("shift_right") ? "1" : "0");
-                bits += (fuFunctions.get("compare") ? "1" : "0");
-                bits += (fuFunctions.get("multiplex") ? "1" : "0");
+                peBits = "";
+
+                peBits += (fuFunctions.get("add") ? "1" : "0");
+                peBits += (fuFunctions.get("sub") ? "1" : "0");
+                peBits += (fuFunctions.get("mul") ? "1" : "0");
+                peBits += (fuFunctions.get("div") ? "1" : "0");
+                peBits += (fuFunctions.get("and") ? "1" : "0");
+                peBits += (fuFunctions.get("or") ? "1" : "0");
+                peBits += (fuFunctions.get("xor") ? "1" : "0");
+                peBits += (fuFunctions.get("not") ? "1" : "0");
+                peBits += (fuFunctions.get("shift_left") ? "1" : "0");
+                peBits += (fuFunctions.get("shift_right") ? "1" : "0");
+                peBits += (fuFunctions.get("compare") ? "1" : "0");
+                peBits += (fuFunctions.get("multiplex") ? "1" : "0");
+
+                bits = peBits + bits;
             }
         }
 
@@ -599,7 +604,7 @@ public class CRC {
 
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
-                bits += this.getPeStaticConfigParameterBits(i,j);
+                bits = this.getPeStaticConfigParameterBits(i,j) + bits;
             }
         }
 
