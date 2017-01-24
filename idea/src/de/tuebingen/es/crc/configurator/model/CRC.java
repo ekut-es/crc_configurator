@@ -624,7 +624,7 @@ public class CRC {
 
         // TODO: sort by key
         for(Map.Entry<Integer, Configuration> entry : staticConfigs.entrySet()) {
-            bits += this.getPeStaticConfigParameterBits(row,column,entry.getKey());
+            bits = this.getPeStaticConfigParameterBits(row,column,entry.getKey()) + bits;
         }
 
         return bits;
