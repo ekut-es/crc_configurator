@@ -95,8 +95,9 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
         outerVBox.getChildren().add(scrollPane);
 
         TextArea commentTextArea = this.addCommentTextArea(outerVBox);
-        commentTextArea.textProperty().addListener((observable, oldValue, newValue) -> controller.setCrcComment(newValue));
         commentTextArea.setText(model.getCrc().getComment());
+        commentTextArea.textProperty().addListener((observable, oldValue, newValue) -> controller.setCrcComment(newValue));
+
 
         this.setContent(outerVBox);
 

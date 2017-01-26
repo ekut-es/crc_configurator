@@ -124,8 +124,8 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         outerVBox.getChildren().add(scrollPane);
 
         TextArea commentTextArea = this.addCommentTextArea(outerVBox);
-        commentTextArea.textProperty().addListener((observable, oldValue, newValue) -> controller.setConfigurationComment(configurationTabType, number, newValue));
         commentTextArea.setText(this.getConfig().getComment());
+        commentTextArea.textProperty().addListener((observable, oldValue, newValue) -> controller.setConfigurationComment(configurationTabType, number, newValue));
 
         this.setContent(outerVBox);
 

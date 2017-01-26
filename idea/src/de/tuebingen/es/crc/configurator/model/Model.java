@@ -34,9 +34,6 @@ public class Model implements Observable {
 
     @SuppressWarnings("SameParameterValue")
     public void setSaved(boolean saved) {
-        // TODO
-        //System.out.println("this.saved " + this.saved);
-        //System.out.println("saved " + saved);
         this.saved = saved;
     }
 
