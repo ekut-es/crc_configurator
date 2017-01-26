@@ -17,6 +17,8 @@
                       accelerator="Shift+Shortcut+S"/>
             <MenuItem fx:id="menuItemExportBits" text="Export Bits" disable="true"
                       onAction="#handleExportBitsAction"/>
+            <MenuItem fx:id="menuItemExportPNG" text="Export PNG" disable="true"
+                      onAction="#handleExportPNGAction" accelerator="Shortcut+P"/>
             <MenuItem fx:id="menuItemClose" text="Close" disable="true" onAction="#handleCloseAction"
                       accelerator="Shortcut+W"/>
             <SeparatorMenuItem/>

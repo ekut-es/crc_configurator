@@ -4,6 +4,7 @@ import de.tuebingen.es.crc.configurator.model.Model;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -18,6 +19,7 @@ public abstract class ConfiguratorTab extends Tab {
 
     protected Model model;
 
+    protected Canvas canvas;
 
     public static final int PE_DRAW_SIZE = 200;
     public static final int CANVAS_PADDING = 40;
@@ -27,6 +29,10 @@ public abstract class ConfiguratorTab extends Tab {
 
     public ConfiguratorTab() {
         this.setOnSelectionChanged(event -> selectionChanged());
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
     }
 
     protected abstract void selectionChanged();

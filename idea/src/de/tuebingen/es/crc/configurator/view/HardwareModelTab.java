@@ -73,7 +73,8 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
 
         VBox outerVBox = new VBox(2);
 
-        Canvas canvas = new Canvas();
+        //Canvas canvas = new Canvas();
+        canvas = new Canvas();
         canvas.setHeight(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE)));
         canvas.setWidth(2*CANVAS_PADDING+(model.getCrc().getColumns()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
 

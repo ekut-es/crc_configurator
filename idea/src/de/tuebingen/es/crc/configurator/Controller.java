@@ -4,15 +4,20 @@ import de.tuebingen.es.crc.configurator.model.Configuration;
 import de.tuebingen.es.crc.configurator.model.Model;
 import de.tuebingen.es.crc.configurator.model.PE;
 import de.tuebingen.es.crc.configurator.view.*;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,6 +53,9 @@ public class Controller {
 
     @FXML
     private MenuItem menuItemExportBits;
+
+    @FXML
+    private MenuItem menuItemExportPNG;
 
     @FXML
     private MenuItem menuItemClose;
@@ -134,6 +142,7 @@ public class Controller {
             menuItemEdit.setDisable(false);
             menuItemSaveAs.setDisable(false);
             menuItemExportBits.setDisable(false);
+            menuItemExportPNG.setDisable(false);
             menuItemClose.setDisable(false);
 
             stage.setTitle("CRC Configurator (Unnamed File)");
@@ -277,6 +286,7 @@ public class Controller {
         menuItemSave.setDisable(false);
         menuItemSaveAs.setDisable(false);
         menuItemExportBits.setDisable(false);
+        menuItemExportPNG.setDisable(false);
         menuItemClose.setDisable(false);
 
         stage.setTitle("CRC Configurator (" + crcDescriptionFile.getName() + ")");
@@ -329,6 +339,35 @@ public class Controller {
     }
 
     /**
+     * shows a file chooser dialog to save an PNG image of the current tab
+     * @param actionEvent
+     */
+    public void handleExportPNGAction(ActionEvent actionEvent) {
+
+        ConfiguratorTab selectedTab = (ConfiguratorTab) tabPane.getSelectionModel().getSelectedItem();
+
+        Canvas canvas = selectedTab.getCanvas();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG (*png)", "*.png"));
+        fileChooser.setInitialFileName("*.png");
+        fileChooser.setTitle("Export PNG of " + selectedTab.getText());
+
+        File pngFile = fileChooser.showSaveDialog(mainVBox.getScene().getWindow());
+
+        if(pngFile != null) {
+            try {
+                WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+                canvas.snapshot(null, writableImage);
+                RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+                ImageIO.write(renderedImage, "png", pngFile);
+            } catch (Exception e) {
+                showErrorMessage(e.getMessage());
+            }
+        }
+    }
+
+    /**
      * checks if file was saved before closing it and presents a warning if necessary
      * quits Application
      */
@@ -372,6 +411,7 @@ public class Controller {
         menuItemSave.setDisable(true);
         menuItemSaveAs.setDisable(true);
         menuItemExportBits.setDisable(true);
+        menuItemExportPNG.setDisable(true);
         menuItemClose.setDisable(true);
         stage.setTitle("CRC Configurator");
     }
@@ -554,6 +594,7 @@ public class Controller {
         model.setSaved(false);
         this.getConfig(configurationTabType, configurationNumber).setComment(comment);
     }
+
 
 }
 
