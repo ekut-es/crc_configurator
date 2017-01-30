@@ -691,4 +691,5 @@ public class CRC {
 
         return bits;
     }
+
 }

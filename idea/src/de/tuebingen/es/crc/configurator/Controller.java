@@ -419,7 +419,7 @@ public class Controller {
     /**
      * adds the "Hardware Model" tab to the tab pane
      */
-    private void displayHardwareModelTab() {
+    public void displayHardwareModelTab() {
         hardwareModelTab = new HardwareModelTab(model, this);
         model.attachObserver(hardwareModelTab);
         tabPane.getTabs().add(hardwareModelTab);
@@ -428,7 +428,7 @@ public class Controller {
     /**
      * adds the "Static Configration" tabs to the tab pane
      */
-    private void displayStaticConfigTabs() {
+    public void displayStaticConfigTabs() {
 
         HashMap<Integer,Configuration> staticConfigs =  model.getCrc().getStaticConfigs();
 
@@ -456,7 +456,7 @@ public class Controller {
     /**
      * adds the "Dynamic Configration" tabs to the tab pane
      */
-    private void displayDynamicConfigTabs() {
+    public void displayDynamicConfigTabs() {
 
         HashMap<Integer,Configuration> dynamicConfigs =  model.getCrc().getDynamicConfigs();
 
@@ -511,6 +511,9 @@ public class Controller {
 
     }
 
+    public TabPane getTabPane() {
+        return tabPane;
+    }
     /**
      * sets the functions of FU at position row,column
      * @param row

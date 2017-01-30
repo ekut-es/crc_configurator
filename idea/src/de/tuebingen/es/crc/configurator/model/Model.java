@@ -2,7 +2,9 @@ package de.tuebingen.es.crc.configurator.model;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.tuebingen.es.crc.configurator.view.Observer;
 import org.json.simple.JSONObject;
@@ -164,4 +166,6 @@ public class Model implements Observable {
         crc.edit(rows, columns, staticConfigLines, dynamicConfigLines);
         crcWasResized = false;
     }
+
+
 }
