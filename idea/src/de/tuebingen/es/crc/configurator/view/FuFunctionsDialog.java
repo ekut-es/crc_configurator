@@ -1,6 +1,5 @@
 package de.tuebingen.es.crc.configurator.view;
 
-import com.sun.tools.javac.comp.Check;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
