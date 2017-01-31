@@ -4,6 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.*;
+import java.util.stream.BaseStream;
 import java.util.stream.Collectors;
 
 /**
@@ -375,6 +376,14 @@ public class CRC {
             this.checkSetFuFunctionInPe(dynamicConfig.getPe(row, column), fuFunctions);
         }
 
+    }
+
+    public void setAllFuFunctions(LinkedHashMap<String, Boolean> fuFunctions) {
+        for(int i = 0; i < this.rows; i++) {
+           for(int j = 0; j < this.columns; j++) {
+               this.setFuFunctions(i,j,fuFunctions);
+           }
+        }
     }
 
     public void setFuSignedness(int row, int column, boolean fuSingedness) {

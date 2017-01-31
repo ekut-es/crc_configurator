@@ -227,7 +227,11 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
 
             // data was changed -> update model
             if(dialog.modelHasChanged) {
-                controller.setFuFunctions(row, column, dialog.getFuFunctions());
+                if(dialog.getApplyToAll()) {
+                    controller.setFuFunctions(-1, -1, dialog.getFuFunctions());
+                } else {
+                    controller.setFuFunctions(row, column, dialog.getFuFunctions());
+                }
             }
         }
     }

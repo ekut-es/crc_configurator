@@ -516,13 +516,20 @@ public class Controller {
     }
     /**
      * sets the functions of FU at position row,column
+     * if row and column are set to -1 the selected FU functions will be applied to all FUs
      * @param row
      * @param column
      * @param fuFunctions
      */
     public void setFuFunctions(int row, int column, LinkedHashMap<String, Boolean> fuFunctions) {
+
         model.setSaved(false);
-        model.getCrc().setFuFunctions(row, column, fuFunctions);
+
+        if(row == -1 || column == -1) {
+            model.getCrc().setAllFuFunctions(fuFunctions);
+        } else {
+            model.getCrc().setFuFunctions(row, column, fuFunctions);
+        }
     }
 
     public void setFuSignedness(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, boolean fuSingedness) {

@@ -1,5 +1,6 @@
 package de.tuebingen.es.crc.configurator.view;
 
+import com.sun.tools.javac.comp.Check;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -21,6 +22,7 @@ import java.util.Map;
 public class FuFunctionsDialog extends Stage {
 
     public boolean modelHasChanged;
+    private boolean applyToAll;
     private final LinkedHashMap<String, Boolean> fuFunctions;
     private final LinkedHashMap<String, CheckBox> fuFunctionCheckboxes;
 
@@ -32,6 +34,7 @@ public class FuFunctionsDialog extends Stage {
 
         fuFunctionCheckboxes = new LinkedHashMap<>();
         modelHasChanged = false;
+        applyToAll = false;
 
         this.setResizable(false);
         this.initStyle(StageStyle.UNIFIED);
@@ -39,7 +42,7 @@ public class FuFunctionsDialog extends Stage {
 
         Group root = new Group();
 
-        Scene scene = new Scene(root, 150, 460);
+        Scene scene = new Scene(root, 150, 500);
 
         VBox vBox = new VBox(fuFunctions.size()+2);
         vBox.setPadding(new Insets(10,10,10,10));
@@ -54,6 +57,11 @@ public class FuFunctionsDialog extends Stage {
             vBox.getChildren().add(checkBox);
         }
 
+        CheckBox checkBoxApplyToAll = new CheckBox();
+        checkBoxApplyToAll.setText("Apply to all PEs");
+        checkBoxApplyToAll.setSelected(applyToAll);
+        vBox.getChildren().add(checkBoxApplyToAll);
+
         Button cancelButton = new Button("Cancel");
         Button saveButton = new Button("Save");
 
@@ -65,6 +73,9 @@ public class FuFunctionsDialog extends Stage {
             for(Map.Entry<String, CheckBox> function : fuFunctionCheckboxes.entrySet()) {
                 this.fuFunctions.replace(function.getKey(), function.getValue().isSelected());
             }
+
+            applyToAll = checkBoxApplyToAll.isSelected();
+
             modelHasChanged = true;
             this.close();
         });
@@ -83,5 +94,9 @@ public class FuFunctionsDialog extends Stage {
 
     public LinkedHashMap<String, Boolean> getFuFunctions() {
         return this.fuFunctions;
+    }
+
+    public Boolean getApplyToAll() {
+        return this.applyToAll;
     }
 }
