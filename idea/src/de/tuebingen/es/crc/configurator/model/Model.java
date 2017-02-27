@@ -167,5 +167,35 @@ public class Model implements Observable {
         crcWasResized = false;
     }
 
+    public void exportVerilogCode(File verilogFile, boolean fifosBetweenPes) throws Exception {
 
+        // check is a directory
+        if(verilogFile.isDirectory()) {
+            throw new Exception("Can't overwrite '" + verilogFile.getPath() + "' because it is a directory!");
+        }
+
+        // check if file exists and is writable
+        if(verilogFile.exists() && !verilogFile.canWrite()) {
+            throw new Exception("Can't write '" + verilogFile.getPath() + "'!");
+        }
+
+        CRCVerilogGenerator crcVerilogGenerator = new CRCVerilogGenerator(this.crc, fifosBetweenPes);
+
+        FileWriter fw = new FileWriter(verilogFile);
+
+        if(!verilogFile.exists()) {
+            verilogFile.createNewFile();
+        }
+
+        try {
+            fw.write(crcVerilogGenerator.generate());
+        } catch (Exception e) {
+            throw new Exception("Can't write to file '" + verilogFile.getAbsolutePath() + "'!");
+        } finally {
+            //noinspection ThrowFromFinallyBlock
+            fw.flush();
+            //noinspection ThrowFromFinallyBlock
+            fw.close();
+        }
+    }
 }

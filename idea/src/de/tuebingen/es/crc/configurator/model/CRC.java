@@ -3,6 +3,7 @@ package de.tuebingen.es.crc.configurator.model;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.BaseStream;
 import java.util.stream.Collectors;
@@ -700,5 +701,4 @@ public class CRC {
 
         return bits;
     }
-
 }

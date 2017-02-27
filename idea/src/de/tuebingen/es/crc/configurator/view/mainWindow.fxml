@@ -19,6 +19,7 @@
                       onAction="#handleExportBitsAction"/>
             <MenuItem fx:id="menuItemExportPNG" text="Export PNG" disable="true"
                       onAction="#handleExportPNGAction" accelerator="Shortcut+P"/>
+            <MenuItem fx:id="menuItemExportVerilog" text="Export Verilog Code" disable="true" onAction="#handleExportVerilogAction"/>
             <MenuItem fx:id="menuItemClose" text="Close" disable="true" onAction="#handleCloseAction"
                       accelerator="Shortcut+W"/>
             <SeparatorMenuItem/>

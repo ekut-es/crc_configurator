@@ -58,6 +58,9 @@ public class Controller {
     private MenuItem menuItemExportPNG;
 
     @FXML
+    private MenuItem menuItemExportVerilog;
+
+    @FXML
     private MenuItem menuItemClose;
 
     private HardwareModelTab hardwareModelTab;
@@ -143,6 +146,7 @@ public class Controller {
             menuItemSaveAs.setDisable(false);
             menuItemExportBits.setDisable(false);
             menuItemExportPNG.setDisable(false);
+            menuItemExportVerilog.setDisable(false);
             menuItemClose.setDisable(false);
 
             stage.setTitle("CRC Configurator (Unnamed File)");
@@ -287,6 +291,7 @@ public class Controller {
         menuItemSaveAs.setDisable(false);
         menuItemExportBits.setDisable(false);
         menuItemExportPNG.setDisable(false);
+        menuItemExportVerilog.setDisable(false);
         menuItemClose.setDisable(false);
 
         stage.setTitle("CRC Configurator (" + crcDescriptionFile.getName() + ")");
@@ -336,6 +341,7 @@ public class Controller {
     public void handleExportBitsAction(ActionEvent actionEvent) {
         ExportBitsDialog exportBitsDialog = new ExportBitsDialog(model.getCrc());
         exportBitsDialog.showAndWait();
+
     }
 
     /**
@@ -349,7 +355,7 @@ public class Controller {
         Canvas canvas = selectedTab.getCanvas();
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG (*png)", "*.png"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG (*.png)", "*.png"));
         fileChooser.setInitialFileName("*.png");
         fileChooser.setTitle("Export PNG of " + selectedTab.getText());
 
@@ -361,6 +367,20 @@ public class Controller {
                 canvas.snapshot(null, writableImage);
                 RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
                 ImageIO.write(renderedImage, "png", pngFile);
+            } catch (Exception e) {
+                showErrorMessage(e.getMessage());
+            }
+        }
+    }
+
+    public void handleExportVerilogAction(ActionEvent actionEvent) {
+
+        ExportVerilogDialog exportVerilogDialog = new ExportVerilogDialog(this.model.getCrcDescriptionFilePath());
+        exportVerilogDialog.showAndWait();
+
+        if(exportVerilogDialog.wasExportPressed()) {
+            try {
+                this.model.exportVerilogCode(exportVerilogDialog.getVerilogFile(), exportVerilogDialog.areFifosBetweenPes());
             } catch (Exception e) {
                 showErrorMessage(e.getMessage());
             }
@@ -412,6 +432,7 @@ public class Controller {
         menuItemSaveAs.setDisable(true);
         menuItemExportBits.setDisable(true);
         menuItemExportPNG.setDisable(true);
+        menuItemExportVerilog.setDisable(true);
         menuItemClose.setDisable(true);
         stage.setTitle("CRC Configurator");
     }

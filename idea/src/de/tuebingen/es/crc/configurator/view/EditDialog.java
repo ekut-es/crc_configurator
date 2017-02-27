@@ -122,14 +122,14 @@ public class EditDialog extends Stage {
                 dynamicConfigLinesTextField
         );
 
-        Button applyButton = new Button("Cancel");
-        Button createButton = new Button("Apply");
+        Button cancelButton = new Button("Cancel");
+        Button applyButton = new Button("Apply");
 
         // close dialog when "Cancel" button was pressed
-        applyButton.setOnAction(event -> this.close());
+        cancelButton.setOnAction(event -> this.close());
 
         // set variable when "Create" button was pressed
-        createButton.setOnAction(event -> {
+        applyButton.setOnAction(event -> {
             apply = true;
             this.rows = Integer.parseInt(rowsTextField.getText());
             this.columns = Integer.parseInt(columnsTextField.getText());
@@ -141,7 +141,7 @@ public class EditDialog extends Stage {
 
         HBox buttonHBox = new HBox(2);
         buttonHBox.setSpacing(15);
-        buttonHBox.getChildren().addAll(applyButton,createButton);
+        buttonHBox.getChildren().addAll(cancelButton,applyButton);
 
         vBox.getChildren().add(gridPane);
         vBox.getChildren().add(warningLabel);
