@@ -3,7 +3,7 @@ package de.tuebingen.es.crc.configurator.model.verilog;
 /**
  * Created by Konstantin (Konze) Lübeck on 27/02/2017.
  */
-public class VerilogWire {
+public class VerilogWire implements VerilogModule {
     public String name;
     public String width;
 

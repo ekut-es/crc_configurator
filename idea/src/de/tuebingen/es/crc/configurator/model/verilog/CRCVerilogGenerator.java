@@ -16,12 +16,14 @@ public class CRCVerilogGenerator {
     private boolean fifosBetweenPes;
     private ArrayList<VerilogWire> wires;
     private ArrayList<VerilogInputFifo> inputFifos;
+    private ArrayList<VerilogPE> pes;
 
     public CRCVerilogGenerator(CRC crc, boolean fifosBetweenPes) {
         this.crc = crc;
         this.fifosBetweenPes = fifosBetweenPes;
         this.wires = new ArrayList<>();
         this.inputFifos = new ArrayList<>();
+        this.pes = new ArrayList<>();
     }
 
     private String getWireDeclarations() {
@@ -38,6 +40,14 @@ public class CRCVerilogGenerator {
             inputFifoDeclarations += inputFifo.getDeclaration() + "\n";
         }
         return inputFifoDeclarations;
+    }
+
+    private String getPeDeclarations() {
+        String peDeclarations = "";
+        for(VerilogPE pe : pes) {
+            peDeclarations += pe.getDeclaration() + "\n";
+        }
+        return peDeclarations;
     }
 
     public String generate() {
@@ -194,6 +204,72 @@ public class CRCVerilogGenerator {
             inputFifos.add(inputFifoDataIn1);
         }
 
+        for(int row = 0; row < crc.getRows(); row++) {
+            for(int column = 0; column < crc.getColumns(); column++) {
+
+                // northwest corner PE
+                if(row == 0 && column == 0) {
+                    System.out.println("northwest corner PE");
+                    System.out.println("pe_" + row + "_" + column);
+                }
+
+                // nortmost row PEs
+                else if(row == 0 && column != 0 && column != crc.getColumns()-1) {
+                    System.out.println("northmost row PEs");
+                    System.out.println("pe_" + row + "_" + column);
+                }
+
+                // northeast corner PE
+                else if(row == 0 && column == crc.getColumns()-1) {
+                    System.out.println("northeast corner PE");
+                    System.out.println("pe_" + row + "_" + column);
+                }
+
+                // westmost column PEs
+                else if(row != 0 && row != crc.getRows()-1 && column == 0) {
+                    System.out.println("westmost column PEs");
+                    System.out.println("pe_" + row + "_" + column);
+
+                }
+
+                // eastmost column PEs
+                else if(row != 0 && row != crc.getRows()-1 && column == crc.getColumns()-1) {
+                    System.out.println("eastmost column PEs");
+                    System.out.println("pe_" + row + "_" + column);
+
+                }
+
+                // southwest corner PE
+                else if(row == crc.getRows()-1 && column == 0) {
+                    System.out.println("southwest corner PE");
+                    System.out.println("pe_" + row + "_" + column);
+
+                }
+
+                // southmost row PEs
+                else if(row == crc.getRows()-1 && column != 0 && column != crc.getColumns()-1) {
+                    System.out.println("southmost row PE");
+                    System.out.println("pe_" + row + "_" + column);
+
+                }
+
+                // southeast corner PE
+                else if(row == crc.getRows()-1 && column == crc.getColumns()-1) {
+                    System.out.println("southeast corner PE");
+                    System.out.println("pe_" + row + "_" + column);
+
+                }
+
+                // center PE
+                else {
+                    System.out.println("center PE");
+                    System.out.println("pe_" + row + "_" + column);
+                }
+
+            }
+        }
+
+
         module += inputs;
         module += outputs;
 
@@ -203,6 +279,8 @@ public class CRCVerilogGenerator {
         module += this.getWireDeclarations();
         module += "\n\n";
         module += this.getInputFifoDeclarations();
+        module += "\n\n";
+        module += this.getPeDeclarations();
 
         module += "endmodule\n";
 
