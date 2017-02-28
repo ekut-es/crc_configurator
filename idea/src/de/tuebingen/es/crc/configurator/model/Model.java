@@ -2,10 +2,9 @@ package de.tuebingen.es.crc.configurator.model;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import de.tuebingen.es.crc.configurator.model.verilog.CRCVerilogGenerator;
 import de.tuebingen.es.crc.configurator.view.Observer;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
