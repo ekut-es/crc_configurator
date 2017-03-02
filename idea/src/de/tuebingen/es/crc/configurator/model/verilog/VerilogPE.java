@@ -135,7 +135,7 @@ public class VerilogPE implements VerilogModule {
                 "    ) " + this.name + "(\n" +
                 "        .clk(clk),\n" +
                 "        .reset(reset),\n" +
-                "        .enable_config_read(" + this.enable_config_read + ")," +
+                "        .enable_config_read(" + this.enable_config_read + "),\n" +
                 "        .flag_exception(" + this.flag_exception + "),\n" +
                 "        .config_in(" + this.config_in + "),\n" +
                 "        .config_select(" + this.config_select + "),\n" +
@@ -188,34 +188,34 @@ public class VerilogPE implements VerilogModule {
         peModule += (this.data_out_N_0 != null) ? "        .data_out_N_0(" + this.data_out_N_0 + "),\n" : "";
         peModule += (this.flag_out_N_0 != null) ? "        .flag_out_N_0(" + this.flag_out_N_0 + "),\n" : "";
         peModule += (this.valid_bit_out_N_0 != null) ? "        .valid_bit_out_N_0(" + this.valid_bit_out_N_0 + "),\n" : "";
-        peModule += "        .ext_input_ready(" + ((this.ext_input_ready_N_0 != null) ? this.ext_input_ready_N_0 : "1'b0") + "),\n";
+        peModule += "        .ext_input_ready_N_0(" + ((this.ext_input_ready_N_0 != null) ? this.ext_input_ready_N_0 : "1'b0") + "),\n";
 
         peModule += (this.data_out_N_1 != null) ? "        .data_out_N_1(" + this.data_out_N_1 + "),\n" : "";
         peModule += (this.flag_out_N_1 != null) ? "        .flag_out_N_1(" + this.flag_out_N_1 + "),\n" : "";
         peModule += (this.valid_bit_out_N_1 != null) ? "        .valid_bit_out_N_1(" + this.valid_bit_out_N_1 + "),\n" : "";
-        peModule += "        .ext_input_ready(" + ((this.ext_input_ready_N_1 != null) ? this.ext_input_ready_N_1 : "1'b0") + "),\n";
+        peModule += "        .ext_input_ready_N_1(" + ((this.ext_input_ready_N_1 != null) ? this.ext_input_ready_N_1 : "1'b0") + "),\n";
 
         // data output to the east
         peModule += (this.data_out_E_0 != null) ? "        .data_out_E_0(" + this.data_out_E_0 + "),\n" : "";
         peModule += (this.flag_out_E_0 != null) ? "        .flag_out_E_0(" + this.flag_out_E_0 + "),\n" : "";
         peModule += (this.valid_bit_out_E_0 != null) ? "        .valid_bit_out_E_0(" + this.valid_bit_out_E_0 + "),\n" : "";
-        peModule += "        .ext_input_ready(" + ((this.ext_input_ready_E_0 != null) ? this.ext_input_ready_E_0 : "1'b0") + "),\n";
+        peModule += "        .ext_input_ready_E_0(" + ((this.ext_input_ready_E_0 != null) ? this.ext_input_ready_E_0 : "1'b0") + "),\n";
 
         peModule += (this.data_out_E_1 != null) ? "        .data_out_E_1(" + this.data_out_E_1 + "),\n" : "";
         peModule += (this.flag_out_E_1 != null) ? "        .flag_out_E_1(" + this.flag_out_E_1 + "),\n" : "";
         peModule += (this.valid_bit_out_E_1 != null) ? "        .valid_bit_out_E_1(" + this.valid_bit_out_E_1 + "),\n" : "";
-        peModule += "        .ext_input_ready(" + ((this.ext_input_ready_E_1 != null) ? this.ext_input_ready_E_1 : "1'b0") + "),\n";
+        peModule += "        .ext_input_ready_E_1(" + ((this.ext_input_ready_E_1 != null) ? this.ext_input_ready_E_1 : "1'b0") + "),\n";
 
         // data output to the south
         peModule += (this.data_out_S_0 != null) ? "        .data_out_S_0(" + this.data_out_S_0 + "),\n" : "";
         peModule += (this.flag_out_S_0 != null) ? "        .flag_out_S_0(" + this.flag_out_S_0 + "),\n" : "";
         peModule += (this.valid_bit_out_S_0 != null) ? "        .valid_bit_out_S_0(" + this.valid_bit_out_S_0 + "),\n" : "";
-        peModule += "        .ext_input_ready(" + ((this.ext_input_ready_S_0 != null) ? this.ext_input_ready_S_0 : "1'b0") + "),\n";
+        peModule += "        .ext_input_ready_S_0(" + ((this.ext_input_ready_S_0 != null) ? this.ext_input_ready_S_0 : "1'b0") + "),\n";
 
         peModule += (this.data_out_S_1 != null) ? "        .data_out_S_1(" + this.data_out_S_1 + "),\n" : "";
         peModule += (this.flag_out_S_1 != null) ? "        .flag_out_S_1(" + this.flag_out_S_1 + "),\n" : "";
         peModule += (this.valid_bit_out_S_1 != null) ? "        .valid_bit_out_S_1(" + this.valid_bit_out_S_1 + "),\n" : "";
-        peModule += "        .ext_input_ready(" + ((this.ext_input_ready_S_1 != null) ? this.ext_input_ready_S_1 : "1'b0") + "),\n";
+        peModule += "        .ext_input_ready_S_1(" + ((this.ext_input_ready_S_1 != null) ? this.ext_input_ready_S_1 : "1'b0") + "),\n";
 
         peModule += "    );\n";
 
