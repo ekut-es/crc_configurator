@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tuebingen.es.crc.configurator.model.verilog.CRCVerilogGenerator;
+import de.tuebingen.es.crc.configurator.model.verilog.CRCVerilogQuestaSimScriptGenerator;
+import de.tuebingen.es.crc.configurator.model.verilog.CRCVerilogTestBenchGenerator;
 import de.tuebingen.es.crc.configurator.view.Observer;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -166,35 +168,96 @@ public class Model implements Observable {
         crcWasResized = false;
     }
 
-    public void exportVerilogCode(File verilogFile, boolean fifosBetweenPes) throws Exception {
-
+    private void checkFile(File file) throws Exception {
         // check is a directory
-        if(verilogFile.isDirectory()) {
-            throw new Exception("Can't overwrite '" + verilogFile.getPath() + "' because it is a directory!");
+        if(file.isDirectory()) {
+            throw new Exception("Can't overwrite '" + file.getPath() + "' because it is a directory!");
         }
 
         // check if file exists and is writable
-        if(verilogFile.exists() && !verilogFile.canWrite()) {
-            throw new Exception("Can't write '" + verilogFile.getPath() + "'!");
+        if(file.exists() && !file.canWrite()) {
+            throw new Exception("Can't write '" + file.getPath() + "'!");
         }
 
+    }
+
+    public void exportVerilogCode(File verilogFile, boolean fifosBetweenPes, boolean generateTestbenchAndQuestaSimScript, File testBenchFile, File questaSimScript) throws Exception {
+
+        // check verilog file
+        this.checkFile(verilogFile);
+
+        // generate verilog file
         CRCVerilogGenerator crcVerilogGenerator = new CRCVerilogGenerator(this.crc, fifosBetweenPes);
 
-        FileWriter fw = new FileWriter(verilogFile);
-
+        // create files if they not exist
         if(!verilogFile.exists()) {
             verilogFile.createNewFile();
         }
 
+        FileWriter verilogFileWriter = new FileWriter(verilogFile);
+
+        // write verilog file
         try {
-            fw.write(crcVerilogGenerator.generate());
+            verilogFileWriter.write(crcVerilogGenerator.generate());
         } catch (Exception e) {
             throw new Exception("Can't write to file '" + verilogFile.getAbsolutePath() + "'!");
         } finally {
             //noinspection ThrowFromFinallyBlock
-            fw.flush();
+            verilogFileWriter.flush();
             //noinspection ThrowFromFinallyBlock
-            fw.close();
+            verilogFileWriter.close();
+        }
+
+
+        if(generateTestbenchAndQuestaSimScript) {
+            // check test bench file
+            this.checkFile(testBenchFile);
+
+            // generate test bench file
+            CRCVerilogTestBenchGenerator crcVerilogTestBenchGenerator = new CRCVerilogTestBenchGenerator(this.crc);
+
+            if(!testBenchFile.exists()) {
+                testBenchFile.createNewFile();
+            }
+
+            FileWriter testBenchFileWriter = new FileWriter(testBenchFile);
+
+            // write test bench file
+            try {
+                testBenchFileWriter.write(crcVerilogTestBenchGenerator.generate());
+            } catch (Exception e) {
+                throw new Exception("Can't write to file '" + testBenchFile.getAbsolutePath() + "'!");
+            } finally {
+                //noinspection ThrowFromFinallyBlock
+                testBenchFileWriter.flush();
+                //noinspection ThrowFromFinallyBlock
+                testBenchFileWriter.close();
+            }
+
+
+            // check QuestaSim script
+            this.checkFile(questaSimScript);
+
+            // generate QuestaSim script
+            CRCVerilogQuestaSimScriptGenerator crcVerilogQuestaSimScriptGenerator = new CRCVerilogQuestaSimScriptGenerator(verilogFile.getName(), testBenchFile.getName());
+
+            if(!questaSimScript.exists()) {
+                questaSimScript.createNewFile();
+            }
+
+            FileWriter questaSimScriptFileWriter = new FileWriter(questaSimScript);
+
+            // write QuestaSim script
+            try {
+                questaSimScriptFileWriter.write(crcVerilogQuestaSimScriptGenerator.generate());
+            } catch (Exception e) {
+                throw new Exception("Can't write to file '" + questaSimScript.getAbsolutePath() + "'!");
+            } finally {
+                //noinspection ThrowFromFinallyBlock
+                questaSimScriptFileWriter.flush();
+                //noinspection ThrowFromFinallyBlock
+                questaSimScriptFileWriter.close();
+            }
         }
     }
 }

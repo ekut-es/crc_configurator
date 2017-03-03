@@ -23,6 +23,7 @@ public class ExportVerilogDialog extends Stage {
 
     private File verilogFile;
     private boolean fifosBetweenPes;
+    private boolean generateTestbenchAndQuestaSimScript;
     private boolean export;
 
     public ExportVerilogDialog(String crcDescriptionFilePath) {
@@ -37,9 +38,9 @@ public class ExportVerilogDialog extends Stage {
 
         Group root = new Group();
 
-        Scene scene = new Scene(root, 400, 150);
+        Scene scene = new Scene(root, 400, 315);
 
-        VBox vBox = new VBox(3);
+        VBox vBox = new VBox(6);
         vBox.setPadding(new Insets(10,10,10,10));
         vBox.setSpacing(20);
 
@@ -48,19 +49,19 @@ public class ExportVerilogDialog extends Stage {
         fifoBetweenPesCheckbox.setText("FIFOs between PEs");
 
         // Label, TextField and Choose Button for Verilog File Path
-        Label pathLabel = new Label("Path to Verilog File:");
+        Label pathToVerilogFileLabel = new Label("Path to Verilog File:");
 
-        TextField pathTextField = new TextField();
-        pathTextField.setMinWidth(312);
+        TextField pathToVerilogFileTextField = new TextField();
+        pathToVerilogFileTextField.setMinWidth(312);
 
         verilogFile = new File(crcDescriptionFilePath.substring(0, crcDescriptionFilePath.lastIndexOf('.')) + ".v");
 
-        pathTextField.setText(verilogFile.getAbsolutePath());
+        pathToVerilogFileTextField.setText(verilogFile.getAbsolutePath());
 
-        Button choosePathButton = new Button("Choose");
+        Button choosePathToVerilogFileButton = new Button("Choose");
 
         // open file chooser dialog when "Choose" button was pressed
-        choosePathButton.setOnAction( event -> {
+        choosePathToVerilogFileButton.setOnAction( event -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Verilog (*.v)", "*.v"));
             fileChooser.setInitialFileName("*.v");
@@ -68,14 +69,59 @@ public class ExportVerilogDialog extends Stage {
 
             verilogFile = fileChooser.showOpenDialog(scene.getWindow());
 
-            pathTextField.setText(verilogFile.getAbsolutePath());
+            pathToVerilogFileTextField.setText(verilogFile.getAbsolutePath());
         });
 
         HBox pathChooserHBox = new HBox(2);
-        pathChooserHBox.getChildren().addAll(pathTextField,choosePathButton);
+        pathChooserHBox.getChildren().addAll(pathToVerilogFileTextField,choosePathToVerilogFileButton);
 
-        VBox pathChooserVBox = new VBox(2);
-        pathChooserVBox.getChildren().addAll(pathLabel,pathChooserHBox);
+        VBox pathToVerilogFileChooserVBox = new VBox(2);
+        pathToVerilogFileChooserVBox.getChildren().addAll(pathToVerilogFileLabel,pathChooserHBox);
+
+        // check box for generation of testbench and QuestaSim Script
+        CheckBox generateTestBenchAndQuestaSimScriptCheckBox = new CheckBox("Generate test bench and QuestaSim script");
+
+        // label for text field for path to testbench file
+        Label pathToTestBenchFileLabel = new Label("Path to test bench file:");
+
+        // read only text field for path to testbench file
+        TextField pathToTestBenchFileTextField = new TextField();
+        pathToTestBenchFileTextField.setEditable(false);
+        pathToTestBenchFileTextField.setText("...");
+
+        VBox pathToTestBenchFileVBox = new VBox();
+        pathToTestBenchFileVBox.getChildren().addAll(pathToTestBenchFileLabel, pathToTestBenchFileTextField);
+
+        // label for text field for path to QuestaSim Script
+        Label pathToQuestaSimScriptLabel = new Label("Path to QuestaSim script:");
+
+        // read only text field for path to QuestaSim Script
+        TextField pathToQuestaSimScriptTextField = new TextField();
+        pathToQuestaSimScriptTextField.setEditable(false);
+        pathToQuestaSimScriptTextField.setText("...");
+
+        VBox pathToQuestaSimScriptVBox = new VBox();
+        pathToQuestaSimScriptVBox.getChildren().addAll(pathToQuestaSimScriptLabel, pathToQuestaSimScriptTextField);
+
+        // insert/remove path to test bench file and QuestaSim script when checkbox is toggled
+        generateTestBenchAndQuestaSimScriptCheckBox.setOnAction( event -> {
+            if(generateTestBenchAndQuestaSimScriptCheckBox.isSelected()) {
+                pathToTestBenchFileTextField.setText(this.getTestBenchFilePath());
+                pathToQuestaSimScriptTextField.setText(this.getQuestaSimScriptPath());
+            } else {
+                pathToTestBenchFileTextField.setText("...");
+                pathToQuestaSimScriptTextField.setText("...");
+            }
+        });
+
+        // update test bench file and QuestaSim script text field when path to verilog file changes
+        pathToVerilogFileTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(generateTestBenchAndQuestaSimScriptCheckBox.isSelected()) {
+                verilogFile = new File(pathToVerilogFileTextField.getText());
+                pathToTestBenchFileTextField.setText(this.getTestBenchFilePath());
+                pathToQuestaSimScriptTextField.setText(this.getQuestaSimScriptPath());
+            }
+        });
 
         // Cancel and Export Buttons
         Button cancelButton = new Button("Cancel");
@@ -86,8 +132,8 @@ public class ExportVerilogDialog extends Stage {
 
         // generate verilog file when "Export" was pressed
         exportButton.setOnAction( event -> {
-            verilogFile = new File(pathTextField.getText());
             fifosBetweenPes = fifoBetweenPesCheckbox.isSelected();
+            generateTestbenchAndQuestaSimScript = generateTestBenchAndQuestaSimScriptCheckBox.isSelected();
             export = true;
             this.close();
         });
@@ -98,7 +144,10 @@ public class ExportVerilogDialog extends Stage {
 
         // adding all together
         vBox.getChildren().add(fifoBetweenPesCheckbox);
-        vBox.getChildren().add(pathChooserVBox);
+        vBox.getChildren().add(pathToVerilogFileChooserVBox);
+        vBox.getChildren().add(generateTestBenchAndQuestaSimScriptCheckBox);
+        vBox.getChildren().add(pathToTestBenchFileVBox);
+        vBox.getChildren().add(pathToQuestaSimScriptVBox);
         vBox.getChildren().add(buttonHBox);
 
         root.getChildren().add(vBox);
@@ -106,12 +155,34 @@ public class ExportVerilogDialog extends Stage {
         this.setScene(scene);
     }
 
+    private String getTestBenchFilePath() {
+        return verilogFile.getAbsolutePath().substring(0, verilogFile.getAbsolutePath().lastIndexOf('.')) + "_tb.sv";
+    }
+
+    private String getQuestaSimScriptPath() {
+        return verilogFile.getAbsolutePath().substring(0, verilogFile.getAbsolutePath().lastIndexOf('.')) + "_tb_questa_rtl.do";
+    }
+
     public File getVerilogFile() {
         return verilogFile;
     }
 
+    public File getTestBenchFile() {
+        File testBenchFile = new File(this.getTestBenchFilePath());
+        return testBenchFile;
+    }
+
+    public File getQuestaSimScript() {
+        File questaSimScript = new File(this.getQuestaSimScriptPath());
+        return questaSimScript;
+    }
+
     public boolean areFifosBetweenPes() {
         return fifosBetweenPes;
+    }
+
+    public boolean generateTestbenchAndQuestaSimScript() {
+        return generateTestbenchAndQuestaSimScript;
     }
 
     public boolean wasExportPressed() {

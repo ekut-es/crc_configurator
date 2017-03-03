@@ -18,6 +18,7 @@ public class CRCVerilogGenerator {
     private ArrayList<VerilogWire> wires;
     private ArrayList<VerilogInputFifo> inputFifos;
     private ArrayList<VerilogPE> pes;
+    private ArrayList<VerilogOutputFifo> outputFifos;
 
     public CRCVerilogGenerator(CRC crc, boolean fifosBetweenPes) {
         this.crc = crc;
@@ -25,6 +26,7 @@ public class CRCVerilogGenerator {
         this.wires = new ArrayList<>();
         this.inputFifos = new ArrayList<>();
         this.pes = new ArrayList<>();
+        this.outputFifos = new ArrayList<>();
     }
 
     private String getWireDeclarations() {
@@ -49,6 +51,14 @@ public class CRCVerilogGenerator {
             peDeclarations += pe.getDeclaration() + "\n";
         }
         return peDeclarations;
+    }
+
+    private String getOutputFifoDeclarations() {
+        String outputFifoDeclarations = "";
+        for (VerilogOutputFifo outputFifo : outputFifos) {
+            outputFifoDeclarations += outputFifo.getDeclaration() + "\n";
+        }
+        return outputFifoDeclarations;
     }
 
     private void connectPeDataFlagInNorth(VerilogPE pe, int row, int column) {
@@ -344,7 +354,7 @@ public class CRCVerilogGenerator {
                         "    input wire [(" + crc.getRows() + "*2)-1:0] valid_bit_in;\n" +
                         "    input wire [(" + crc.getRows() + "*`CONFIG_SELECT_WIDTH*2)-1:0] config_select_in;\n" +
                         "\n" +
-                        "    input wire [(" + crc.getRows() + "*2)-1:0] output_fifos_read;\n\n";
+                        "    input wire [(" + crc.getRows() + "*2)-1:0] output_fifo_read;\n\n";
 
         String outputs = "/* -------------------------------------------------------------------------\n" +
                         " *                                   OUTPUTS\n" +
@@ -887,6 +897,49 @@ public class CRCVerilogGenerator {
             }
         }
 
+        // generate output FIFOs
+        for(int row = 0; row < crc.getRows(); row++) {
+
+            // output FIFO for data_out_0
+            int outputFifoNumber = 2 * row;
+
+            VerilogOutputFifo outputFifo0 = new VerilogOutputFifo("output_fifo_" + outputFifoNumber);
+            outputFifo0.data_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_data_out_E_0";
+            outputFifo0.flag_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_flag_out_E_0";
+            outputFifo0.valid_bit_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_valid_bit_out_E_0";
+            outputFifo0.config_select_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_config_select_out_E_0";
+
+            outputFifo0.read = "output_fifo_read[" + outputFifoNumber + ":" + outputFifoNumber + "]";
+
+            outputFifo0.data_out = "data_out[(" + (outputFifoNumber+1) + "*`DATA_WIDTH)-1:" + outputFifoNumber + "*`DATA_WIDTH]";
+            outputFifo0.flag_out = "flag_out[" + outputFifoNumber + ":" + outputFifoNumber + "]";
+            outputFifo0.valid_bit_out = "valid_bit_out[" + outputFifoNumber + ":" + outputFifoNumber + "]";
+            outputFifo0.config_select_out = "config_select_out[(" + (outputFifoNumber+1) + "*`CONFIG_SELECT_WIDTH)-1:" + outputFifoNumber + "*`CONFIG_SELECT_WIDTH]";
+
+            outputFifo0.full = "output_fifo_full[" + outputFifoNumber + ":" + outputFifoNumber + "]";
+
+            outputFifos.add(outputFifo0);
+
+            // output FIFO for data_out_0
+            outputFifoNumber = 2 * row + 1;
+
+            VerilogOutputFifo outputFifo1 = new VerilogOutputFifo("output_fifo_" + outputFifoNumber);
+            outputFifo1.data_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_data_out_E_1";
+            outputFifo1.flag_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_flag_out_E_1";
+            outputFifo1.valid_bit_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_valid_bit_out_E_1";
+            outputFifo1.config_select_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_config_select_out_E_1";
+
+            outputFifo1.read = "output_fifo_read[" + outputFifoNumber + ":" + outputFifoNumber + "]";
+
+            outputFifo1.data_out = "data_out[(" + (outputFifoNumber+1) + "*`DATA_WIDTH)-1:" + outputFifoNumber + "*`DATA_WIDTH]";
+            outputFifo1.flag_out = "flag_out[" + outputFifoNumber + ":" + outputFifoNumber + "]";
+            outputFifo1.valid_bit_out = "valid_bit_out[" + outputFifoNumber + ":" + outputFifoNumber + "]";
+            outputFifo1.config_select_out = "config_select_out[(" + (outputFifoNumber+1) + "*`CONFIG_SELECT_WIDTH)-1:" + outputFifoNumber + "*`CONFIG_SELECT_WIDTH]";
+
+            outputFifo1.full = "output_fifo_full[" + outputFifoNumber + ":" + outputFifoNumber + "]";
+
+            outputFifos.add(outputFifo1);
+        }
 
         module += inputs;
         module += outputs;
@@ -899,6 +952,8 @@ public class CRCVerilogGenerator {
         module += this.getInputFifoDeclarations();
         module += "\n\n";
         module += this.getPeDeclarations();
+        module += "\n\n";
+        module += this.getOutputFifoDeclarations();
 
         module += "endmodule\n";
 
