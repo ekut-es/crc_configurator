@@ -54,7 +54,15 @@ public class ExportVerilogDialog extends Stage {
         TextField pathToVerilogFileTextField = new TextField();
         pathToVerilogFileTextField.setMinWidth(312);
 
-        verilogFile = new File(crcDescriptionFilePath.substring(0, crcDescriptionFilePath.lastIndexOf('.')) + ".v");
+        // crc description file does not exist yet
+        if(crcDescriptionFilePath != "") {
+            verilogFile = new File(crcDescriptionFilePath.substring(0, crcDescriptionFilePath.lastIndexOf('.')) + ".v");
+        }
+
+        // crc description file exists
+        else {
+            verilogFile = new File("crc.v");
+        }
 
         pathToVerilogFileTextField.setText(verilogFile.getAbsolutePath());
 
