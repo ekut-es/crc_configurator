@@ -596,7 +596,7 @@ public class CRCVerilogGenerator {
 
                         pe.config_select_in_E = peConfigSelectOutE.name;
 
-                        VerilogWire peSouthConfigSelectOutN = new VerilogWire("pe_" + row + "_" + (column-1) + "_config_select_out_N");
+                        VerilogWire peSouthConfigSelectOutN = new VerilogWire("pe_" + row + "_" + (column-1) + "_config_select_out_N", "`CONFIG_SELECT_WIDTH");
                         wires.add(peSouthConfigSelectOutN);
 
                         pe.config_select_in_S = peSouthConfigSelectOutN.name;
