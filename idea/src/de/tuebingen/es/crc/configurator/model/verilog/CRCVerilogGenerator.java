@@ -229,10 +229,7 @@ public class CRCVerilogGenerator {
 
         pe.valid_bit_out_E_0 = peValidBitOutE0.name;
 
-        VerilogWire outputFifo0Full = new VerilogWire("output_fifo_" + (row*2) + "_full");
-        wires.add(outputFifo0Full);
-
-        pe.ext_input_ready_E_0 = "!" + outputFifo0Full.name;
+        pe.ext_input_ready_E_0 = "!output_fifo_full[" + (row*2) + ":" + (row*2) + "]";
 
         // data output to the east 1
         VerilogWire peDataOutE1 = new VerilogWire("pe_" + row + "_" + column + "_data_out_E_1", "`DATA_WIDTH");
@@ -250,10 +247,7 @@ public class CRCVerilogGenerator {
 
         pe.valid_bit_out_E_1 = peValidBitOutE1.name;
 
-        VerilogWire outputFifo1Full = new VerilogWire("output_fifo_" + (row*2+1) + "_full");
-        wires.add(outputFifo1Full);
-
-        pe.ext_input_ready_E_1 = "!" + outputFifo1Full.name;
+        pe.ext_input_ready_E_1 = "!output_fifo_full[" + (row*2+1) + ":" + (row*2+1) + "]";
     }
 
     private void connectPeDataFlagOutSouth(VerilogPE pe, int row, int column) {
@@ -368,6 +362,8 @@ public class CRCVerilogGenerator {
                         "\n" +
                         "    output wire [(" + crc.getRows() + "*2)-1:0] input_fifo_full;\n" +
                         "    output wire [(" + crc.getRows() + "*2)-1:0] output_fifo_full;\n\n";
+
+
 
 
         // generate input FIFOs
@@ -626,6 +622,9 @@ public class CRCVerilogGenerator {
 
                 // westmost column PEs
                 else if(row != 0 && row != crc.getRows()-1 && column == 0) {
+                    pe.regs_in_north = true;
+                    pe.regs_in_south = true;
+
                     if(!fifosBetweenPes) {
                         // config select ins
                         pe.config_select_in_N = "pe_" + (row-1) + "_" + column + "_config_select_out_S";
@@ -680,6 +679,9 @@ public class CRCVerilogGenerator {
 
                 // eastmost column PEs
                 else if(row != 0 && row != crc.getRows()-1 && column == crc.getColumns()-1) {
+                    pe.regs_in_north = true;
+                    pe.regs_in_south = true;
+
                     if(!fifosBetweenPes) {
                         // config select ins
                         pe.config_select_in_N = "pe_" + (row-1) + "_" + column + "_config_select_out_S";
@@ -730,6 +732,9 @@ public class CRCVerilogGenerator {
 
                 // southwest corner PE
                 else if(row == crc.getRows()-1 && column == 0) {
+                    pe.regs_in_north = true;
+                    pe.regs_in_south = false;
+
                     if(!fifosBetweenPes) {
                         // config select ins
                         pe.config_select_in_N = "pe_" + (row-1) + "_" + column + "_config_select_out_S";
@@ -767,6 +772,9 @@ public class CRCVerilogGenerator {
 
                 // southmost row PEs
                 else if(row == crc.getRows()-1 && column != 0 && column != crc.getColumns()-1) {
+                    pe.regs_in_north = true;
+                    pe.regs_in_south = false;
+
                     if(!fifosBetweenPes) {
                         // config select ins
                         pe.config_select_in_N = "pe_" + (row-1) + "_" + column + "_config_select_out_S";
@@ -804,6 +812,9 @@ public class CRCVerilogGenerator {
 
                 // southeast corner PE
                 else if(row == crc.getRows()-1 && column == crc.getColumns()-1) {
+                    pe.regs_in_north = true;
+                    pe.regs_in_south = false;
+
                     if(!fifosBetweenPes) {
                         // config select ins
                         pe.config_select_in_N = "pe_" + (row-1) + "_" + column + "_config_select_out_S";
@@ -839,6 +850,9 @@ public class CRCVerilogGenerator {
 
                 // center PE
                 else {
+                    pe.regs_in_north = true;
+                    pe.regs_in_south = true;
+
                     if(!fifosBetweenPes) {
                         // config select ins
                         pe.config_select_in_N = "pe_" + (row-1) + "_" + column + "_config_select_out_S";
