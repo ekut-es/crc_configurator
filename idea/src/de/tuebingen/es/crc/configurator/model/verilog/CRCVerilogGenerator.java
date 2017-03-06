@@ -335,7 +335,7 @@ public class CRCVerilogGenerator {
                         "\n" +
                         "    input_fifo_full,\n" +
                         "    output_fifo_full,\n" +
-                        "    output_fifos_read\n" +
+                        "    output_fifo_read\n" +
                         ");\n\n";
 
         String inputs = "/* -------------------------------------------------------------------------\n" +
@@ -482,9 +482,9 @@ public class CRCVerilogGenerator {
                 pe.enable_config_read = "enable_config_read[" + (crc.getColumns()*row+column) + ":" + (crc.getColumns()*row+column) + "]";
                 pe.flag_exception = "flag_exception[" + (crc.getColumns()*row+column) + ":" + (crc.getColumns()*row+column)+ "]";
 
-                pe.config_in = "config_in[(`CONFIG_WIDTH*" + ((row*crc.getColumns())+column+1) + "-1:`CONFIG_WIDTH*" + ((row*crc.getColumns())+column) + "]";
-                pe.config_load_select = "config_load_select[(`CONFIG_SELECT_WIDTH*" + ((row*crc.getColumns())+column+1) + "-1:`CONFIG_SELECT_WIDTH*" + ((row*crc.getColumns())+column) + "]";
-                pe.config_load_select = "config_select[(`CONFIG_SELECT_WIDTH*" + ((row*crc.getColumns())+column+1) + "-1:`CONFIG_SELECT_WIDTH*" + ((row*crc.getColumns())+column) + "]";
+                pe.config_in = "config_in[`CONFIG_WIDTH*" + ((row*crc.getColumns())+column+1) + "-1:`CONFIG_WIDTH*" + ((row*crc.getColumns())+column) + "]";
+                pe.config_load_select = "config_load_select[`CONFIG_SELECT_WIDTH*" + ((row*crc.getColumns())+column+1) + "-1:`CONFIG_SELECT_WIDTH*" + ((row*crc.getColumns())+column) + "]";
+                pe.config_select = "config_select[`CONFIG_SELECT_WIDTH*" + ((row*crc.getColumns())+column+1) + "-1:`CONFIG_SELECT_WIDTH*" + ((row*crc.getColumns())+column) + "]";
 
                 // northwest corner PE
                 if(row == 0 && column == 0) {
@@ -517,10 +517,7 @@ public class CRCVerilogGenerator {
 
                         pe.config_select_out_S = peConfigSelectOutS.name;
 
-                        VerilogWire peConfigSelectOutW = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_W", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutW);
-
-                        pe.config_select_out_W = peConfigSelectOutW.name;
+                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
                     }
 
                     // data input from the south
@@ -596,7 +593,7 @@ public class CRCVerilogGenerator {
 
                         pe.config_select_in_E = peConfigSelectOutE.name;
 
-                        VerilogWire peSouthConfigSelectOutN = new VerilogWire("pe_" + row + "_" + (column-1) + "_config_select_out_N", "`CONFIG_SELECT_WIDTH");
+                        VerilogWire peSouthConfigSelectOutN = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N", "`CONFIG_SELECT_WIDTH");
                         wires.add(peSouthConfigSelectOutN);
 
                         pe.config_select_in_S = peSouthConfigSelectOutN.name;
@@ -816,7 +813,7 @@ public class CRCVerilogGenerator {
 
                         pe.config_select_in_E = peConfigSelectOutE.name;
 
-                        pe.config_select_in_W = "pe_" + row + "_" + (column-1) + "_config_select_";
+                        pe.config_select_in_W = "pe_" + row + "_" + (column-1) + "_config_select_out_E";
 
                         // config select outs
                         pe.config_select_out_N = "pe_" + row + "_" + column + "_config_select_out_N";
@@ -859,19 +856,19 @@ public class CRCVerilogGenerator {
                         pe.config_select_in_W = "pe_" + row + "_" + (column-1) + "_config_select_out_E";
 
                         // config select outs
-                        pe.config_select_out_N = "pe_" + row + "column" + "_config_select_out_N";
+                        pe.config_select_out_N = "pe_" + row + "_" + column + "_config_select_out_N";
 
                         VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
                         wires.add(peConfigSelectOutE);
 
                         pe.config_select_out_E = peConfigSelectOutE.name;
 
-                        pe.config_select_out_S = "pe_" + row + "_" + column + "_config_select_out_S";
+                        VerilogWire peConfigSelectOutS = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS);
 
-                        VerilogWire peConfigSelectOutW = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S");
-                        wires.add(peConfigSelectOutW);
+                        pe.config_select_out_S = peConfigSelectOutS.name;
 
-                        pe.config_select_out_W = peConfigSelectOutW.name;
+                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
                     }
 
                     // data in from the north
@@ -907,7 +904,7 @@ public class CRCVerilogGenerator {
             outputFifo0.data_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_data_out_E_0";
             outputFifo0.flag_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_flag_out_E_0";
             outputFifo0.valid_bit_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_valid_bit_out_E_0";
-            outputFifo0.config_select_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_config_select_out_E_0";
+            outputFifo0.config_select_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_config_select_out_E";
 
             outputFifo0.read = "output_fifo_read[" + outputFifoNumber + ":" + outputFifoNumber + "]";
 
@@ -927,7 +924,7 @@ public class CRCVerilogGenerator {
             outputFifo1.data_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_data_out_E_1";
             outputFifo1.flag_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_flag_out_E_1";
             outputFifo1.valid_bit_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_valid_bit_out_E_1";
-            outputFifo1.config_select_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_config_select_out_E_1";
+            outputFifo1.config_select_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_config_select_out_E";
 
             outputFifo1.read = "output_fifo_read[" + outputFifoNumber + ":" + outputFifoNumber + "]";
 

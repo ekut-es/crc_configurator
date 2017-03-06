@@ -215,8 +215,9 @@ public class VerilogPE implements VerilogModule {
         peModule += (this.data_out_S_1 != null) ? "        .data_out_S_1(" + this.data_out_S_1 + "),\n" : "";
         peModule += (this.flag_out_S_1 != null) ? "        .flag_out_S_1(" + this.flag_out_S_1 + "),\n" : "";
         peModule += (this.valid_bit_out_S_1 != null) ? "        .valid_bit_out_S_1(" + this.valid_bit_out_S_1 + "),\n" : "";
-        peModule += "        .ext_input_ready_S_1(" + ((this.ext_input_ready_S_1 != null) ? this.ext_input_ready_S_1 : "1'b0") + "),\n";
+        peModule += "        .ext_input_ready_S_1(" + ((this.ext_input_ready_S_1 != null) ? this.ext_input_ready_S_1 : "1'b0") + ")\n";
 
+        //peModule = peModule.substring(0, peModule.length()-1);
         peModule += "    );\n";
 
         return peModule;
