@@ -43,10 +43,10 @@ public class AboutDialog extends Stage {
 
         Text aboutText = new Text(
                 "Konstantin Lübeck\n" +
-                        "Eberhard Karls Universität Tübingen\n" +
-                        "Wilhelm-Schickard-Institut\n" +
-                        "Chair for Embedded Systems\n\n" +
-                        "Version 0.1 (2016)\n"
+                "Eberhard Karls Universität Tübingen\n" +
+                "Wilhelm-Schickard-Institut\n" +
+                "Chair for Embedded Systems\n\n" +
+                "Version 0.2 (2017)\n"
         );
 
         Text iconCredit = new Text("The Icon was adapted from FroyoShark");
