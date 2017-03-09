@@ -142,10 +142,10 @@ To get the CRC/PE configuration bits go to menu \textit{File $\rightarrow$ Expor
 
 \subsection*{Export Images of the Hardware Model and the Configurations}
 If you wish to export an image of the hardware model choose the \textit{Hardware Model} tab and go to the menu \textit{File $\rightarrow$ Export PNG}. Now choose a file name and a desired destination for the PNG image and click on \textit{Save} to export the PNG image of the hardware model.\\
-If you wish to export an image of a configuration choose a \textit{Static Configuration X} or \textit{Dynamic Configuration X} tab and go to the menu \textit{File $\rightarrow$ Export PNG}. Now choose a file name and a desired destination for the PNG image and click on \textit{Save} to export the PNG image of a configuration. 
+If you wish to export an image of a configuration choose a \textit{Static Configuration} or \textit{Dynamic Configuration} tab and go to the menu \textit{File $\rightarrow$ Export PNG}. Now choose a file name and a desired destination for the PNG image and click on \textit{Save} to export the PNG image of a configuration. 
 
 \subsection*{Export Verilog Code}
-In order to export Verilog code for the hardware model and the static configurations go to the menu \textit{File $\rightarrow$ Export Verilog Code}. You can now choose if there should be FIFOs between all PEs or not by checking the \textit{FIFOs between PEs} checkbox. Afterwards you can choose the location and the name of the Verilog file. You can either type the absolute path in the text filed \textit{Path to Verilog File} or choose a desired destination and name graphically by clicking on \textit{Choose}. \textbf{Caution:} if a file already exists at the chosen loaction it will be overwritten. It is also possible to generate a test bench for the verilog code and a QuestaSim script for the simulation of the test bench with the Verilog code. In order to generate these two files check the \textit{Generate test bench and QuestaSim script} checkbox. The location and the file names are set according to the Verilog file. \textbf{Caution:} if files with those names already exist at the chosen location those will be overwritten.\\
+In order to export Verilog code for the hardware model and the static configurations go to the menu \textit{File $\rightarrow$ Export Verilog Code}. You can now choose if there should be FIFOs between all PEs or not by checking the \textit{FIFOs between PEs} checkbox. Afterwards you can choose the location and the name of the Verilog file. You can either type the absolute path in the text filed \textit{Path to Verilog File} or choose a desired destination and name graphically by clicking on \textit{Choose}. \textbf{Caution:} if a file already exists at the chosen loaction it will be overwritten. It is also possible to generate a test bench for the Verilog code and a QuestaSim script for the simulation of the test bench with the Verilog code. In order to generate these two files check the \textit{Generate test bench and QuestaSim script} checkbox. The location and the file names are set according to the Verilog file name. \textbf{Caution:} if files with those names already exist at the chosen location those will be overwritten.\\
 
 To run the simulation with QuestaSim start QuestaSim an enter the following command:\\
 
@@ -169,6 +169,6 @@ If you wish to generate images for the hardware model and all configurations for
 \noindent\texttt{java -jar crc\_configurator.jar /path/to/crc/description/file.json -{}-export-pngs}\\
 
 It is also possible to mix those export arguments.\\
-By using the command line argument \texttt{-h} or \texttt{-{}-help} you can see a short text which explains all possible command line arguments:
+By using the command line argument \texttt{-h} or \texttt{-{}-help} you can see a short text which explains all possible command line arguments.
 
 \end{document}
