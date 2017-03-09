@@ -97,7 +97,7 @@ public class Main extends Application {
 
             if(exportBits) {
                 ExportBitsText exportBitsText = new ExportBitsText();
-                System.out.println(exportBitsText.getText(model.getCrc()));
+                System.out.println(exportBitsText.getText(model.getCrc(), false));
             }
 
             if(exportPNGs) {
