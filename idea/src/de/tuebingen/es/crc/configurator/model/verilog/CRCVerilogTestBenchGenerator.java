@@ -108,6 +108,31 @@ public class CRCVerilogTestBenchGenerator {
 
         module +=       "    endtask\n\n";
 
+        // task which loads a config line into a PE
+        module +=       "    task doConfiguration(integer row, integer column, reg [`CONFIG_WIDTH-1:0] config_data);\n";
+        module +=       "        enable_config_read[((row * " + crc.getColumns()+ ") + column +1) -1 -: 1] = 1'b1;\n";
+        module +=       "        config_in[(`CONFIG_WIDTH*((row * " + crc.getColumns() + ") + column +1)) -1 -: `CONFIG_WIDTH] = config_data;\n";
+        module +=       "        `TICK\n";
+        module +=       "        `TICK\n";
+        module +=       "        enable_config_read[((row * " + crc.getColumns()+ ") + column +1) -1 -: 1] = 1'b0;\n";
+        module +=       "    endtask\n\n";
+
+
+        for(int dynamicConfigurationNumber = 0; dynamicConfigurationNumber < crc.getDynamicConfigLines(); dynamicConfigurationNumber++) {
+
+            // task which loads a dynamic configuration
+            module +=       "    task loadDynamicConfiguration" + dynamicConfigurationNumber+ "();\n";
+
+            for(int row = 0; row < crc.getRows(); row++) {
+                for(int column = 0; column < crc.getColumns(); column++) {
+                    module += "        `TICK\n";
+                    module += "        doConfiguration(" + row + ", " + column + ", " + crc.getPeDynamicConfigParameterBits(row, column, dynamicConfigurationNumber).length() + "'b" + crc.getPeDynamicConfigParameterBits(row, column, dynamicConfigurationNumber) + ");\n";
+                }
+            }
+
+            module +=       "    endtask\n\n";
+        }
+
         // task which displays the data/flag output
         module +=       "    task displayDataFlagOutput();\n";
         module +=       "        $display(\"OUTPUT_DATA\");\n";
