@@ -24,4 +24,9 @@ public class VerilogWire implements VerilogModule {
             return "wire [" + width + "-1:0] " + name + ";";
         }
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

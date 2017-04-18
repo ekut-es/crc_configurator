@@ -31,15 +31,23 @@ public class VerilogPE implements VerilogModule {
     public String config_load_select;
     public String config_select;
 
-    public String config_select_in_N;
-    public String config_select_in_E;
-    public String config_select_in_S;
-    public String config_select_in_W;
+    public String config_select_in_N_0;
+    public String config_select_in_N_1;
+    public String config_select_in_E_0;
+    public String config_select_in_E_1;
+    public String config_select_in_S_0;
+    public String config_select_in_S_1;
+    public String config_select_in_W_0;
+    public String config_select_in_W_1;
 
-    public String config_select_out_N;
-    public String config_select_out_E;
-    public String config_select_out_S;
-    public String config_select_out_W;
+    public String config_select_out_N_0;
+    public String config_select_out_N_1;
+    public String config_select_out_E_0;
+    public String config_select_out_E_1;
+    public String config_select_out_S_0;
+    public String config_select_out_S_1;
+    public String config_select_out_W_0;
+    public String config_select_out_W_1;
 
     // data input from the north
     public String data_in_N_0;
@@ -141,15 +149,23 @@ public class VerilogPE implements VerilogModule {
                 "        .config_select(" + this.config_select + "),\n" +
                 "        .config_load_select(" + this.config_load_select + "),\n";
 
-        peModule += "        .config_select_in_N(" + ((this.config_select_in_N != null) ? this.config_select_in_N : "{`CONFIG_SELECT_WIDTH{1'b0}}") + "),\n";
-        peModule += "        .config_select_in_E(" + ((this.config_select_in_E != null) ? this.config_select_in_E : "{`CONFIG_SELECT_WIDTH{1'b0}}") + "),\n";
-        peModule += "        .config_select_in_S(" + ((this.config_select_in_S != null) ? this.config_select_in_S : "{`CONFIG_SELECT_WIDTH{1'b0}}") + "),\n";
-        peModule += "        .config_select_in_W(" + ((this.config_select_in_W != null) ? this.config_select_in_W : "{`CONFIG_SELECT_WIDTH{1'b0}}") + "),\n";
+        peModule += "        .config_select_in_N_0(" + ((this.config_select_in_N_0 != null) ? this.config_select_in_N_0 : "{`CONFIG_SELECT_WIDTH{1'b0}}") + "),\n";
+        peModule += "        .config_select_in_N_1(" + ((this.config_select_in_N_1 != null) ? this.config_select_in_N_1 : "{`CONFIG_SELECT_WIDTH{1'b0}}") + "),\n";
+        peModule += "        .config_select_in_E_0(" + ((this.config_select_in_E_0 != null) ? this.config_select_in_E_0 : "{`CONFIG_SELECT_WIDTH{1'b0}}") + "),\n";
+        peModule += "        .config_select_in_E_1(" + ((this.config_select_in_E_1 != null) ? this.config_select_in_E_1 : "{`CONFIG_SELECT_WIDTH{1'b0}}") + "),\n";
+        peModule += "        .config_select_in_S_0(" + ((this.config_select_in_S_0 != null) ? this.config_select_in_S_0 : "{`CONFIG_SELECT_WIDTH{1'b0}}") + "),\n";
+        peModule += "        .config_select_in_S_1(" + ((this.config_select_in_S_1 != null) ? this.config_select_in_S_1 : "{`CONFIG_SELECT_WIDTH{1'b0}}") + "),\n";
+        peModule += "        .config_select_in_W_0(" + ((this.config_select_in_W_0 != null) ? this.config_select_in_W_0 : "{`CONFIG_SELECT_WIDTH{1'b0}}") + "),\n";
+        peModule += "        .config_select_in_W_1(" + ((this.config_select_in_W_1 != null) ? this.config_select_in_W_1 : "{`CONFIG_SELECT_WIDTH{1'b0}}") + "),\n";
 
-        peModule += (this.config_select_out_N != null) ? "        .config_select_out_N(" + this.config_select_out_N + "),\n" : "";
-        peModule += (this.config_select_out_E != null) ? "        .config_select_out_E(" + this.config_select_out_E + "),\n" : "";
-        peModule += (this.config_select_out_S != null) ? "        .config_select_out_S(" + this.config_select_out_S + "),\n" : "";
-        peModule += (this.config_select_out_W != null) ? "        .config_select_out_W(" + this.config_select_out_W + "),\n" : "";
+        peModule += (this.config_select_out_N_0 != null) ? "        .config_select_out_N_0(" + this.config_select_out_N_0 + "),\n" : "";
+        peModule += (this.config_select_out_N_1 != null) ? "        .config_select_out_N_1(" + this.config_select_out_N_1 + "),\n" : "";
+        peModule += (this.config_select_out_E_0 != null) ? "        .config_select_out_E_0(" + this.config_select_out_E_0 + "),\n" : "";
+        peModule += (this.config_select_out_E_1 != null) ? "        .config_select_out_E_1(" + this.config_select_out_E_1 + "),\n" : "";
+        peModule += (this.config_select_out_S_0 != null) ? "        .config_select_out_S_0(" + this.config_select_out_S_0 + "),\n" : "";
+        peModule += (this.config_select_out_S_1 != null) ? "        .config_select_out_S_1(" + this.config_select_out_S_1 + "),\n" : "";
+        peModule += (this.config_select_out_W_0 != null) ? "        .config_select_out_W_0(" + this.config_select_out_W_0 + "),\n" : "";
+        peModule += (this.config_select_out_W_1 != null) ? "        .config_select_out_W_1(" + this.config_select_out_W_1 + "),\n" : "";
 
         // data input from the north
         peModule += "        .data_in_N_0(" + ((this.data_in_N_0 != null) ? this.data_in_N_0 : "{`DATA_WIDTH{1'b0}}") + "),\n";

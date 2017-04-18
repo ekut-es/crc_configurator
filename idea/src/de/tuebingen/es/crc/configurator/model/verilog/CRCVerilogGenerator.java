@@ -161,14 +161,14 @@ public class CRCVerilogGenerator {
 
             fifoPeSouthN0.valid_bit_in = peSouthValidBitOutN0.name;
 
-            fifoPeSouthN0.config_select_in = "pe_" + (row+1) + "_" + column + "_config_select_out_N";
+            fifoPeSouthN0.config_select_in = "pe_" + (row+1) + "_" + column + "_config_select_out_N_0";
 
             VerilogWire peInputReadyS0 = new VerilogWire("pe_" + row + "_" + column + "_input_ready_S_0");
             wires.add(peInputReadyS0);
 
             fifoPeSouthN0.ext_input_ready = peInputReadyS0.name;
 
-            fifoPeSouthN0.ext_config_select_in = "pe_" + row + "_" + column + "_config_select_out_S";
+            fifoPeSouthN0.ext_config_select_in = "pe_" + row + "_" + column + "_config_select_out_S_0";
 
             VerilogWire fifoPeSouthN0DataOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_0_data_out", "`DATA_WIDTH");
             wires.add(fifoPeSouthN0DataOut);
@@ -217,14 +217,14 @@ public class CRCVerilogGenerator {
 
             fifoPeSouthN1.valid_bit_in = peSouthValidBitOutN1.name;
 
-            fifoPeSouthN1.config_select_in = "pe_" + (row+1) + "_" + column + "_config_select_out_N";
+            fifoPeSouthN1.config_select_in = "pe_" + (row+1) + "_" + column + "_config_select_out_N_1";
 
             VerilogWire peInputReadyS1 = new VerilogWire("pe_" + row + "_" + column + "_input_ready_S_1");
             wires.add(peInputReadyS1);
 
             fifoPeSouthN1.ext_input_ready = peInputReadyS1.name;
 
-            fifoPeSouthN1.ext_config_select_in = "pe_" + row + "_" + column + "_config_select_out_S";
+            fifoPeSouthN1.ext_config_select_in = "pe_" + row + "_" + column + "_config_select_out_S_1";
 
             VerilogWire fifoPeSouthN1DataOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_1_data_out", "`DATA_WIDTH");
             wires.add(fifoPeSouthN1DataOut);
@@ -241,10 +241,7 @@ public class CRCVerilogGenerator {
 
             fifoPeSouthN1.valid_bit_out = fifoPeSouthN1ValidBitOut.name;
 
-            VerilogWire fifoPeSouthN1ConfigSelectOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_1_config_select_out", "`CONFIG_SELECT_WIDTH");
-            wires.add(fifoPeSouthN1ConfigSelectOut);
-
-            fifoPeSouthN1.config_select_out = fifoPeSouthN1ConfigSelectOut.name;
+            fifoPeSouthN1.config_select_out = "fifo_pe_" + (row+1) + "_" + column + "_data_out_N_1_config_select_out";
 
             VerilogWire fifoPeSouthN1Full = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_1_full");
             wires.add(fifoPeSouthN1Full);
@@ -391,17 +388,17 @@ public class CRCVerilogGenerator {
 
             fifoPeE0.valid_bit_in = peValidBitOutE0.name;
 
-            fifoPeE0.config_select_in = "pe_" + row + "_" + column + "_config_select_out_E";
+            fifoPeE0.config_select_in = "pe_" + row + "_" + column + "_config_select_out_E_0";
 
             VerilogWire peEastInputReadyW0 = new VerilogWire("pe_" + row + "_" + (column+1) + "_input_ready_W_0");
             wires.add(peEastInputReadyW0);
 
             fifoPeE0.ext_input_ready = peEastInputReadyW0.name;
 
-            VerilogWire peEastConfigSelectOutW = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W", "`CONFIG_SELECT_WIDTH");
-            wires.add(peEastConfigSelectOutW);
+            VerilogWire peEastConfigSelectOutW0 = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W_0", "`CONFIG_SELECT_WIDTH");
+            wires.add(peEastConfigSelectOutW0);
 
-            fifoPeE0.ext_config_select_in = peEastConfigSelectOutW.name;
+            fifoPeE0.ext_config_select_in = peEastConfigSelectOutW0.name;
 
             VerilogWire fifoPeDataOutE0DataOut = new VerilogWire("fifo_pe_" + row + "_" + column + "_data_out_E_0_data_out", "`DATA_WIDTH");
             wires.add(fifoPeDataOutE0DataOut);
@@ -453,14 +450,17 @@ public class CRCVerilogGenerator {
 
             fifoPeE1.valid_bit_in = peValidBitOutE1.name;
 
-            fifoPeE1.config_select_in = "pe_" + row + "_" + column + "_config_select_out_E";
+            fifoPeE1.config_select_in = "pe_" + row + "_" + column + "_config_select_out_E_0";
 
             VerilogWire peEastInputReadyW1 = new VerilogWire("pe_" + row + "_" + (column+1) + "_input_ready_W_1");
             wires.add(peEastInputReadyW1);
 
             fifoPeE1.ext_input_ready = peEastInputReadyW1.name;
 
-            fifoPeE1.ext_config_select_in = peEastConfigSelectOutW.name;
+            VerilogWire peEastConfigSelectOutW1 = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W_1", "`CONFIG_SELECT_WIDTH");
+            wires.add(peEastConfigSelectOutW1);
+
+            fifoPeE1.ext_config_select_in = peEastConfigSelectOutW1.name;
 
             VerilogWire fifoPeDataOutE1DataOut = new VerilogWire("fifo_pe_" + row + "_" + column + "_data_out_E_1_data_out", "`DATA_WIDTH");
             wires.add(fifoPeDataOutE1DataOut);
@@ -596,17 +596,17 @@ public class CRCVerilogGenerator {
 
             fifoPeDataOutS0.valid_bit_in = peValidBitOutS0.name;
 
-            fifoPeDataOutS0.config_select_in = "pe_" + row + "_" + column + "_config_select_out_S";
+            fifoPeDataOutS0.config_select_in = "pe_" + row + "_" + column + "_config_select_out_S_0";
 
             VerilogWire peSouthInputReadyN0 = new VerilogWire("pe_" + (row+1) + "_" + column + "_input_ready_N_0");
             wires.add(peSouthInputReadyN0);
 
             fifoPeDataOutS0.ext_input_ready = peSouthInputReadyN0.name;
 
-            VerilogWire peSouthConfigSelectOutN = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N", "`CONFIG_SELECT_WIDTH");
-            wires.add(peSouthConfigSelectOutN);
+            VerilogWire peSouthConfigSelectOutN0 = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N_0", "`CONFIG_SELECT_WIDTH");
+            wires.add(peSouthConfigSelectOutN0);
 
-            fifoPeDataOutS0.ext_config_select_in = peSouthConfigSelectOutN.name;
+            fifoPeDataOutS0.ext_config_select_in = peSouthConfigSelectOutN0.name;
 
             VerilogWire fifoPeDataOutS0DataOut = new VerilogWire("fifo_pe_" + row + "_" + column + "_data_out_S_0_data_out", "`DATA_WIDTH");
             wires.add(fifoPeDataOutS0DataOut);
@@ -658,14 +658,17 @@ public class CRCVerilogGenerator {
 
             fifoPeDataOutS1.valid_bit_in = peValidBitOutS1.name;
 
-            fifoPeDataOutS1.config_select_in = "pe_" + row + "_" + column + "_config_select_out_S";
+            fifoPeDataOutS1.config_select_in = "pe_" + row + "_" + column + "_config_select_out_S_1";
 
             VerilogWire peSouthInputReadyN1 = new VerilogWire("pe_" + (row+1) + "_" + column + "_input_ready_N_1");
             wires.add(peSouthInputReadyN1);
 
             fifoPeDataOutS1.ext_input_ready = peSouthInputReadyN1.name;
 
-            fifoPeDataOutS1.ext_config_select_in = peSouthConfigSelectOutN.name;
+            VerilogWire peSouthConfigSelectOutN1 = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N_1", "`CONFIG_SELECT_WIDTH");
+            wires.add(peSouthConfigSelectOutN1);
+
+            fifoPeDataOutS1.ext_config_select_in = peSouthConfigSelectOutN1.name;
 
             VerilogWire fifoPeDataOutS1DataOut = new VerilogWire("fifo_pe_" + row + "_" + column + "_data_out_S_1_data_out", "`DATA_WIDTH");
             wires.add(fifoPeDataOutS1DataOut);
@@ -787,10 +790,10 @@ public class CRCVerilogGenerator {
 
             inputFifo0.ext_input_ready = peWestmostColumnInputReadyW0.name;
 
-            VerilogWire peWestmostColumnConfigSelectOutW = new VerilogWire("pe_" + row + "_0_config_select_out_W", "`CONFIG_SELECT_WIDTH");
-            wires.add(peWestmostColumnConfigSelectOutW);
+            VerilogWire peWestmostColumnConfigSelectOutW0 = new VerilogWire("pe_" + row + "_0_config_select_out_W_0", "`CONFIG_SELECT_WIDTH");
+            wires.add(peWestmostColumnConfigSelectOutW0);
 
-            inputFifo0.ext_config_select_in = peWestmostColumnConfigSelectOutW.name;
+            inputFifo0.ext_config_select_in = peWestmostColumnConfigSelectOutW0.name;
 
             VerilogWire inputFifo0DataOut = new VerilogWire("input_fifo_" + inputFifoNumber + "_data_out", "`DATA_WIDTH");
             wires.add(inputFifo0DataOut);
@@ -830,7 +833,10 @@ public class CRCVerilogGenerator {
 
             inputFifo1.ext_input_ready = peWestmostColumnInputReadyW1.name;
 
-            inputFifo1.ext_config_select_in = peWestmostColumnConfigSelectOutW.name;
+            VerilogWire peWestmostColumnConfigSelectOutW1 = new VerilogWire("pe_" + row + "_0_config_select_out_W_1", "`CONFIG_SELECT_WIDTH");
+            wires.add(peWestmostColumnConfigSelectOutW1);
+
+            inputFifo1.ext_config_select_in = peWestmostColumnConfigSelectOutW1.name;
 
             VerilogWire inputFifo1DataOut = new VerilogWire("input_fifo_" + inputFifoNumber + "_data_out", "`DATA_WIDTH");
             wires.add(inputFifo1DataOut);
@@ -893,53 +899,106 @@ public class CRCVerilogGenerator {
 
                     if(!fifosBetweenPes) {
                         // config select ins
-                        VerilogWire peEastConfigSelectOutW = new VerilogWire("pe_" + row + "_" + (column + 1) + "_config_select_out_W", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peEastConfigSelectOutW);
+                        // east
+                        VerilogWire peEastConfigSelectOutW0 = new VerilogWire("pe_" + row + "_" + (column + 1) + "_config_select_out_W_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peEastConfigSelectOutW0);
 
-                        pe.config_select_in_E = peEastConfigSelectOutW.name;
+                        pe.config_select_in_E_0 = peEastConfigSelectOutW0.name;
 
-                        VerilogWire peSouthConfigSelectOutN = new VerilogWire("pe_" + (row + 1) + "_" + column + "_config_select_out_N", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peSouthConfigSelectOutN);
+                        VerilogWire peEastConfigSelectOutW1 = new VerilogWire("pe_" + row + "_" + (column + 1) + "_config_select_out_W_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peEastConfigSelectOutW1);
 
-                        pe.config_select_in_S = peSouthConfigSelectOutN.name;
+                        pe.config_select_in_E_1 = peEastConfigSelectOutW1.name;
 
-                        pe.config_select_in_W = "input_fifo_0_config_select_out";
+                        // south
+                        VerilogWire peSouthConfigSelectOutN0 = new VerilogWire("pe_" + (row + 1) + "_" + column + "_config_select_out_N_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peSouthConfigSelectOutN0);
+
+                        pe.config_select_in_S_0 = peSouthConfigSelectOutN0.name;
+
+                        VerilogWire peSouthConfigSelectOutN1 = new VerilogWire("pe_" + (row + 1) + "_" + column + "_config_select_out_N_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peSouthConfigSelectOutN1);
+
+                        pe.config_select_in_S_1 = peSouthConfigSelectOutN1.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "input_fifo_0_config_select_out";
+                        pe.config_select_in_W_1 = "input_fifo_1_config_select_out";
 
                         // config select outs
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
 
-                        VerilogWire peConfigSelectOutS = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutS);
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
 
-                        pe.config_select_out_S = peConfigSelectOutS.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        // south
+                        VerilogWire peConfigSelectOutS0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS0);
+
+                        pe.config_select_out_S_0 = peConfigSelectOutS0.name;
+
+                        VerilogWire peConfigSelectOutS1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS1);
+
+                        pe.config_select_out_S_1 = peConfigSelectOutS1.name;
+
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
+
                     } else {
                         // config ins
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_in_E = peConfigSelectOutE.name;
+                        pe.config_select_in_E_0 = peConfigSelectOutE0.name;
 
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
+
+                        pe.config_select_in_E_1 = peConfigSelectOutE1.name;
+
+                        // south
                         VerilogWire fifoPeSouthDataOutN0ConfigSelectOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_0_config_select_out", "`CONFIG_SELECT_WIDTH");
                         wires.add(fifoPeSouthDataOutN0ConfigSelectOut);
 
-                        pe.config_select_in_S = fifoPeSouthDataOutN0ConfigSelectOut.name;
+                        pe.config_select_in_S_0 = fifoPeSouthDataOutN0ConfigSelectOut.name;
 
-                        pe.config_select_in_W = "input_fifo_0_config_select_out";
+                        VerilogWire fifoPeSouthDataOutN1ConfigSelectOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_1_config_select_out", "`CONFIG_SELECT_WIDTH");
+                        wires.add(fifoPeSouthDataOutN1ConfigSelectOut);
+
+                        pe.config_select_in_S_1 = fifoPeSouthDataOutN1ConfigSelectOut.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "input_fifo_0_config_select_out";
+                        pe.config_select_in_W_1 = "input_fifo_1_config_select_out";
 
                         // config outs
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        // east
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        VerilogWire peConfigSelectOutS = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutS);
+                        // south
+                        VerilogWire peConfigSelectOutS0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS0);
 
-                        pe.config_select_out_S = peConfigSelectOutS.name;
+                        pe.config_select_out_S_0 = peConfigSelectOutS0.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        VerilogWire peConfigSelectOutS1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS1);
+
+                        pe.config_select_out_S_1 = peConfigSelectOutS1.name;
+
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     }
 
                     // data input from the south
@@ -962,53 +1021,105 @@ public class CRCVerilogGenerator {
 
                     if(!fifosBetweenPes) {
                         // config select ins
-                        VerilogWire peEastConfigSelectOutW = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peEastConfigSelectOutW);
+                        // east
+                        VerilogWire peEastConfigSelectOutW0 = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peEastConfigSelectOutW0);
 
-                        pe.config_select_in_E = peEastConfigSelectOutW.name;
+                        pe.config_select_in_E_0 = peEastConfigSelectOutW0.name;
 
-                        VerilogWire peSouthConfigSelectOutN = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peSouthConfigSelectOutN);
+                        VerilogWire peEastConfigSelectOutW1 = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peEastConfigSelectOutW1);
 
-                        pe.config_select_in_S = peSouthConfigSelectOutN.name;
+                        pe.config_select_in_E_1 = peEastConfigSelectOutW1.name;
 
-                        pe.config_select_in_W = "pe_" + row + "_" + (column-1) + "_config_select_out_E";
+                        // south
+                        VerilogWire peSouthConfigSelectOutN0 = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peSouthConfigSelectOutN0);
+
+                        pe.config_select_in_S_0 = peSouthConfigSelectOutN0.name;
+
+                        VerilogWire peSouthConfigSelectOutN1 = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peSouthConfigSelectOutN1);
+
+                        pe.config_select_in_S_1 = peSouthConfigSelectOutN1.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "pe_" + row + "_" + (column-1) + "_config_select_out_E_0";
+                        pe.config_select_in_W_1 = "pe_" + row + "_" + (column-1) + "_config_select_out_E_1";
 
                         // config select outs
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
 
-                        VerilogWire peConfigSelectOutS = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutS);
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
 
-                        pe.config_select_out_S = peConfigSelectOutS.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        // south
+                        VerilogWire peConfigSelectOutS0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS0);
+
+                        pe.config_select_out_S_0 = peConfigSelectOutS0.name;
+
+                        VerilogWire peConfigSelectOutS1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS1);
+
+                        pe.config_select_out_S_1 = peConfigSelectOutS1.name;
+
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     } else {
                         // config select ins
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_in_E = peConfigSelectOutE.name;
+                        pe.config_select_in_E_0 = peConfigSelectOutE0.name;
 
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
+
+                        pe.config_select_in_E_1 = peConfigSelectOutE1.name;
+
+                        // south
                         VerilogWire fifoPeSouthDataOutN0ConfigSelectOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_0_config_select_out", "`CONFIG_SELECT_WIDTH");
                         wires.add(fifoPeSouthDataOutN0ConfigSelectOut);
 
-                        pe.config_select_in_S = fifoPeSouthDataOutN0ConfigSelectOut.name;
+                        pe.config_select_in_S_0 = fifoPeSouthDataOutN0ConfigSelectOut.name;
 
-                        pe.config_select_in_W = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_0_config_select_out";
+                        VerilogWire fifoPeSouthDataOutN1ConfigSelectOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_1_config_select_out", "`CONFIG_SELECT_WIDTH");
+                        wires.add(fifoPeSouthDataOutN1ConfigSelectOut);
+
+                        pe.config_select_in_S_1 = fifoPeSouthDataOutN1ConfigSelectOut.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_0_config_select_out";
+                        pe.config_select_in_W_1 = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_1_config_select_out";
 
                         // config select out
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        // east
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        VerilogWire peConfigSelectOutS = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutS);
+                        // south
+                        VerilogWire peConfigSelectOutS0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS0);
 
-                        pe.config_select_out_S = peConfigSelectOutS.name;
+                        pe.config_select_out_S_0 = peConfigSelectOutS0.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        VerilogWire peConfigSelectOutS1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS1);
+
+                        pe.config_select_out_S_1 = peConfigSelectOutS1.name;
+
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     }
 
                     // data input from the south
@@ -1032,50 +1143,98 @@ public class CRCVerilogGenerator {
 
                     if(!fifosBetweenPes) {
                         // config select ins
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_in_E = peConfigSelectOutE.name;
+                        pe.config_select_in_E_0 = peConfigSelectOutE0.name;
 
-                        VerilogWire peSouthConfigSelectOutN = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peSouthConfigSelectOutN);
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
 
-                        pe.config_select_in_S = peSouthConfigSelectOutN.name;
+                        pe.config_select_in_E_1 = peConfigSelectOutE1.name;
 
-                        pe.config_select_in_W = "pe_" + row + "_" + (column-1) + "_config_select_out_E";
+                        // south
+                        VerilogWire peSouthConfigSelectOutN0 = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peSouthConfigSelectOutN0);
+
+                        pe.config_select_in_S_0 = peSouthConfigSelectOutN0.name;
+
+                        VerilogWire peSouthConfigSelectOutN1 = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peSouthConfigSelectOutN1);
+
+                        pe.config_select_in_S_1 = peSouthConfigSelectOutN1.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "pe_" + row + "_" + (column-1) + "_config_select_out_E_0";
+                        pe.config_select_in_W_1 = "pe_" + row + "_" + (column-1) + "_config_select_out_E_1";
 
                         // config select outs
-                        VerilogWire peConfigSelectOutS = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutS);
+                        // east
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        // south
+                        VerilogWire peConfigSelectOutS0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS0);
 
-                        pe.config_select_out_S = peConfigSelectOutS.name;
+                        pe.config_select_out_S_0 = peConfigSelectOutS0.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        VerilogWire peConfigSelectOutS1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS1);
+
+                        pe.config_select_out_S_1 = peConfigSelectOutS1.name;
+
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     } else {
                         // config select ins
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_in_E = peConfigSelectOutE.name;
+                        pe.config_select_in_E_0 = peConfigSelectOutE0.name;
 
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
+
+                        pe.config_select_in_E_1 = peConfigSelectOutE1.name;
+
+                        // south
                         VerilogWire fifoPeSouthDataOutN0ConfigSelectOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_0_config_select_out", "`CONFIG_SELECT_WIDTH");
                         wires.add(fifoPeSouthDataOutN0ConfigSelectOut);
 
-                        pe.config_select_in_S = fifoPeSouthDataOutN0ConfigSelectOut.name;
+                        pe.config_select_in_S_0 = fifoPeSouthDataOutN0ConfigSelectOut.name;
 
-                        pe.config_select_in_W = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_0_config_select_out";
+                        VerilogWire fifoPeSouthDataOutN1ConfigSelectOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_1_config_select_out", "`CONFIG_SELECT_WIDTH");
+                        wires.add(fifoPeSouthDataOutN1ConfigSelectOut);
+
+                        pe.config_select_in_S_1 = fifoPeSouthDataOutN1ConfigSelectOut.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_0_config_select_out";
+                        pe.config_select_in_W_1 = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_1_config_select_out";
 
                         // config select outs
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        // east
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        VerilogWire peConfigSelectOutS = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutS);
+                        // south
+                        VerilogWire peConfigSelectOutS0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS0);
 
-                        pe.config_select_out_S = peConfigSelectOutS.name;
+                        pe.config_select_out_S_0 = peConfigSelectOutS0.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        VerilogWire peConfigSelectOutS1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS1);
+
+                        pe.config_select_out_S_1 = peConfigSelectOutS1.name;
+
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     }
 
                     // data input from the south
@@ -1098,61 +1257,121 @@ public class CRCVerilogGenerator {
 
                     if(!fifosBetweenPes) {
                         // config select ins
-                        pe.config_select_in_N = "pe_" + (row-1) + "_" + column + "_config_select_out_S";
+                        // north
+                        pe.config_select_in_N_0 = "pe_" + (row-1) + "_" + column + "_config_select_out_S_0";
+                        pe.config_select_in_N_1 = "pe_" + (row-1) + "_" + column + "_config_select_out_S_1";
 
-                        VerilogWire peEastConfigSelectOutW = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peEastConfigSelectOutW);
+                        // east
+                        VerilogWire peEastConfigSelectOutW0 = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peEastConfigSelectOutW0);
 
-                        pe.config_select_in_E = peEastConfigSelectOutW.name;
+                        pe.config_select_in_E_0 = peEastConfigSelectOutW0.name;
 
-                        VerilogWire peSouthConfigSelectOutN = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peSouthConfigSelectOutN);
+                        VerilogWire peEastConfigSelectOutW1 = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peEastConfigSelectOutW1);
 
-                        pe.config_select_in_S = peSouthConfigSelectOutN.name;
+                        pe.config_select_in_E_1 = peEastConfigSelectOutW1.name;
 
-                        pe.config_select_in_W = "input_fifo_" + (2*row) + "_config_select_out";
+                        // south
+                        VerilogWire peSouthConfigSelectOutN0 = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peSouthConfigSelectOutN0);
+
+                        pe.config_select_in_S_0 = peSouthConfigSelectOutN0.name;
+
+                        VerilogWire peSouthConfigSelectOutN1 = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peSouthConfigSelectOutN1);
+
+                        pe.config_select_in_S_1 = peSouthConfigSelectOutN1.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "input_fifo_" + (2*row) + "_config_select_out";
+                        pe.config_select_in_W_1 = "input_fifo_" + (2*row+1) + "_config_select_out";
 
                         // config select outs
-                        pe.config_select_out_N = "pe_" + row + "_" + column + "_config_select_out_N";
+                        // north
+                        pe.config_select_out_N_0 = "pe_" + row + "_" + column + "_config_select_out_N_0";
+                        pe.config_select_out_N_1 = "pe_" + row + "_" + column + "_config_select_out_N_1";
 
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
 
-                        VerilogWire peConfigSelectOutS = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutS);
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
 
-                        pe.config_select_out_S = peConfigSelectOutS.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        // south
+                        VerilogWire peConfigSelectOutS0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS0);
+
+                        pe.config_select_out_S_0 = peConfigSelectOutS0.name;
+
+                        VerilogWire peConfigSelectOutS1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS1);
+
+                        pe.config_select_out_S_1 = peConfigSelectOutS1.name;
+
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     } else {
                         // config select ins
-                        pe.config_select_in_N = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_0_config_select_out";
+                        // north
+                        pe.config_select_in_N_0 = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_0_config_select_out";
+                        pe.config_select_in_N_1 = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_1_config_select_out";
 
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_in_E = peConfigSelectOutE.name;
+                        pe.config_select_in_E_0 = peConfigSelectOutE0.name;
 
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
+
+                        pe.config_select_in_E_1 = peConfigSelectOutE1.name;
+
+                        // south
                         VerilogWire fifoPeSouthDataOutN0ConfigSelectOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_0_config_select_out", "`CONFIG_SELECT_WIDTH");
                         wires.add(fifoPeSouthDataOutN0ConfigSelectOut);
 
-                        pe.config_select_in_S = fifoPeSouthDataOutN0ConfigSelectOut.name;
+                        pe.config_select_in_S_0 = fifoPeSouthDataOutN0ConfigSelectOut.name;
 
-                        pe.config_select_in_W = "input_fifo_" + (2*row) + "_config_select_out";
+                        VerilogWire fifoPeSouthDataOutN1ConfigSelectOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_1_config_select_out", "`CONFIG_SELECT_WIDTH");
+                        wires.add(fifoPeSouthDataOutN1ConfigSelectOut);
+
+                        pe.config_select_in_S_1 = fifoPeSouthDataOutN1ConfigSelectOut.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "input_fifo_" + (2*row) + "_config_select_out";
+                        pe.config_select_in_W_1 = "input_fifo_" + (2*row+1) + "_config_select_out";
 
                         // config select outs
-                        pe.config_select_out_N = "pe_" + row + "_" + column + "_config_select_out_N";
+                        // north
+                        pe.config_select_out_N_0 = "pe_" + row + "_" + column + "_config_select_out_N_0";
+                        pe.config_select_out_N_1 = "pe_" + row + "_" + column + "_config_select_out_N_1";
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        // east
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        VerilogWire peConfigSelectOutS = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutS);
+                        // south
+                        VerilogWire peConfigSelectOutS0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS0);
 
-                        pe.config_select_out_S = peConfigSelectOutS.name;
+                        pe.config_select_out_S_0 = peConfigSelectOutS0.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        VerilogWire peConfigSelectOutS1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS1);
+
+                        pe.config_select_out_S_1 = peConfigSelectOutS1.name;
+
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     }
 
                     // data input from the north
@@ -1182,58 +1401,114 @@ public class CRCVerilogGenerator {
 
                     if(!fifosBetweenPes) {
                         // config select ins
-                        pe.config_select_in_N = "pe_" + (row-1) + "_" + column + "_config_select_out_S";
+                        // north
+                        pe.config_select_in_N_0 = "pe_" + (row-1) + "_" + column + "_config_select_out_S_0";
+                        pe.config_select_in_N_1 = "pe_" + (row-1) + "_" + column + "_config_select_out_S_1";
 
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_in_E = peConfigSelectOutE.name;
+                        pe.config_select_in_E_0 = peConfigSelectOutE0.name;
 
-                        VerilogWire peSouthConfigSelectOutN = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peSouthConfigSelectOutN);
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
 
-                        pe.config_select_in_S = peSouthConfigSelectOutN.name;
+                        pe.config_select_in_E_1 = peConfigSelectOutE1.name;
 
-                        pe.config_select_in_W = "pe_" + row + "_" + (column-1) + "_config_select_out_E";
+                        // south
+                        VerilogWire peSouthConfigSelectOutN0 = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peSouthConfigSelectOutN0);
+
+                        pe.config_select_in_S_0 = peSouthConfigSelectOutN0.name;
+
+                        VerilogWire peSouthConfigSelectOutN1 = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peSouthConfigSelectOutN1);
+
+                        pe.config_select_in_S_1 = peSouthConfigSelectOutN1.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "pe_" + row + "_" + (column-1) + "_config_select_out_E_0";
+                        pe.config_select_in_W_1 = "pe_" + row + "_" + (column-1) + "_config_select_out_E_1";
 
                         // config select outs
-                        pe.config_select_out_N = "pe_" + row + "_" + column + "_config_select_out_N";
+                        // north
+                        pe.config_select_out_N_0 = "pe_" + row + "_" + column + "_config_select_out_N_0";
+                        pe.config_select_out_N_1 = "pe_" + row + "_" + column + "_config_select_out_N_1";
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        // east
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        VerilogWire peConfigSelectOutS = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutS);
+                        // south
+                        VerilogWire peConfigSelectOutS0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS0);
 
-                        pe.config_select_out_S = peConfigSelectOutS.name;
+                        pe.config_select_out_S_0 = peConfigSelectOutS0.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        VerilogWire peConfigSelectOutS1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS1);
+
+                        pe.config_select_out_S_1 = peConfigSelectOutS1.name;
+
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     } else {
                         // config ins
-                        pe.config_select_in_N = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_0_config_select_out";
+                        // north
+                        pe.config_select_in_N_0 = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_0_config_select_out";
+                        pe.config_select_in_N_1 = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_1_config_select_out";
 
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_in_E = peConfigSelectOutE.name;
+                        pe.config_select_in_E_0 = peConfigSelectOutE0.name;
 
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
+
+                        pe.config_select_in_E_1 = peConfigSelectOutE1.name;
+
+                        // south
                         VerilogWire fifoPeSouthDataOutN0ConfigSelectOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_0_config_select_out", "`CONFIG_SELECT_WIDTH");
                         wires.add(fifoPeSouthDataOutN0ConfigSelectOut);
 
-                        pe.config_select_in_S = fifoPeSouthDataOutN0ConfigSelectOut.name;
+                        pe.config_select_in_S_0 = fifoPeSouthDataOutN0ConfigSelectOut.name;
 
-                        pe.config_select_in_W = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_0_config_select_out";
+                        VerilogWire fifoPeSouthDataOutN1ConfigSelectOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_1_config_select_out", "`CONFIG_SELECT_WIDTH");
+                        wires.add(fifoPeSouthDataOutN1ConfigSelectOut);
 
-                        // config outs
-                        pe.config_select_out_N = "pe_" + row + "_" + column + "_config_select_out_N";
+                        pe.config_select_in_S_1 = fifoPeSouthDataOutN1ConfigSelectOut.name;
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        // west
+                        pe.config_select_in_W_0 = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_0_config_select_out";
+                        pe.config_select_in_W_1 = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_1_config_select_out";
 
-                        VerilogWire peConfigSelectOutS = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutS);
+                        // config select outs
+                        // north
+                        pe.config_select_out_N_0 = "pe_" + row + "_" + column + "_config_select_out_N_0";
+                        pe.config_select_out_N_1 = "pe_" + row + "_" + column + "_config_select_out_N_1";
 
-                        pe.config_select_out_S = peConfigSelectOutS.name;
+                        // east
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        // south
+                        VerilogWire peConfigSelectOutS0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS0);
+
+                        pe.config_select_out_S_0 = peConfigSelectOutS0.name;
+
+                        VerilogWire peConfigSelectOutS1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS1);
+
+                        pe.config_select_out_S_1 = peConfigSelectOutS1.name;
+
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     }
 
                     // data in from the north
@@ -1262,41 +1537,77 @@ public class CRCVerilogGenerator {
 
                     if(!fifosBetweenPes) {
                         // config select ins
-                        pe.config_select_in_N = "pe_" + (row-1) + "_" + column + "_config_select_out_S";
+                        // north
+                        pe.config_select_in_N_0 = "pe_" + (row-1) + "_" + column + "_config_select_out_S_0";
+                        pe.config_select_in_N_1 = "pe_" + (row-1) + "_" + column + "_config_select_out_S_1";
 
-                        VerilogWire peEastConfigSelectOutW = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peEastConfigSelectOutW);
+                        // east
+                        VerilogWire peEastConfigSelectOutW0 = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peEastConfigSelectOutW0);
 
-                        pe.config_select_in_E = peEastConfigSelectOutW.name;
+                        pe.config_select_in_E_0 = peEastConfigSelectOutW0.name;
 
-                        pe.config_select_in_W = "input_fifo_" + (row*2) + "_config_select_out";
+                        VerilogWire peEastConfigSelectOutW1 = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peEastConfigSelectOutW1);
+
+                        pe.config_select_in_E_1 = peEastConfigSelectOutW1.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "input_fifo_" + (row*2) + "_config_select_out";
+                        pe.config_select_in_W_1 = "input_fifo_" + (row*2+1) + "_config_select_out";
 
                         // config select outs
-                        pe.config_select_out_N = "pe_" + row + "_" + column + "_config_select_out_N";
+                        // north
+                        pe.config_select_out_N_0 = "pe_" + row + "_" + column + "_config_select_out_N_0";
+                        pe.config_select_out_N_1 = "pe_" + row + "_" + column + "_config_select_out_N_1";
 
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
+
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
+
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     } else {
                         // config select ins
-                        pe.config_select_in_N = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_0_config_select_out";
+                        // north
+                        pe.config_select_in_N_0 = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_0_config_select_out";
+                        pe.config_select_in_N_1 = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_1_config_select_out";
 
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_in_E = peConfigSelectOutE.name;
+                        pe.config_select_in_E_0 = peConfigSelectOutE0.name;
 
-                        pe.config_select_in_W = "input_fifo_" + (row*2) + "_config_select_out";
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
+
+                        pe.config_select_in_E_1 = peConfigSelectOutE1.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "input_fifo_" + (row*2) + "_config_select_out";
+                        pe.config_select_in_W_1 = "input_fifo_" + (row*2+1) + "_config_select_out";
 
                         // config select outs
-                        pe.config_select_out_N = "pe_" + row + "_" + column + "_config_select_out_N";
+                        // north
+                        pe.config_select_out_N_0 = "pe_" + row + "_" + column + "_config_select_out_N_0";
+                        pe.config_select_out_N_1 = "pe_" + row + "_" + column + "_config_select_out_N_1";
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        // east
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     }
 
                     // data in from the north
@@ -1319,41 +1630,77 @@ public class CRCVerilogGenerator {
 
                     if(!fifosBetweenPes) {
                         // config select ins
-                        pe.config_select_in_N = "pe_" + (row-1) + "_" + column + "_config_select_out_S";
+                        // north
+                        pe.config_select_in_N_0 = "pe_" + (row-1) + "_" + column + "_config_select_out_S_0";
+                        pe.config_select_in_N_1 = "pe_" + (row-1) + "_" + column + "_config_select_out_S_1";
 
-                        VerilogWire peEastConfigSelectOutWest = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peEastConfigSelectOutWest);
+                        // east
+                        VerilogWire peEastConfigSelectOutW0 = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peEastConfigSelectOutW0);
 
-                        pe.config_select_in_E = peEastConfigSelectOutWest.name;
+                        pe.config_select_in_E_0 = peEastConfigSelectOutW0.name;
 
-                        pe.config_select_in_W = "pe_" + row + "_" + (column-1) + "_config_select_out_E";
+                        VerilogWire peEastConfigSelectOutW1 = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peEastConfigSelectOutW1);
+
+                        pe.config_select_in_E_1 = peEastConfigSelectOutW1.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "pe_" + row + "_" + (column-1) + "_config_select_out_E_0";
+                        pe.config_select_in_W_1 = "pe_" + row + "_" + (column-1) + "_config_select_out_E_1";
 
                         // config select outs
-                        pe.config_select_out_N = "pe_" + row + "_" + column + "_config_select_out_N";
+                        // north
+                        pe.config_select_out_N_0 = "pe_" + row + "_" + column + "_config_select_out_N_0";
+                        pe.config_select_out_N_1 = "pe_" + row + "_" + column + "_config_select_out_N_1";
 
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
+
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
+
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     } else {
                         // config select ins
-                        pe.config_select_in_N = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_0_config_select_out";
+                        // north
+                        pe.config_select_in_N_0 = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_0_config_select_out";
+                        pe.config_select_in_N_1 = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_1_config_select_out";
 
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_in_E = peConfigSelectOutE.name;
+                        pe.config_select_in_E_0 = peConfigSelectOutE0.name;
 
-                        pe.config_select_in_W = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_0_config_select_out";
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
+
+                        pe.config_select_in_E_1 = peConfigSelectOutE1.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_0_config_select_out";
+                        pe.config_select_in_W_1 = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_1_config_select_out";
 
                         // config select outs
-                        pe.config_select_out_N = "pe_" + row + "_" + column + "_config_select_out_N";
+                        // north
+                        pe.config_select_out_N_0 = "pe_" + row + "_" + column + "_config_select_out_N_0";
+                        pe.config_select_out_N_1 = "pe_" + row + "_" + column + "_config_select_out_N_1";
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        // east
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     }
 
                     // data in from the north
@@ -1376,39 +1723,70 @@ public class CRCVerilogGenerator {
 
                     if(!fifosBetweenPes) {
                         // config select ins
-                        pe.config_select_in_N = "pe_" + (row-1) + "_" + column + "_config_select_out_S";
+                        // north
+                        pe.config_select_in_N_0 = "pe_" + (row-1) + "_" + column + "_config_select_out_S_0";
+                        pe.config_select_in_N_1 = "pe_" + (row-1) + "_" + column + "_config_select_out_S_1";
 
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_in_E = peConfigSelectOutE.name;
+                        pe.config_select_in_E_0 = peConfigSelectOutE0.name;
 
-                        pe.config_select_in_W = "pe_" + row + "_" + (column-1) + "_config_select_out_E";
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
+
+                        pe.config_select_in_E_1 = peConfigSelectOutE1.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "pe_" + row + "_" + (column-1) + "_config_select_out_E_0";
+                        pe.config_select_in_W_1 = "pe_" + row + "_" + (column-1) + "_config_select_out_E_1";
 
                         // config select outs
-                        pe.config_select_out_N = "pe_" + row + "_" + column + "_config_select_out_N";
+                        // north
+                        pe.config_select_out_N_0 = "pe_" + row + "_" + column + "_config_select_out_N_0";
+                        pe.config_select_out_N_1 = "pe_" + row + "_" + column + "_config_select_out_N_1";
 
+                        // east
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
-
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     } else {
                         // config select ins
-                        pe.config_select_in_N = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_0_config_select_out";
+                        // north
+                        pe.config_select_in_N_0 = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_0_config_select_out";
+                        pe.config_select_in_N_1 = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_1_config_select_out";
 
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_in_E = peConfigSelectOutE.name;
+                        pe.config_select_in_E_0 = peConfigSelectOutE0.name;
 
-                        pe.config_select_in_W = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_0_config_select_out";
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
+
+                        pe.config_select_in_E_1 = peConfigSelectOutE1.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_0_config_select_out";
+                        pe.config_select_in_W_1 = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_1_config_select_out";
 
                         // config select outs
-                        pe.config_select_out_N = "pe_" + row + "_" + column + "_config_select_out_N";
+                        // north
+                        pe.config_select_out_N_0 = "pe_" + row + "_" + column + "_config_select_out_N_0";
+                        pe.config_select_out_N_1 = "pe_" + row + "_" + column + "_config_select_out_N_1";
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        // east
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     }
 
                     // data in from the north
@@ -1431,61 +1809,121 @@ public class CRCVerilogGenerator {
 
                     if(!fifosBetweenPes) {
                         // config select ins
-                        pe.config_select_in_N = "pe_" + (row-1) + "_" + column + "_config_select_out_S";
+                        // north
+                        pe.config_select_in_N_0 = "pe_" + (row-1) + "_" + column + "_config_select_out_S_0";
+                        pe.config_select_in_N_1 = "pe_" + (row-1) + "_" + column + "_config_select_out_S_1";
 
-                        VerilogWire peEastConfigSelectOutW = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peEastConfigSelectOutW);
+                        // east
+                        VerilogWire peEastConfigSelectOutW0 = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peEastConfigSelectOutW0);
 
-                        pe.config_select_in_E = peEastConfigSelectOutW.name;
+                        pe.config_select_in_E_0 = peEastConfigSelectOutW0.name;
 
-                        VerilogWire peSouthConfigSelectN = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peSouthConfigSelectN);
+                        VerilogWire peEastConfigSelectOutW1 = new VerilogWire("pe_" + row + "_" + (column+1) + "_config_select_out_W_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peEastConfigSelectOutW1);
 
-                        pe.config_select_in_S = peSouthConfigSelectN.name;
+                        pe.config_select_in_E_1 = peEastConfigSelectOutW1.name;
 
-                        pe.config_select_in_W = "pe_" + row + "_" + (column-1) + "_config_select_out_E";
+                        // south
+                        VerilogWire peSouthConfigSelectN0 = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peSouthConfigSelectN0);
+
+                        pe.config_select_in_S_0 = peSouthConfigSelectN0.name;
+
+                        VerilogWire peSouthConfigSelectN1 = new VerilogWire("pe_" + (row+1) + "_" + column + "_config_select_out_N_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peSouthConfigSelectN1);
+
+                        pe.config_select_in_S_1 = peSouthConfigSelectN1.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "pe_" + row + "_" + (column-1) + "_config_select_out_E_0";
+                        pe.config_select_in_W_1 = "pe_" + row + "_" + (column-1) + "_config_select_out_E_1";
 
                         // config select outs
-                        pe.config_select_out_N = "pe_" + row + "_" + column + "_config_select_out_N";
+                        // north
+                        pe.config_select_out_N_0 = "pe_" + row + "_" + column + "_config_select_out_N_0";
+                        pe.config_select_out_N_1 = "pe_" + row + "_" + column + "_config_select_out_N_1";
 
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
 
-                        VerilogWire peConfigSelectOutS = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutS);
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
 
-                        pe.config_select_out_S = peConfigSelectOutS.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        // south
+                        VerilogWire peConfigSelectOutS0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS0);
+
+                        pe.config_select_out_S_0 = peConfigSelectOutS0.name;
+
+                        VerilogWire peConfigSelectOutS1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS1);
+
+                        pe.config_select_out_S_1 = peConfigSelectOutS1.name;
+
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     } else {
                         // config select ins
-                        pe.config_select_in_N = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_0_config_select_out";
+                        // north
+                        pe.config_select_in_N_0 = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_0_config_select_out";
+                        pe.config_select_in_N_1 = "fifo_pe_" + (row-1) + "_" + column + "_data_out_S_1_config_select_out";
 
-                        VerilogWire peConfigSelectOutE = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutE);
+                        // east
+                        VerilogWire peConfigSelectOutE0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE0);
 
-                        pe.config_select_in_E = peConfigSelectOutE.name;
+                        pe.config_select_in_E_0 = peConfigSelectOutE0.name;
 
+                        VerilogWire peConfigSelectOutE1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_E_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutE1);
+
+                        pe.config_select_in_E_1 = peConfigSelectOutE1.name;
+
+                        // south
                         VerilogWire fifoPeSouthDataOutN0ConfigSelectOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_0_config_select_out", "`CONFIG_SELECT_WIDTH");
                         wires.add(fifoPeSouthDataOutN0ConfigSelectOut);
 
-                        pe.config_select_in_S = fifoPeSouthDataOutN0ConfigSelectOut.name;
+                        pe.config_select_in_S_0 = fifoPeSouthDataOutN0ConfigSelectOut.name;
 
-                        pe.config_select_in_W = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_0_config_select_out";
+                        VerilogWire fifoPeSouthDataOutN1ConfigSelectOut = new VerilogWire("fifo_pe_" + (row+1) + "_" + column + "_data_out_N_1_config_select_out", "`CONFIG_SELECT_WIDTH");
+                        wires.add(fifoPeSouthDataOutN1ConfigSelectOut);
+
+                        pe.config_select_in_S_1 = fifoPeSouthDataOutN1ConfigSelectOut.name;
+
+                        // west
+                        pe.config_select_in_W_0 = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_0_config_select_out";
+                        pe.config_select_in_W_1 = "fifo_pe_" + row + "_" + (column-1) + "_data_out_E_1_config_select_out";
 
                         // config select outs
-                        pe.config_select_out_N = "pe_" + row + "_" + column + "_config_select_out_N";
+                        // north
+                        pe.config_select_out_N_0 = "pe_" + row + "_" + column + "_config_select_out_N_0";
+                        pe.config_select_out_N_1 = "pe_" + row + "_" + column + "_config_select_out_N_1";
 
-                        pe.config_select_out_E = peConfigSelectOutE.name;
+                        // east
+                        pe.config_select_out_E_0 = peConfigSelectOutE0.name;
+                        pe.config_select_out_E_1 = peConfigSelectOutE1.name;
 
-                        VerilogWire peConfigSelectOutS = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S", "`CONFIG_SELECT_WIDTH");
-                        wires.add(peConfigSelectOutS);
+                        // south
+                        VerilogWire peConfigSelectOutS0 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_0", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS0);
 
-                        pe.config_select_out_S = peConfigSelectOutS.name;
+                        pe.config_select_out_S_0 = peConfigSelectOutS0.name;
 
-                        pe.config_select_out_W = "pe_" + row + "_" + column + "_config_select_out_W";
+                        VerilogWire peConfigSelectOutS1 = new VerilogWire("pe_" + row + "_" + column + "_config_select_out_S_1", "`CONFIG_SELECT_WIDTH");
+                        wires.add(peConfigSelectOutS1);
+
+                        pe.config_select_out_S_1 = peConfigSelectOutS1.name;
+
+                        // west
+                        pe.config_select_out_W_0 = "pe_" + row + "_" + column + "_config_select_out_W_0";
+                        pe.config_select_out_W_1 = "pe_" + row + "_" + column + "_config_select_out_W_1";
                     }
 
                     // data in from the north
@@ -1521,7 +1959,7 @@ public class CRCVerilogGenerator {
             outputFifo0.data_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_data_out_E_0";
             outputFifo0.flag_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_flag_out_E_0";
             outputFifo0.valid_bit_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_valid_bit_out_E_0";
-            outputFifo0.config_select_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_config_select_out_E";
+            outputFifo0.config_select_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_config_select_out_E_0";
 
             outputFifo0.read = "output_fifo_read[" + outputFifoNumber + ":" + outputFifoNumber + "]";
 
@@ -1541,7 +1979,7 @@ public class CRCVerilogGenerator {
             outputFifo1.data_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_data_out_E_1";
             outputFifo1.flag_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_flag_out_E_1";
             outputFifo1.valid_bit_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_valid_bit_out_E_1";
-            outputFifo1.config_select_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_config_select_out_E";
+            outputFifo1.config_select_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_config_select_out_E_1";
 
             outputFifo1.read = "output_fifo_read[" + outputFifoNumber + ":" + outputFifoNumber + "]";
 
