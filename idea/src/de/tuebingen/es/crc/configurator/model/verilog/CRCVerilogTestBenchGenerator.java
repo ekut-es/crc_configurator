@@ -28,6 +28,34 @@ public class CRCVerilogTestBenchGenerator {
                         " * ------------------------------------------------------------------------- */\n\n" +
                         "`include \"preprocessor.v\"\n\n";
 
+        // macros for data inputs
+        String macros = "";
+
+        for(int row = 0; row < crc.getRows(); row++) {
+            int i = 2*row;
+            macros += "`define VALID_BIT_IN_" + i + "  valid_bit_in[" + i + ":" + i + "]\n";
+            macros += "`define FLAG_IN_" + i + " flag_in[" + i + ":" + i + "]\n";
+            macros += "`define DATA_IN_" + i + " data_in[" + (i+1) + "*`DATA_WIDTH-1:" + i + "*`DATA_WIDTH]\n\n";
+
+            i = 2*row+1;
+            macros += "`define VALID_BIT_IN_" + i + "  valid_bit_in[" + i + ":" + i + "]\n";
+            macros += "`define FLAG_IN_" + i + " flag_in[" + i + ":" + i + "]\n";
+            macros += "`define DATA_IN_" + i + " data_in[" + (i+1) + "*`DATA_WIDTH-1:" + i + "*`DATA_WIDTH]\n\n";
+        }
+
+        // macros for data outputs
+        for(int row = 0; row < crc.getRows(); row++) {
+            int i = 2*row;
+            macros += "`define VALID_BIT_OUT_" + i + "  valid_bit_out[" + i + ":" + i + "]\n";
+            macros += "`define FLAG_OUT_" + i + " flag_out[" + i + ":" + i + "]\n";
+            macros += "`define DATA_OUT_" + i + " data_out[" + (i+1) + "*`DATA_WIDTH-1:" + i + "*`DATA_WIDTH]\n\n";
+
+            i = 2*row+1;
+            macros += "`define VALID_BIT_OUT_" + i + "  valid_bit_out[" + i + ":" + i + "]\n";
+            macros += "`define FLAG_OUT_" + i + " flag_out[" + i + ":" + i + "]\n";
+            macros += "`define DATA_OUT_" + i + " data_out[" + (i+1) + "*`DATA_WIDTH-1:" + i + "*`DATA_WIDTH]\n\n";
+        }
+
         // module definition
         String module = "module CRC_CORE_W_INPUT_OUTPUT_FIFOS_tb();\n\n" +
                         "/* -------------------------------------------------------------------------\n" +
@@ -150,10 +178,23 @@ public class CRCVerilogTestBenchGenerator {
         module +=       "    initial begin\n" +
                         "        $display(\"START CRC_CORE_W_INPUT_OUTPUT_FIFOS testbench\");\n" +
                         "\n" +
+                        "        /**\n" +
+                        "         * Macros for data inputs and outputs\n" +
+                        "         * data_{in,out}_*:\n" +
+                        "         * `VALID_BIT_{IN,OUT}_*\n" +
+                        "         * `FLAG_{IN,OUT}_*\n" +
+                        "         * `DATA_{IN,OUT}_*\n" +
+                        "         */\n" +
+                        "\n" +
                         "        clk = 1;\n" +
                         "        reset = 0;\n" +
                         "\n" +
+                        "        setAllInputsTo0();\n" +
+                        "        doReset();\n" +
+                        "        setConfigSelects(3'b000);\n" +
+                        "\n" +
                         "        `TICK\n" +
+                        "\n" +
                         "        $display(\"STOP CRC_CORE_W_INPUT_OUTPUT_FIFOS testbench\");\n" +
                         "        $stop;\n" +
                         "    end\n" +
@@ -191,6 +232,7 @@ public class CRCVerilogTestBenchGenerator {
         module += "endmodule\n";
 
         String file = header;
+        file += macros;
         file += module;
 
         return file;

@@ -19,10 +19,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.RenderedImage;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -50,6 +47,9 @@ public class Controller {
 
     @FXML
     private MenuItem menuItemSaveAs;
+
+    @FXML
+    private MenuItem menuItemReload;
 
     @FXML
     private MenuItem menuItemExportBits;
@@ -285,10 +285,11 @@ public class Controller {
             }
         }
 
-        // show "Edit", "Save", "Save As", and "Close" in menu bar
+        // show "Edit", "Save", "Save As", "Reload File", and "Close" in menu bar
         menuItemEdit.setDisable(false);
         menuItemSave.setDisable(false);
         menuItemSaveAs.setDisable(false);
+        menuItemReload.setDisable(false);
         menuItemExportBits.setDisable(false);
         menuItemExportPNG.setDisable(false);
         menuItemExportVerilog.setDisable(false);
@@ -438,6 +439,7 @@ public class Controller {
         menuItemEdit.setDisable(true);
         menuItemSave.setDisable(true);
         menuItemSaveAs.setDisable(true);
+        menuItemReload.setDisable(true);
         menuItemExportBits.setDisable(true);
         menuItemExportPNG.setDisable(true);
         menuItemExportVerilog.setDisable(true);
@@ -635,6 +637,24 @@ public class Controller {
     }
 
 
+    public void handleReloadAction(ActionEvent actionEvent) {
+        File crcDescriptionFile = new File(model.getCrcDescriptionFilePath());
+
+        // save which tab was selected
+        String selectedTabName = tabPane.getSelectionModel().getSelectedItem().getText();
+
+        this.closeCrcDescriptionFile();
+        this.openCrcDescriptionFile(crcDescriptionFile);
+
+        // go to previously selected tab if it still exists
+        for(Tab tab : tabPane.getTabs()) {
+            if(tab.getText().equals(selectedTabName)) {
+                tabPane.getSelectionModel().select(tab);
+                break;
+            }
+        }
+
+    }
 }
 
 

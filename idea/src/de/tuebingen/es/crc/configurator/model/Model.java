@@ -1,6 +1,7 @@
 package de.tuebingen.es.crc.configurator.model;
 
 import java.io.*;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,8 @@ public class Model implements Observable {
     private final List<Observer> observers;
 
     private boolean crcWasResized;
+
+    private Thread fileWatcherThread;
 
     public Model() {
         saved = true;
@@ -100,7 +103,6 @@ public class Model implements Observable {
             throw new IOException("CRC description file is not readable!");
         }
 
-
         // parse
         JSONObject jsonCrcDescription;
 
@@ -116,7 +118,9 @@ public class Model implements Observable {
         // generate object representation CRC
         crc = new CRC(jsonCrcDescription, this);
 
-        crcDescriptionFilePath = crcDescriptionFile.getAbsolutePath();
+        crcDescriptionFilePath = crcDescriptionFile.getPath();
+
+        this.startFileWatcher(crcDescriptionFile);
     }
 
     /**
@@ -133,7 +137,6 @@ public class Model implements Observable {
      * @throws Exception
      */
     public void saveCrcDescriptionFile(String filePath) throws Exception {
-
         File crcDescriptionFile = new File(filePath);
         FileWriter fw = new FileWriter(crcDescriptionFile);
 
@@ -152,6 +155,9 @@ public class Model implements Observable {
             //noinspection ThrowFromFinallyBlock
             fw.close();
         }
+
+        this.startFileWatcher(crcDescriptionFile);
+
     }
 
     /**
@@ -259,5 +265,19 @@ public class Model implements Observable {
                 questaSimScriptFileWriter.close();
             }
         }
+    }
+
+    private void startFileWatcher(File file) {
+        /*
+        if(fileWatcherThread != null) {
+            if(fileWatcherThread.isAlive()) {
+                fileWatcherThread.stop();
+            }
+
+        }
+
+        fileWatcherThread = new Thread(new FileWatcher(file));
+        fileWatcherThread.start();
+        */
     }
 }
