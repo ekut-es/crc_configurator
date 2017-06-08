@@ -187,13 +187,19 @@ public class Model implements Observable {
 
     }
 
-    public void exportVerilogCode(File verilogFile, boolean fifosBetweenPes, boolean generateTestbenchAndQuestaSimScript, File testBenchFile, File questaSimScript) throws Exception {
+    public void exportVerilogCode(File verilogFile, boolean fifosBetweenPes, int interPeFifoLength, int inputFifoLength, int outputFifoLength, boolean generateTestbenchAndQuestaSimScript, File testBenchFile, File questaSimScript) throws Exception {
 
         // check verilog file
         this.checkFile(verilogFile);
 
         // generate verilog file
-        CRCVerilogGenerator crcVerilogGenerator = new CRCVerilogGenerator(this.crc, fifosBetweenPes);
+        CRCVerilogGenerator crcVerilogGenerator = new CRCVerilogGenerator(
+                this.crc,
+                fifosBetweenPes,
+                interPeFifoLength,
+                inputFifoLength,
+                outputFifoLength
+        );
 
         // create files if they not exist
         if(!verilogFile.exists()) {

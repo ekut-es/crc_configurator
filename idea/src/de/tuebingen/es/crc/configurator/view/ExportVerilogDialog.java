@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -23,6 +24,9 @@ public class ExportVerilogDialog extends Stage {
 
     private File verilogFile;
     private boolean fifosBetweenPes;
+    private int interPeFifoLength;
+    private int inputFifoLength;
+    private int outputFifoLength;
     private boolean generateTestbenchAndQuestaSimScript;
     private boolean export;
 
@@ -38,9 +42,9 @@ public class ExportVerilogDialog extends Stage {
 
         Group root = new Group();
 
-        Scene scene = new Scene(root, 400, 315);
+        Scene scene = new Scene(root, 400, 450);
 
-        VBox vBox = new VBox(9);
+        VBox vBox = new VBox(7);
         vBox.setPadding(new Insets(10,10,10,10));
         vBox.setSpacing(20);
 
@@ -48,33 +52,73 @@ public class ExportVerilogDialog extends Stage {
         CheckBox fifoBetweenPesCheckbox = new CheckBox();
         fifoBetweenPesCheckbox.setText("FIFOs between PEs");
 
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+
         // Label and TextField for inter pe fifo length
         Label interPeFifoLengthLabel = new Label("Length of FIFOs between PEs:");
 
         NumberTextField interPeFifoLengthTextField = new NumberTextField();
         interPeFifoLengthTextField.setMaxDigits(2);
+        interPeFifoLengthTextField.setMinNumber(0);
+        interPeFifoLengthTextField.setMaxNumber(0);
+        interPeFifoLengthTextField.setMinWidth(40);
+        interPeFifoLengthTextField.setMaxWidth(40);
+        interPeFifoLengthTextField.setEditable(false);
 
-        VBox interPeFifoLengthVBox = new VBox();
-        interPeFifoLengthVBox.getChildren().addAll(interPeFifoLengthLabel, interPeFifoLengthTextField);
-
+        fifoBetweenPesCheckbox.setOnAction( event -> {
+            if(fifoBetweenPesCheckbox.isSelected()) {
+                interPeFifoLengthTextField.setEditable(true);
+                interPeFifoLengthTextField.setMinNumber(2);
+                interPeFifoLengthTextField.setMaxNumber(100);
+            } else {
+                interPeFifoLengthTextField.setEditable(false);
+                interPeFifoLengthTextField.setMinNumber(0);
+                interPeFifoLengthTextField.setMaxNumber(0);
+            }
+        });
 
         // Label and TextField for input fifo length
-        Label inputFifoLengthLabel = new Label("Length of Input FIFOs:");
+        Label inputFifoLengthLabel = new Label("Length of input FIFOs:");
 
         NumberTextField inputFifoLengthTextField = new NumberTextField();
         inputFifoLengthTextField.setMaxDigits(2);
-
-        VBox inputFifoLengthVBox = new VBox();
-        inputFifoLengthVBox.getChildren().addAll(inputFifoLengthLabel, inputFifoLengthTextField);
+        // TODO minNumber = 0 => no FIFOs will be generated
+        inputFifoLengthTextField.setMinNumber(2);
+        inputFifoLengthTextField.setMinWidth(40);
+        inputFifoLengthTextField.setMaxWidth(40);
 
 
         // Label and TextField for output fifo length
-        Label outputFifoLengthLabel = new Label("Length of Output FIFOs:");
+        Label outputFifoLengthLabel = new Label("Length of output FIFOs:");
+
         NumberTextField outputFifoLengthTextField = new NumberTextField();
+        outputFifoLengthTextField.setMaxDigits(2);
+        // TODO minNumber = 0 => no FIFOs will be generated
+        outputFifoLengthTextField.setMinNumber(2);
+        outputFifoLengthTextField.setMinWidth(40);
+        outputFifoLengthTextField.setMaxWidth(40);
 
-        VBox outputFifoLengthVBox = new VBox();
-        outputFifoLengthVBox.getChildren().addAll(outputFifoLengthLabel, outputFifoLengthTextField);
 
+        // add fifo length inputs to grid pane
+        GridPane.setConstraints(interPeFifoLengthLabel, 0, 0);
+        GridPane.setConstraints(interPeFifoLengthTextField, 1, 0);
+
+        GridPane.setConstraints(inputFifoLengthLabel, 0, 1);
+        GridPane.setConstraints(inputFifoLengthTextField, 1, 1);
+
+        GridPane.setConstraints(outputFifoLengthLabel, 0, 2);
+        GridPane.setConstraints(outputFifoLengthTextField, 1, 2);
+
+        gridPane.getChildren().addAll(
+                interPeFifoLengthLabel,
+                interPeFifoLengthTextField,
+                inputFifoLengthLabel,
+                inputFifoLengthTextField,
+                outputFifoLengthLabel,
+                outputFifoLengthTextField
+        );
 
         // Label, TextField and Choose Button for Verilog File Path
         Label pathToVerilogFileLabel = new Label("Path to Verilog File:");
@@ -170,6 +214,9 @@ public class ExportVerilogDialog extends Stage {
         // generate verilog file when "Export" was pressed
         exportButton.setOnAction( event -> {
             fifosBetweenPes = fifoBetweenPesCheckbox.isSelected();
+            interPeFifoLength = interPeFifoLengthTextField.getNumber();
+            inputFifoLength = inputFifoLengthTextField.getNumber();
+            outputFifoLength = outputFifoLengthTextField.getNumber();
             generateTestbenchAndQuestaSimScript = generateTestBenchAndQuestaSimScriptCheckBox.isSelected();
             export = true;
             this.close();
@@ -181,9 +228,7 @@ public class ExportVerilogDialog extends Stage {
 
         // adding all together
         vBox.getChildren().add(fifoBetweenPesCheckbox);
-        vBox.getChildren().add(interPeFifoLengthVBox);
-        vBox.getChildren().add(inputFifoLengthVBox);
-        vBox.getChildren().add(outputFifoLengthVBox);
+        vBox.getChildren().add(gridPane);
         vBox.getChildren().add(pathToVerilogFileChooserVBox);
         vBox.getChildren().add(generateTestBenchAndQuestaSimScriptCheckBox);
         vBox.getChildren().add(pathToTestBenchFileVBox);
@@ -219,6 +264,18 @@ public class ExportVerilogDialog extends Stage {
 
     public boolean areFifosBetweenPes() {
         return fifosBetweenPes;
+    }
+
+    public int getInterPeFifoLength() {
+        return interPeFifoLength;
+    }
+
+    public int getInputFifoLength() {
+        return inputFifoLength;
+    }
+
+    public int getOutputFifoLength() {
+        return outputFifoLength;
     }
 
     public boolean generateTestbenchAndQuestaSimScript() {

@@ -383,12 +383,30 @@ public class Controller {
             try {
                 // do not generate a test bench/QuestaSim script
                 if(!exportVerilogDialog.generateTestbenchAndQuestaSimScript()) {
-                    this.model.exportVerilogCode(exportVerilogDialog.getVerilogFile(), exportVerilogDialog.areFifosBetweenPes(), false, null, null);
+                    this.model.exportVerilogCode(
+                            exportVerilogDialog.getVerilogFile(),
+                            exportVerilogDialog.areFifosBetweenPes(),
+                            exportVerilogDialog.getInterPeFifoLength(),
+                            exportVerilogDialog.getInputFifoLength(),
+                            exportVerilogDialog.getOutputFifoLength(),
+                            false,
+                            null,
+                            null
+                    );
                 }
 
                 // do generate a test bench/QuestaSim script
                 else {
-                    this.model.exportVerilogCode(exportVerilogDialog.getVerilogFile(), exportVerilogDialog.areFifosBetweenPes(), true, exportVerilogDialog.getTestBenchFile(), exportVerilogDialog.getQuestaSimScript());
+                    this.model.exportVerilogCode(
+                            exportVerilogDialog.getVerilogFile(),
+                            exportVerilogDialog.areFifosBetweenPes(),
+                            exportVerilogDialog.getInterPeFifoLength(),
+                            exportVerilogDialog.getInputFifoLength(),
+                            exportVerilogDialog.getOutputFifoLength(),
+                            true,
+                            exportVerilogDialog.getTestBenchFile(),
+                            exportVerilogDialog.getQuestaSimScript()
+                    );
                 }
             } catch (Exception e) {
                 showErrorMessage(e.getMessage());

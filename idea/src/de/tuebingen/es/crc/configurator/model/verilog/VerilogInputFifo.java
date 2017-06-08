@@ -6,6 +6,8 @@ package de.tuebingen.es.crc.configurator.model.verilog;
 public class VerilogInputFifo implements VerilogModule {
     public String name;
 
+    public int length = 2;
+
     public String data_in;
     public String flag_in;
     public String valid_bit_in;
@@ -23,7 +25,9 @@ public class VerilogInputFifo implements VerilogModule {
     }
 
     public String getDeclaration() {
-        return  "    INPUT_FIFO " + this.name + "(\n" +
+        return  "    INPUT_FIFO # (\n" +
+                "        .LENGTH(" + this.length + ")\n" +
+                "    ) " + this.name + " (\n" +
                 "        .clk(clk),\n" +
                 "        .reset(reset),\n" +
                 "\n" +

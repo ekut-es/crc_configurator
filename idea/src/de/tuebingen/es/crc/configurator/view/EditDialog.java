@@ -68,6 +68,7 @@ public class EditDialog extends Stage {
         Label rowsLabel = new Label("Rows");
         NumberTextField rowsTextField = new NumberTextField();
         rowsTextField.setMaxDigits(2);
+        rowsTextField.setMinNumber(2);
         rowsTextField.setMinWidth(40);
         rowsTextField.setMaxWidth(40);
         rowsTextField.setText("" + rows);
@@ -75,6 +76,7 @@ public class EditDialog extends Stage {
         Label columnsLabel = new Label("Columns");
         NumberTextField columnsTextField = new NumberTextField();
         columnsTextField.setMaxDigits(2);
+        columnsTextField.setMinNumber(2);
         columnsTextField.setMinWidth(40);
         columnsTextField.setMaxWidth(40);
         columnsTextField.setText("" + columns);

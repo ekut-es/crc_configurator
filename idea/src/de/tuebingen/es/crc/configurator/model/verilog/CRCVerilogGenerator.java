@@ -15,20 +15,28 @@ public class CRCVerilogGenerator {
 
     private CRC crc;
     private boolean fifosBetweenPes;
+    private int interPeFifoLength;
+    private int inputFifoLength;
+    private int outputFifoLength;
     private ArrayList<VerilogWire> wires;
     private ArrayList<VerilogInputFifo> inputFifos;
     private ArrayList<VerilogPE> pes;
     private ArrayList<VerilogOutputFifo> outputFifos;
-    private ArrayList<VerilogInputFifo> interconnectFifos;
+    private ArrayList<VerilogInputFifo> interPeFifos;
 
-    public CRCVerilogGenerator(CRC crc, boolean fifosBetweenPes) {
+    public CRCVerilogGenerator(CRC crc, boolean fifosBetweenPes, int interPeFifoLength, int inputFifoLength, int outputFifoLength) {
         this.crc = crc;
+
         this.fifosBetweenPes = fifosBetweenPes;
+        this.interPeFifoLength = interPeFifoLength;
+        this.inputFifoLength = inputFifoLength;
+        this.outputFifoLength = outputFifoLength;
+
         this.wires = new ArrayList<>();
         this.inputFifos = new ArrayList<>();
         this.pes = new ArrayList<>();
         this.outputFifos = new ArrayList<>();
-        this.interconnectFifos = new ArrayList<>();
+        this.interPeFifos = new ArrayList<>();
     }
 
     private String getWireDeclarations() {
@@ -42,6 +50,7 @@ public class CRCVerilogGenerator {
     private String getInputFifoDeclarations() {
         String inputFifoDeclarations = "";
         for (VerilogInputFifo inputFifo : inputFifos) {
+            inputFifo.length = this.inputFifoLength;
             inputFifoDeclarations += inputFifo.getDeclaration() + "\n";
         }
         return inputFifoDeclarations;
@@ -55,17 +64,19 @@ public class CRCVerilogGenerator {
         return peDeclarations;
     }
 
-    private String getInterconnectFifoDeclarations() {
-        String interconnectFifoDeclarations = "";
-        for (VerilogInputFifo inputFifo : interconnectFifos) {
-            interconnectFifoDeclarations += inputFifo.getDeclaration() + "\n";
+    private String getInterPeFifoDeclarations() {
+        String interPeFifoDeclarations = "";
+        for (VerilogInputFifo interPeFifo : interPeFifos) {
+            interPeFifo.length = this.interPeFifoLength;
+            interPeFifoDeclarations += interPeFifo.getDeclaration() + "\n";
         }
-        return interconnectFifoDeclarations;
+        return interPeFifoDeclarations;
     }
 
     private String getOutputFifoDeclarations() {
         String outputFifoDeclarations = "";
         for (VerilogOutputFifo outputFifo : outputFifos) {
+            outputFifo.length = this.outputFifoLength;
             outputFifoDeclarations += outputFifo.getDeclaration() + "\n";
         }
         return outputFifoDeclarations;
@@ -192,7 +203,7 @@ public class CRCVerilogGenerator {
 
             fifoPeSouthN0.full = fifoPeSouthN0Full.name;
 
-            interconnectFifos.add(fifoPeSouthN0);
+            interPeFifos.add(fifoPeSouthN0);
 
             pe.data_in_S_0 = fifoPeSouthN0DataOut.name;
             pe.flag_in_S_0 = fifoPeSouthN0FlagOut.name;
@@ -248,7 +259,7 @@ public class CRCVerilogGenerator {
 
             fifoPeSouthN1.full = fifoPeSouthN1Full.name;
 
-            interconnectFifos.add(fifoPeSouthN1);
+            interPeFifos.add(fifoPeSouthN1);
 
             pe.data_in_S_1 = fifoPeSouthN1DataOut.name;
             pe.flag_in_S_1 = fifoPeSouthN1FlagOut.name;
@@ -425,7 +436,7 @@ public class CRCVerilogGenerator {
 
             fifoPeE0.full = fifoPeDataOutE0Full.name;
 
-            interconnectFifos.add(fifoPeE0);
+            interPeFifos.add(fifoPeE0);
 
             pe.data_out_E_0 = peDataOutE0.name;
             pe.flag_out_E_0 = peFlagOutE0.name;
@@ -487,7 +498,7 @@ public class CRCVerilogGenerator {
 
             fifoPeE1.full = fifoPeDataOutE1Full.name;
 
-            interconnectFifos.add(fifoPeE1);
+            interPeFifos.add(fifoPeE1);
 
             pe.data_out_E_1 = peDataOutE1.name;
             pe.flag_out_E_1 = peFlagOutE1.name;
@@ -633,7 +644,7 @@ public class CRCVerilogGenerator {
 
             fifoPeDataOutS0.full = fifoPeDataOutS0Full.name;
 
-            interconnectFifos.add(fifoPeDataOutS0);
+            interPeFifos.add(fifoPeDataOutS0);
 
             pe.data_out_S_0 = peDataOutS0.name;
             pe.flag_out_S_0 = peFlagOutS0.name;
@@ -695,7 +706,7 @@ public class CRCVerilogGenerator {
 
             fifoPeDataOutS1.full = fifoPeDataOutS1Full.name;
 
-            interconnectFifos.add(fifoPeDataOutS1);
+            interPeFifos.add(fifoPeDataOutS1);
 
             pe.data_out_S_1 = peDataOutS1.name;
             pe.flag_out_S_1 = peFlagOutS1.name;
@@ -2005,7 +2016,7 @@ public class CRCVerilogGenerator {
         module += "\n\n";
         module += this.getPeDeclarations();
         module += "\n\n";
-        module += this.getInterconnectFifoDeclarations();
+        module += this.getInterPeFifoDeclarations();
         module += "\n\n";
         module += this.getOutputFifoDeclarations();
 
