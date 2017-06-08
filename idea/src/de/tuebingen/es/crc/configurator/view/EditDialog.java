@@ -67,28 +67,28 @@ public class EditDialog extends Stage {
 
         Label rowsLabel = new Label("Rows");
         NumberTextField rowsTextField = new NumberTextField();
-        rowsTextField.setMaxNumbers(2);
+        rowsTextField.setMaxDigits(2);
         rowsTextField.setMinWidth(40);
         rowsTextField.setMaxWidth(40);
         rowsTextField.setText("" + rows);
 
         Label columnsLabel = new Label("Columns");
         NumberTextField columnsTextField = new NumberTextField();
-        columnsTextField.setMaxNumbers(2);
+        columnsTextField.setMaxDigits(2);
         columnsTextField.setMinWidth(40);
         columnsTextField.setMaxWidth(40);
         columnsTextField.setText("" + columns);
 
         Label staticConfigLinesLabel = new Label("Static Conf. Lines");
         NumberTextField staticConfigLinesTextField = new NumberTextField();
-        staticConfigLinesTextField.setMaxNumbers(2);
+        staticConfigLinesTextField.setMaxDigits(2);
         staticConfigLinesTextField.setMinWidth(40);
         staticConfigLinesTextField.setMaxWidth(40);
         staticConfigLinesTextField.setText("" + staticConfigLines);
 
         Label dynamicConfigLinesLabel = new Label("Dynamic Conf. Lines");
         NumberTextField dynamicConfigLinesTextField = new NumberTextField();
-        dynamicConfigLinesTextField.setMaxNumbers(2);
+        dynamicConfigLinesTextField.setMaxDigits(2);
         dynamicConfigLinesTextField.setMinWidth(40);
         dynamicConfigLinesTextField.setMaxWidth(40);
         dynamicConfigLinesTextField.setText("" + dynamicConfigLines);

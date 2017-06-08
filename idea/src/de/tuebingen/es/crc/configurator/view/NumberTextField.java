@@ -7,16 +7,16 @@ import javafx.scene.control.TextField;
  */
 public class NumberTextField extends TextField {
 
-    private int maxNumbers;
+    private int maxDigits;
 
     public NumberTextField() {
         super();
-        maxNumbers = 0;
+        maxDigits = 0;
     }
 
     @SuppressWarnings("SameParameterValue")
-    public void setMaxNumbers(int maxNumbers) {
-        this.maxNumbers = maxNumbers;
+    public void setMaxDigits(int maxDigits) {
+        this.maxDigits = maxDigits;
     }
 
     @Override
@@ -41,9 +41,9 @@ public class NumberTextField extends TextField {
     }
 
     private void shrink() {
-        if(maxNumbers > 0) {
-            if(this.getText().length() > maxNumbers) {
-                this.setText(getText().substring(0, maxNumbers));
+        if(maxDigits > 0) {
+            if(this.getText().length() > maxDigits) {
+                this.setText(getText().substring(0, maxDigits));
             }
         }
     }

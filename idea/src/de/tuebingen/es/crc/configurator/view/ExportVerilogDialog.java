@@ -40,7 +40,7 @@ public class ExportVerilogDialog extends Stage {
 
         Scene scene = new Scene(root, 400, 315);
 
-        VBox vBox = new VBox(6);
+        VBox vBox = new VBox(9);
         vBox.setPadding(new Insets(10,10,10,10));
         vBox.setSpacing(20);
 
@@ -48,11 +48,40 @@ public class ExportVerilogDialog extends Stage {
         CheckBox fifoBetweenPesCheckbox = new CheckBox();
         fifoBetweenPesCheckbox.setText("FIFOs between PEs");
 
+        // Label and TextField for inter pe fifo length
+        Label interPeFifoLengthLabel = new Label("Length of FIFOs between PEs:");
+
+        NumberTextField interPeFifoLengthTextField = new NumberTextField();
+        interPeFifoLengthTextField.setMaxDigits(2);
+
+        VBox interPeFifoLengthVBox = new VBox();
+        interPeFifoLengthVBox.getChildren().addAll(interPeFifoLengthLabel, interPeFifoLengthTextField);
+
+
+        // Label and TextField for input fifo length
+        Label inputFifoLengthLabel = new Label("Length of Input FIFOs:");
+
+        NumberTextField inputFifoLengthTextField = new NumberTextField();
+        inputFifoLengthTextField.setMaxDigits(2);
+
+        VBox inputFifoLengthVBox = new VBox();
+        inputFifoLengthVBox.getChildren().addAll(inputFifoLengthLabel, inputFifoLengthTextField);
+
+
+        // Label and TextField for output fifo length
+        Label outputFifoLengthLabel = new Label("Length of Output FIFOs:");
+        NumberTextField outputFifoLengthTextField = new NumberTextField();
+
+        VBox outputFifoLengthVBox = new VBox();
+        outputFifoLengthVBox.getChildren().addAll(outputFifoLengthLabel, outputFifoLengthTextField);
+
+
         // Label, TextField and Choose Button for Verilog File Path
         Label pathToVerilogFileLabel = new Label("Path to Verilog File:");
 
         TextField pathToVerilogFileTextField = new TextField();
         pathToVerilogFileTextField.setMinWidth(312);
+
 
         // crc description file does not exist yet
         if(crcDescriptionFilePath != "") {
@@ -152,6 +181,9 @@ public class ExportVerilogDialog extends Stage {
 
         // adding all together
         vBox.getChildren().add(fifoBetweenPesCheckbox);
+        vBox.getChildren().add(interPeFifoLengthVBox);
+        vBox.getChildren().add(inputFifoLengthVBox);
+        vBox.getChildren().add(outputFifoLengthVBox);
         vBox.getChildren().add(pathToVerilogFileChooserVBox);
         vBox.getChildren().add(generateTestBenchAndQuestaSimScriptCheckBox);
         vBox.getChildren().add(pathToTestBenchFileVBox);
