@@ -686,11 +686,6 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 this.drawInternalConnectionW1ToS1(x, y);
                 break;
         }
-
-
-        if(!this.getConfig().getPe(row, column).isActive()) {
-            this.drawInternalConnectionInactive(x, y);
-        }
     }
 
     private void drawConnectionN0ToS0(double x, double y) {
@@ -2378,86 +2373,6 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 },
                 3
         );
-    }
-
-    private void drawInternalConnectionInactive(double x, double y) {
-        gc.setStroke(Color.GRAY);
-        gc.setLineWidth(4);
-
-        // arrow E0
-        gc.strokePolygon(
-                new double[] {
-                        x+PE_DRAW_SIZE-12-1-3,
-                        x+PE_DRAW_SIZE-12-1-8,
-                        x+PE_DRAW_SIZE-12-1-8
-                },
-                new double[] {
-                        y+8*peDrawSizeTwentieth,
-                        y+8*peDrawSizeTwentieth-3,
-                        y+8*peDrawSizeTwentieth+3
-                },
-                3
-        );
-
-        // arrow E1
-        gc.strokePolygon(
-                new double[] {
-                        x+PE_DRAW_SIZE-12-1-3,
-                        x+PE_DRAW_SIZE-12-1-8,
-                        x+PE_DRAW_SIZE-12-1-8
-                },
-                new double[] {
-                        y+12*peDrawSizeTwentieth,
-                        y+12*peDrawSizeTwentieth-3,
-                        y+12*peDrawSizeTwentieth+3
-                },
-                3
-        );
-
-        // E0 -> W0
-        gc.strokePolyline(
-                new double[]{
-                        x+3,
-                        x+2*peDrawSizeTwentieth,
-                        x+2*peDrawSizeTwentieth,
-                        x+15*peDrawSizeTwentieth,
-                        x+15*peDrawSizeTwentieth,
-                        x+PE_DRAW_SIZE-12-5
-                },
-                new double[]{
-                        y+8*peDrawSizeTwentieth,
-                        y+8*peDrawSizeTwentieth,
-                        y+3*peDrawSizeTwentieth,
-                        y+3*peDrawSizeTwentieth,
-                        y+8*peDrawSizeTwentieth,
-                        y+8*peDrawSizeTwentieth
-                },
-                6
-        );
-
-        // E1 -> W1
-        gc.strokePolyline(
-                new double[]{
-                        x+3,
-                        x+2*peDrawSizeTwentieth,
-                        x+2*peDrawSizeTwentieth,
-                        x+15*peDrawSizeTwentieth,
-                        x+15*peDrawSizeTwentieth,
-                        x+PE_DRAW_SIZE-12-5
-                },
-                new double[]{
-                        y+12*peDrawSizeTwentieth,
-                        y+12*peDrawSizeTwentieth,
-                        y+17*peDrawSizeTwentieth,
-                        y+17*peDrawSizeTwentieth,
-                        y+12*peDrawSizeTwentieth,
-                        y+12*peDrawSizeTwentieth
-                },
-                6
-        );
-
-        gc.setFill(Color.BLACK);
-        gc.setLineWidth(2);
     }
 
     /**
