@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -21,6 +22,8 @@ public class NewDialog extends Stage {
     private int columns;
     private int staticConfigLines;
     private int dynamicConfigLines;
+    private boolean inputsNorth;
+    private boolean inputsSouth;
 
     public int getRows() {
         return rows;
@@ -38,6 +41,14 @@ public class NewDialog extends Stage {
         return dynamicConfigLines;
     }
 
+    public boolean areInputsNorth() {
+        return inputsNorth;
+    }
+
+    public boolean areInputsSouth() {
+        return inputsSouth;
+    }
+
     public boolean create;
 
     public NewDialog() {
@@ -51,9 +62,9 @@ public class NewDialog extends Stage {
 
         Group root = new Group();
 
-        Scene scene = new Scene(root, 200, 205);
+        Scene scene = new Scene(root, 200, 280);
 
-        VBox vBox = new VBox(2);
+        VBox vBox = new VBox(4);
         vBox.setPadding(new Insets(10,10,10,10));
         vBox.setSpacing(20);
 
@@ -112,6 +123,12 @@ public class NewDialog extends Stage {
                 dynamicConfigLinesTextField
         );
 
+        CheckBox inputsSouthCheckbox = new CheckBox();
+        inputsSouthCheckbox.setText("Inputs in the South");
+
+        CheckBox inputsNorthCheckbox = new CheckBox();
+        inputsNorthCheckbox.setText("Inputs in the North");
+
         Button cancelButton = new Button("Cancel");
         Button createButton = new Button("Create");
 
@@ -125,6 +142,8 @@ public class NewDialog extends Stage {
             columns = Integer.parseInt(columnsTextField.getText());
             staticConfigLines = Integer.parseInt(staticConfigLinesTextField.getText());
             dynamicConfigLines = Integer.parseInt(dynamicConfigLinesTextField.getText());
+            inputsNorth = inputsNorthCheckbox.isSelected();
+            inputsSouth = inputsSouthCheckbox.isSelected();
             this.close();
         });
 
@@ -133,6 +152,8 @@ public class NewDialog extends Stage {
         buttonHBox.getChildren().addAll(cancelButton,createButton);
 
         vBox.getChildren().add(gridPane);
+        vBox.getChildren().add(inputsNorthCheckbox);
+        vBox.getChildren().add(inputsSouthCheckbox);
         vBox.getChildren().add(buttonHBox);
 
         root.getChildren().add(vBox);

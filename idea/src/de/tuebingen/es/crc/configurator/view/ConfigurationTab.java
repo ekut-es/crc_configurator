@@ -4,11 +4,9 @@ import de.tuebingen.es.crc.configurator.Controller;
 import de.tuebingen.es.crc.configurator.model.Configuration;
 import de.tuebingen.es.crc.configurator.model.Model;
 import de.tuebingen.es.crc.configurator.model.PE;
-import javafx.event.*;
-import javafx.event.Event;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseButton;
@@ -39,6 +37,9 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
     private final ConfigurationTabType configurationTabType;
 
     private final int peDrawSizeTwentieth = (PE_DRAW_SIZE/20);
+
+    private int inputsNorthPadding;
+    private int inputsSouthPadding;
 
     private ContextMenu contextMenu;
 
@@ -96,9 +97,22 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
         VBox outerVBox = new VBox(2);
 
+        // check if there are inputs in the north and set padding for PEs
+        if(model.getCrc().areInputsNorth()) {
+            inputsNorthPadding = INTER_PE_DISTANCE;
+        } else {
+            inputsNorthPadding = 0;
+        }
+
+        if(model.getCrc().areInputsSouth()) {
+            inputsSouthPadding = INTER_PE_DISTANCE;
+        } else {
+            inputsSouthPadding = 0;
+        }
+
         //Canvas canvas = new Canvas();
         canvas = new Canvas();
-        canvas.setHeight(2*CANVAS_PADDING+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
+        canvas.setHeight(2*CANVAS_PADDING+inputsNorthPadding+inputsSouthPadding+(model.getCrc().getRows()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))-INTER_PE_DISTANCE);
         canvas.setWidth(2*CANVAS_PADDING+(model.getCrc().getColumns()*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+INTER_PE_DISTANCE);
 
         // listen for right clicks and double clicks in the configuration tab
@@ -155,7 +169,6 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
         gc.clearRect(0,0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 
-
         for(int i = 0; i < model.getCrc().getRows(); i++) {
             for(int j = 0; j < model.getCrc().getColumns(); j++) {
                 drawPe(gc, i, j);
@@ -173,7 +186,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
     private void drawPe(GraphicsContext gc, int row, int column) {
 
         int x = CANVAS_PADDING+(column*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+INTER_PE_DISTANCE;
-        int y = CANVAS_PADDING+(row*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
+        int y = CANVAS_PADDING+inputsNorthPadding+(row*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
 
 
         gc.setStroke(Color.BLACK);
@@ -328,66 +341,102 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         // draw data paths
         // northwest corner
         if(row == 0 && column == 0) {
+
+            if(model.getCrc().areInputsNorth()) {
+                this.drawConnectionS0ToN0(x, y-PE_DRAW_SIZE-INTER_PE_DISTANCE, true);
+                this.drawConnectionS1ToN1(x, y-PE_DRAW_SIZE-INTER_PE_DISTANCE, true);
+            }
+
             this.drawConnectionE0ToW0(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
             this.drawConnectionE1ToW1(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
 
             this.drawConnectionE0ToW0(x, y, false, false);
             this.drawConnectionE1ToW1(x, y, false, false);
-            this.drawConnectionS0ToN0(x, y);
-            this.drawConnectionS1ToN1(x, y);
+            this.drawConnectionS0ToN0(x, y, false);
+            this.drawConnectionS1ToN1(x, y, false);
         }
 
         // northmost row
         else if(row == 0 && column > 0 && column < model.getCrc().getColumns()-1) {
+
+            if(model.getCrc().areInputsNorth()) {
+                this.drawConnectionS0ToN0(x, y-PE_DRAW_SIZE-INTER_PE_DISTANCE, true);
+                this.drawConnectionS1ToN1(x, y-PE_DRAW_SIZE-INTER_PE_DISTANCE, true);
+            }
+
             this.drawConnectionE0ToW0(x, y, false, false);
             this.drawConnectionE1ToW1(x, y, false, false);
-            this.drawConnectionS0ToN0(x, y);
-            this.drawConnectionS1ToN1(x, y);
+            this.drawConnectionS0ToN0(x, y, false);
+            this.drawConnectionS1ToN1(x, y, false);
         }
 
         // northeast corner
         else if(row == 0 && column == model.getCrc().getColumns()-1) {
+
+            if(model.getCrc().areInputsNorth()) {
+                this.drawConnectionS0ToN0(x, y-PE_DRAW_SIZE-INTER_PE_DISTANCE, true);
+                this.drawConnectionS1ToN1(x, y-PE_DRAW_SIZE-INTER_PE_DISTANCE, true);
+            }
+
             this.drawConnectionE0ToW0(x, y, true, false);
             this.drawConnectionE1ToW1(x, y, true, false);
-            this.drawConnectionS0ToN0(x, y);
-            this.drawConnectionS1ToN1(x, y);
+            this.drawConnectionS0ToN0(x, y, false);
+            this.drawConnectionS1ToN1(x, y, false);
         }
 
         // eastmost column
         else if(row > 0 && row < model.getCrc().getRows()-1 && column == model.getCrc().getColumns()-1) {
             this.drawConnectionE0ToW0(x, y, true, false);
             this.drawConnectionE1ToW1(x, y, true, false);
-            this.drawConnectionS0ToN0(x, y);
-            this.drawConnectionS1ToN1(x, y);
-            this.drawConnectionN0ToS0(x, y);
-            this.drawConnectionN1ToS1(x, y);
-        }
-
-        // southeast corner
-        else if(row == model.getCrc().getRows()-1 && column == model.getCrc().getColumns()-1) {
-            this.drawConnectionE0ToW0(x, y, true, false);
-            this.drawConnectionE1ToW1(x, y, true, false);
-            this.drawConnectionN0ToS0(x, y);
-            this.drawConnectionN1ToS1(x, y);
-        }
-
-        // southmost row
-        else if(row == model.getCrc().getRows()-1 && column > 0 && column < model.getCrc().getColumns()-1) {
-            this.drawConnectionE0ToW0(x, y, false, false);
-            this.drawConnectionE1ToW1(x, y, false, false);
-            this.drawConnectionN0ToS0(x, y);
-            this.drawConnectionN1ToS1(x, y);
+            this.drawConnectionS0ToN0(x, y, false);
+            this.drawConnectionS1ToN1(x, y, false);
+            this.drawConnectionN0ToS0(x, y, false);
+            this.drawConnectionN1ToS1(x, y, false);
         }
 
         // southwest corner
         else if(row == model.getCrc().getRows()-1 && column == 0) {
+
+            if(model.getCrc().areInputsSouth()) {
+                this.drawConnectionN0ToS0(x, y+PE_DRAW_SIZE+INTER_PE_DISTANCE, true);
+                this.drawConnectionN1ToS1(x, y+PE_DRAW_SIZE+INTER_PE_DISTANCE, true);
+            }
+
             this.drawConnectionE0ToW0(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
             this.drawConnectionE1ToW1(x-INTER_PE_DISTANCE-PE_DRAW_SIZE, y, false, true);
 
             this.drawConnectionE0ToW0(x, y, false, false);
             this.drawConnectionE1ToW1(x, y, false, false);
-            this.drawConnectionN0ToS0(x, y);
-            this.drawConnectionN1ToS1(x, y);
+            this.drawConnectionN0ToS0(x, y, false);
+            this.drawConnectionN1ToS1(x, y, false);
+        }
+
+        // southmost row
+        else if(row == model.getCrc().getRows()-1 && column > 0 && column < model.getCrc().getColumns()-1) {
+
+            if(model.getCrc().areInputsSouth()) {
+                this.drawConnectionN0ToS0(x, y+PE_DRAW_SIZE+INTER_PE_DISTANCE, true);
+                this.drawConnectionN1ToS1(x, y+PE_DRAW_SIZE+INTER_PE_DISTANCE, true);
+            }
+
+            this.drawConnectionE0ToW0(x, y, false, false);
+            this.drawConnectionE1ToW1(x, y, false, false);
+            this.drawConnectionN0ToS0(x, y, false);
+            this.drawConnectionN1ToS1(x, y, false);
+        }
+
+        // southeast corner
+        else if(row == model.getCrc().getRows()-1 && column == model.getCrc().getColumns()-1) {
+
+            if(model.getCrc().areInputsSouth()) {
+                this.drawConnectionN0ToS0(x, y+PE_DRAW_SIZE+INTER_PE_DISTANCE, true);
+                this.drawConnectionN1ToS1(x, y+PE_DRAW_SIZE+INTER_PE_DISTANCE, true);
+            }
+
+            this.drawConnectionE0ToW0(x, y, true, false);
+            this.drawConnectionE1ToW1(x, y, true, false);
+            this.drawConnectionN0ToS0(x, y, false);
+            this.drawConnectionN1ToS1(x, y, false);
         }
 
         // westmost column
@@ -397,20 +446,20 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
             this.drawConnectionE0ToW0(x, y, false, false);
             this.drawConnectionE1ToW1(x, y, false, false);
-            this.drawConnectionN0ToS0(x, y);
-            this.drawConnectionN1ToS1(x, y);
-            this.drawConnectionS0ToN0(x, y);
-            this.drawConnectionS1ToN1(x, y);
+            this.drawConnectionN0ToS0(x, y, false);
+            this.drawConnectionN1ToS1(x, y, false);
+            this.drawConnectionS0ToN0(x, y, false);
+            this.drawConnectionS1ToN1(x, y, false);
         }
 
         // center
         else {
             this.drawConnectionE0ToW0(x, y, false, false);
             this.drawConnectionE1ToW1(x, y, false, false);
-            this.drawConnectionN0ToS0(x, y);
-            this.drawConnectionN1ToS1(x, y);
-            this.drawConnectionS0ToN0(x, y);
-            this.drawConnectionS1ToN1(x, y);
+            this.drawConnectionN0ToS0(x, y, false);
+            this.drawConnectionN1ToS1(x, y, false);
+            this.drawConnectionS0ToN0(x, y, false);
+            this.drawConnectionS1ToN1(x, y, false);
 
 
         }
@@ -688,7 +737,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         }
     }
 
-    private void drawConnectionN0ToS0(double x, double y) {
+    private void drawConnectionN0ToS0(double x, double y, boolean crcInput) {
 
         // line
         gc.setStroke(Color.GRAY);
@@ -710,33 +759,39 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 3
         );
 
-        // pad
-        gc.setFill(Color.GRAY);
-        gc.fillPolygon(
-                new double[] {
-                        x+3*peDrawSizeTwentieth-6,
-                        x+3*peDrawSizeTwentieth+6,
-                        x+3*peDrawSizeTwentieth+6,
-                        x+3*peDrawSizeTwentieth-6
-                },
-                new double[] {
-                        y+1,
-                        y+1,
-                        y+13,
-                        y+13
-                },
-                4
-        );
+        if(!crcInput) {
+            // pad
+            gc.setFill(Color.GRAY);
+            gc.fillPolygon(
+                    new double[]{
+                            x + 3 * peDrawSizeTwentieth - 6,
+                            x + 3 * peDrawSizeTwentieth + 6,
+                            x + 3 * peDrawSizeTwentieth + 6,
+                            x + 3 * peDrawSizeTwentieth - 6
+                    },
+                    new double[]{
+                            y + 1,
+                            y + 1,
+                            y + 13,
+                            y + 13
+                    },
+                    4
+            );
+        }
 
         // text
         gc.setStroke(Color.BLACK);
         gc.setFill(Color.BLACK);
         gc.setLineWidth(2);
-        gc.fillText("N0", x+(peDrawSizeTwentieth/2), y-peDrawSizeTwentieth);
+
+        if(!crcInput) {
+            gc.fillText("N0", x + (peDrawSizeTwentieth / 2), y - peDrawSizeTwentieth);
+        }
+
         gc.fillText("S0", x+(peDrawSizeTwentieth/2), y-INTER_PE_DISTANCE+2*peDrawSizeTwentieth);
     }
 
-    private void drawConnectionN1ToS1(double x, double y) {
+    private void drawConnectionN1ToS1(double x, double y, boolean crcInput) {
 
         // line
         gc.setStroke(Color.GRAY);
@@ -758,33 +813,39 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 3
         );
 
-        // pad
-        gc.setFill(Color.GRAY);
-        gc.fillPolygon(
-                new double[] {
-                        x+7*peDrawSizeTwentieth-6,
-                        x+7*peDrawSizeTwentieth+6,
-                        x+7*peDrawSizeTwentieth+6,
-                        x+7*peDrawSizeTwentieth-6
-                },
-                new double[] {
-                        y+1,
-                        y+1,
-                        y+13,
-                        y+13
-                },
-                4
-        );
+        if(!crcInput) {
+            // pad
+            gc.setFill(Color.GRAY);
+            gc.fillPolygon(
+                    new double[]{
+                            x + 7 * peDrawSizeTwentieth - 6,
+                            x + 7 * peDrawSizeTwentieth + 6,
+                            x + 7 * peDrawSizeTwentieth + 6,
+                            x + 7 * peDrawSizeTwentieth - 6
+                    },
+                    new double[]{
+                            y + 1,
+                            y + 1,
+                            y + 13,
+                            y + 13
+                    },
+                    4
+            );
+        }
 
         // text
         gc.setStroke(Color.BLACK);
         gc.setFill(Color.BLACK);
         gc.setLineWidth(2);
-        gc.fillText("N1", x+4.5*peDrawSizeTwentieth, y-peDrawSizeTwentieth);
+
+        if(!crcInput) {
+            gc.fillText("N1", x + 4.5 * peDrawSizeTwentieth, y - peDrawSizeTwentieth);
+        }
+
         gc.fillText("S1", x+4.5*peDrawSizeTwentieth, y-INTER_PE_DISTANCE+2*peDrawSizeTwentieth);
     }
 
-    private void drawConnectionS0ToN0(double x, double y) {
+    private void drawConnectionS0ToN0(double x, double y, boolean crcInput) {
 
         // line
         gc.setStroke(Color.GRAY);
@@ -807,32 +868,37 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         );
 
         // pad
-        gc.setFill(Color.GRAY);
-        gc.fillPolygon(
-                new double[] {
-                        x+13*peDrawSizeTwentieth-6,
-                        x+13*peDrawSizeTwentieth+6,
-                        x+13*peDrawSizeTwentieth+6,
-                        x+13*peDrawSizeTwentieth-6
-                },
-                new double[] {
-                        y+PE_DRAW_SIZE-1,
-                        y+PE_DRAW_SIZE-1,
-                        y+PE_DRAW_SIZE-13,
-                        y+PE_DRAW_SIZE-13
-                },
-                4
-        );
+        if(!crcInput) {
+            gc.setFill(Color.GRAY);
+            gc.fillPolygon(
+                    new double[]{
+                            x + 13 * peDrawSizeTwentieth - 6,
+                            x + 13 * peDrawSizeTwentieth + 6,
+                            x + 13 * peDrawSizeTwentieth + 6,
+                            x + 13 * peDrawSizeTwentieth - 6
+                    },
+                    new double[]{
+                            y + PE_DRAW_SIZE - 1,
+                            y + PE_DRAW_SIZE - 1,
+                            y + PE_DRAW_SIZE - 13,
+                            y + PE_DRAW_SIZE - 13
+                    },
+                    4
+            );
+        }
 
         // text
         gc.setStroke(Color.BLACK);
         gc.setFill(Color.BLACK);
         gc.setLineWidth(2);
         gc.fillText("N0", x+10.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+INTER_PE_DISTANCE-peDrawSizeTwentieth);
-        gc.fillText("S0", x+10.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+2*peDrawSizeTwentieth);
+
+        if(!crcInput) {
+            gc.fillText("S0", x + 10.5 * peDrawSizeTwentieth, y + PE_DRAW_SIZE + 2 * peDrawSizeTwentieth);
+        }
     }
 
-    private void drawConnectionS1ToN1(double x, double y) {
+    private void drawConnectionS1ToN1(double x, double y, boolean crcInput) {
 
         // line
         gc.setStroke(Color.GRAY);
@@ -855,29 +921,34 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         );
 
         // pad
-        gc.setFill(Color.GRAY);
-        gc.fillPolygon(
-                new double[] {
-                        x+17*peDrawSizeTwentieth-6,
-                        x+17*peDrawSizeTwentieth+6,
-                        x+17*peDrawSizeTwentieth+6,
-                        x+17*peDrawSizeTwentieth-6
-                },
-                new double[] {
-                        y+PE_DRAW_SIZE-1,
-                        y+PE_DRAW_SIZE-1,
-                        y+PE_DRAW_SIZE-13,
-                        y+PE_DRAW_SIZE-13
-                },
-                4
-        );
+        if(!crcInput) {
+            gc.setFill(Color.GRAY);
+            gc.fillPolygon(
+                    new double[]{
+                            x + 17 * peDrawSizeTwentieth - 6,
+                            x + 17 * peDrawSizeTwentieth + 6,
+                            x + 17 * peDrawSizeTwentieth + 6,
+                            x + 17 * peDrawSizeTwentieth - 6
+                    },
+                    new double[]{
+                            y + PE_DRAW_SIZE - 1,
+                            y + PE_DRAW_SIZE - 1,
+                            y + PE_DRAW_SIZE - 13,
+                            y + PE_DRAW_SIZE - 13
+                    },
+                    4
+            );
+        }
 
         // text
         gc.setStroke(Color.BLACK);
         gc.setFill(Color.BLACK);
         gc.setLineWidth(2);
         gc.fillText("N1", x+14.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+INTER_PE_DISTANCE-peDrawSizeTwentieth);
-        gc.fillText("S1", x+14.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+2*peDrawSizeTwentieth);
+
+        if(!crcInput) {
+            gc.fillText("S1", x+14.5*peDrawSizeTwentieth, y+PE_DRAW_SIZE+2*peDrawSizeTwentieth);
+        }
     }
 
     private void drawConnectionE0ToW0(double x, double y, boolean crcOutput, boolean crcInput) {
@@ -2396,18 +2467,18 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
                 for(int j = 0; j < model.getCrc().getRows(); j++) {
 
-                    if(y >= CANVAS_PADDING+(j*(PE_DRAW_SIZE+INTER_PE_DISTANCE)) && y <= CANVAS_PADDING+(j*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+PE_DRAW_SIZE) {
+                    if(y >= CANVAS_PADDING+inputsNorthPadding+(j*(PE_DRAW_SIZE+INTER_PE_DISTANCE)) && y <= CANVAS_PADDING+inputsNorthPadding+(j*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+PE_DRAW_SIZE) {
                         row = j;
                     }
                 }
             }
         }
 
-        // if was clicked on PE
+        // if PE was clicked determine on what
         if(row != -1) {
 
             int xOffset = CANVAS_PADDING+INTER_PE_DISTANCE+(column*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
-            int yOffset = CANVAS_PADDING+(row*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
+            int yOffset = CANVAS_PADDING+inputsNorthPadding+(row*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
 
             int xNormalized = x - xOffset;
             int yNormalized = y - yOffset;
@@ -2459,7 +2530,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 6*peDrawSizeTwentieth-4 &&
                     yNormalized <= 6*peDrawSizeTwentieth+12+4) {
 
-                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagInFu0(), model.getCrc().getRows(), row);
+                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagInFu0(), model.getCrc().getRows(), row, model.getCrc().areInputsNorth(), model.getCrc().areInputsSouth());
                 contextMenu = dataFlagInFuDriverContextMenu;
                 dataFlagInFuDriverContextMenu.show(this.getContent(), p.x, p.y);
 
@@ -2481,7 +2552,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 13*peDrawSizeTwentieth-4 &&
                     yNormalized <= 13*peDrawSizeTwentieth+12+4) {
 
-                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagInFu1(), model.getCrc().getRows(), row);
+                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagInFu1(), model.getCrc().getRows(), row, model.getCrc().areInputsNorth(), model.getCrc().areInputsSouth());
                 contextMenu = dataFlagInFuDriverContextMenu;
                 dataFlagInFuDriverContextMenu.show(this.getContent(), p.x, p.y);
 
@@ -2502,7 +2573,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 15*peDrawSizeTwentieth &&
                     yNormalized <= 14.5*peDrawSizeTwentieth+12+4) {
 
-                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfig().getPe(row, column).getFlagInFuMux(), model.getCrc().getRows(), row);
+                DataFlagInFuDriverContextMenu dataFlagInFuDriverContextMenu = new DataFlagInFuDriverContextMenu(this.getConfig().getPe(row, column).getFlagInFuMux(), model.getCrc().getRows(), row, model.getCrc().areInputsNorth(), model.getCrc().areInputsSouth());
                 contextMenu = dataFlagInFuDriverContextMenu;
                 dataFlagInFuDriverContextMenu.show(this.getContent(), p.x, p.y);
 
@@ -2525,7 +2596,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized <= 13+4 &&
                     row != 0) {
 
-                DataFlagNorthDriverContextMenu dataFlagNorthDriverContextMenu = new DataFlagNorthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutN0(), model.getCrc().getRows(), row);
+                DataFlagNorthDriverContextMenu dataFlagNorthDriverContextMenu = new DataFlagNorthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutN0(), model.getCrc().getRows(), row, model.getCrc().areInputsSouth());
                 contextMenu = dataFlagNorthDriverContextMenu;
                 dataFlagNorthDriverContextMenu.show(this.getContent(), p.x, p.y);
 
@@ -2547,7 +2618,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized <= 13+4 &&
                     row != 0) {
 
-                DataFlagNorthDriverContextMenu dataFlagNorthDriverContextMenu = new DataFlagNorthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutN1(), model.getCrc().getRows(), row);
+                DataFlagNorthDriverContextMenu dataFlagNorthDriverContextMenu = new DataFlagNorthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutN1(), model.getCrc().getRows(), row, model.getCrc().areInputsSouth());
                 contextMenu = dataFlagNorthDriverContextMenu;
                 dataFlagNorthDriverContextMenu.show(this.getContent(), p.x, p.y);
 
@@ -2568,7 +2639,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 8*peDrawSizeTwentieth-6-4 &&
                     yNormalized <= 8*peDrawSizeTwentieth+6+4) {
 
-                DataFlagEastDriverContextMenu dataFlagEastDriverContextMenu = new DataFlagEastDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutE0(), model.getCrc().getRows(), row);
+                DataFlagEastDriverContextMenu dataFlagEastDriverContextMenu = new DataFlagEastDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutE0(), model.getCrc().getRows(), row, model.getCrc().areInputsNorth(), model.getCrc().areInputsSouth());
                 contextMenu = dataFlagEastDriverContextMenu;
                 dataFlagEastDriverContextMenu.show(this.getContent(), p.x, p.y);
 
@@ -2589,7 +2660,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 12*peDrawSizeTwentieth-6-4 &&
                     yNormalized <= 12*peDrawSizeTwentieth+6+4) {
 
-                DataFlagEastDriverContextMenu dataFlagEastDriverContextMenu = new DataFlagEastDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutE1(), model.getCrc().getRows(), row);
+                DataFlagEastDriverContextMenu dataFlagEastDriverContextMenu = new DataFlagEastDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutE1(), model.getCrc().getRows(), row, model.getCrc().areInputsNorth(), model.getCrc().areInputsSouth());
                 contextMenu = dataFlagEastDriverContextMenu;
                 dataFlagEastDriverContextMenu.show(this.getContent(), p.x, p.y);
 
@@ -2611,7 +2682,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized <= PE_DRAW_SIZE-1+4 &&
                     row != model.getCrc().getRows()-1) {
 
-                DataFlagSouthDriverContextMenu dataFlagSouthDriverContextMenu = new DataFlagSouthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutS0(), row);
+                DataFlagSouthDriverContextMenu dataFlagSouthDriverContextMenu = new DataFlagSouthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutS0(), row, model.getCrc().areInputsNorth());
                 contextMenu = dataFlagSouthDriverContextMenu;
                 dataFlagSouthDriverContextMenu.show(this.getContent(), p.x, p.y);
 
@@ -2634,7 +2705,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized <= PE_DRAW_SIZE-1+4 &&
                     row != model.getCrc().getRows()-1) {
 
-                DataFlagSouthDriverContextMenu dataFlagSouthDriverContextMenu = new DataFlagSouthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutS1(), row);
+                DataFlagSouthDriverContextMenu dataFlagSouthDriverContextMenu = new DataFlagSouthDriverContextMenu(this.getConfig().getPe(row, column).getDataFlagOutS1(), row, model.getCrc().areInputsNorth());
                 contextMenu = dataFlagSouthDriverContextMenu;
                 dataFlagSouthDriverContextMenu.show(this.getContent(), p.x, p.y);
 

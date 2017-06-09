@@ -80,7 +80,7 @@ public class ExportVerilogDialog extends Stage {
         });
 
         // Label and TextField for input fifo length
-        Label inputFifoLengthLabel = new Label("Length of input FIFOs:");
+        Label inputFifoLengthLabel = new Label("Length of input FIFOs (W):");
 
         NumberTextField inputFifoLengthTextField = new NumberTextField();
         inputFifoLengthTextField.setMaxDigits(2);
@@ -91,7 +91,7 @@ public class ExportVerilogDialog extends Stage {
 
 
         // Label and TextField for output fifo length
-        Label outputFifoLengthLabel = new Label("Length of output FIFOs:");
+        Label outputFifoLengthLabel = new Label("Length of output FIFOs (E):");
 
         NumberTextField outputFifoLengthTextField = new NumberTextField();
         outputFifoLengthTextField.setMaxDigits(2);

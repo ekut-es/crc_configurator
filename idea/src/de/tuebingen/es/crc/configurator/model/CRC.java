@@ -3,9 +3,7 @@ package de.tuebingen.es.crc.configurator.model;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.File;
 import java.util.*;
-import java.util.stream.BaseStream;
 import java.util.stream.Collectors;
 
 /**
@@ -19,6 +17,8 @@ public class CRC {
     private int columns;
     private int staticConfigLines;
     private int dynamicConfigLines;
+    private boolean inputsNorth;
+    private boolean inputsSouth;
 
     private String comment;
 
@@ -43,15 +43,19 @@ public class CRC {
      * @param columns
      * @param staticConfigLines
      * @param dynamicConfigLines
+     * @param inputsNorth
+     * @param inputsSouth
      * @param model
      */
-    public CRC(int rows, int columns, int staticConfigLines, int dynamicConfigLines, Model model) {
+    public CRC(int rows, int columns, int staticConfigLines, int dynamicConfigLines, boolean inputsNorth, boolean inputsSouth, Model model) {
         this.model = model;
         this.setRows(rows);
         this.setColumns(columns);
         this.setStaticConfigLines(staticConfigLines);
         this.setDynamicConfigLines(dynamicConfigLines);
-        this.comment = "";
+        this.setInputsNorth(inputsNorth);
+        this.setInputsSouth(inputsSouth);
+        this.setComment("");
 
         this.generateFuMatrix();
 
@@ -84,6 +88,20 @@ public class CRC {
         this.setColumns(Integer.parseInt(jsonCrcDescription.get("columns").toString()));
         this.setStaticConfigLines(Integer.parseInt(jsonCrcDescription.get("staticConfigLines").toString()));
         this.setDynamicConfigLines(Integer.parseInt(jsonCrcDescription.get("dynamicConfigLines").toString()));
+
+        if(jsonCrcDescription.containsKey("inputsNorth")) {
+            this.setInputsNorth(Boolean.parseBoolean(jsonCrcDescription.get("inputsNorth").toString()));
+        } else {
+            this.setInputsNorth(false);
+        }
+
+        if(jsonCrcDescription.containsKey("inputsSouth")) {
+            this.setInputsSouth(Boolean.parseBoolean(jsonCrcDescription.get("inputsSouth").toString()));
+        } else {
+            this.setInputsSouth(false);
+        }
+
+
         this.setComment(jsonCrcDescription.get("comment").toString());
 
         this.generateFuMatrix();
@@ -183,8 +201,11 @@ public class CRC {
      * @param columns
      * @param staticConfigLines
      * @param dynamicConfigLines
+     * @param inputsNorth
+     * @param inputsSouth
      */
-    public void edit(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
+    public void edit(int rows, int columns, int staticConfigLines, int dynamicConfigLines, boolean inputsNorth, boolean inputsSouth) {
+
 
         // save current FU matrix in temp FU matrix
         ArrayList<ArrayList<FU>> tempFuMatrix = new ArrayList<>();
@@ -273,7 +294,116 @@ public class CRC {
             }
         }
 
+        // if inputs in the north were disabled remove all internal PE connections which are coming from a north input
+        if(this.inputsNorth && !inputsNorth) {
+
+            // loop through static configs
+            for(int i = 0; i < this.staticConfigLines; i++) {
+
+                Configuration staticConfig = staticConfigs.get(i);
+                // loop through northmost row PEs
+                for(int column = 0; column < this.columns; column++) {
+                    disableDriversFromNorth(staticConfig.getPe(0,column));
+                }
+            }
+
+            // loop through dynamic configs
+            for(int i = 0; i < this.dynamicConfigLines; i++) {
+                Configuration dynamicConfig = dynamicConfigs.get(i);
+                // loop through northmost row PEs
+                for(int column = 0; column < this.columns; column++) {
+                    disableDriversFromNorth(dynamicConfig.getPe(0,column));
+                }
+            }
+        }
+
+        // if inputs in the south were disabled remove all internal PE connections which are coming from a south input
+        if(this.inputsSouth && !inputsSouth) {
+
+            // loop through static configs
+            for(int i = 0; i < this.staticConfigLines; i++) {
+
+                Configuration staticConfig = staticConfigs.get(i);
+                // loop through northmost row PEs
+                for(int column = 0; column < this.columns; column++) {
+                    disableDriversFromSouth(staticConfig.getPe(this.rows-1,column));
+                }
+            }
+
+            // loop through dynamic configs
+            for(int i = 0; i < this.dynamicConfigLines; i++) {
+                Configuration dynamicConfig = dynamicConfigs.get(i);
+                // loop through northmost row PEs
+                for(int column = 0; column < this.columns; column++) {
+                    disableDriversFromSouth(dynamicConfig.getPe(this.rows-1,column));
+                }
+            }
+        }
+
+        this.inputsNorth = inputsNorth;
+        this.inputsSouth = inputsSouth;
+
         this.notifyAllObservers();
+    }
+
+    private void disableDriversFromNorth(PE pe) {
+        if(pe.getDataFlagInFu0() == PE.DataFlagInFuDriver.data_flag_in_N_0 || pe.getDataFlagInFu0() == PE.DataFlagInFuDriver.data_flag_in_N_1) {
+            pe.setDataFlagInFu0(PE.DataFlagInFuDriver.none);
+        }
+
+        if(pe.getDataFlagInFu1() == PE.DataFlagInFuDriver.data_flag_in_N_0 || pe.getDataFlagInFu1() == PE.DataFlagInFuDriver.data_flag_in_N_1) {
+            pe.setDataFlagInFu1(PE.DataFlagInFuDriver.none);
+        }
+
+        if(pe.getFlagInFuMux() == PE.DataFlagInFuDriver.data_flag_in_N_0 || pe.getFlagInFuMux() == PE.DataFlagInFuDriver.data_flag_in_N_1) {
+            pe.setFlagInFuMux(PE.DataFlagInFuDriver.none);
+        }
+
+        if(pe.getDataFlagOutE0() == PE.DataFlagOutDriver.data_flag_in_N_0 || pe.getDataFlagOutE0() == PE.DataFlagOutDriver.data_flag_in_N_1) {
+            pe.setDataFlagOutE0(PE.DataFlagOutDriver.none);
+        }
+
+        if(pe.getDataFlagOutE1() == PE.DataFlagOutDriver.data_flag_in_N_0 || pe.getDataFlagOutE1() == PE.DataFlagOutDriver.data_flag_in_N_1) {
+            pe.setDataFlagOutE1(PE.DataFlagOutDriver.none);
+        }
+
+        if(pe.getDataFlagOutS0() == PE.DataFlagOutDriver.data_flag_in_N_0 || pe.getDataFlagOutS0() == PE.DataFlagOutDriver.data_flag_in_N_1) {
+            pe.setDataFlagOutS0(PE.DataFlagOutDriver.none);
+        }
+
+        if(pe.getDataFlagOutS1() == PE.DataFlagOutDriver.data_flag_in_N_0 || pe.getDataFlagOutS1() == PE.DataFlagOutDriver.data_flag_in_N_1) {
+            pe.setDataFlagOutS1(PE.DataFlagOutDriver.none);
+        }
+    }
+
+    private void disableDriversFromSouth(PE pe) {
+        if(pe.getDataFlagInFu0() == PE.DataFlagInFuDriver.data_flag_in_S_0 || pe.getDataFlagInFu0() == PE.DataFlagInFuDriver.data_flag_in_S_1) {
+            pe.setDataFlagInFu0(PE.DataFlagInFuDriver.none);
+        }
+
+        if(pe.getDataFlagInFu1() == PE.DataFlagInFuDriver.data_flag_in_S_0 || pe.getDataFlagInFu1() == PE.DataFlagInFuDriver.data_flag_in_S_1) {
+            pe.setDataFlagInFu1(PE.DataFlagInFuDriver.none);
+        }
+
+        if(pe.getDataFlagInFu1() == PE.DataFlagInFuDriver.data_flag_in_S_0 || pe.getDataFlagInFu1() == PE.DataFlagInFuDriver.data_flag_in_S_1) {
+            pe.setDataFlagInFu1(PE.DataFlagInFuDriver.none);
+        }
+
+        if(pe.getDataFlagOutN0() == PE.DataFlagOutDriver.data_flag_in_S_0 || pe.getDataFlagOutN0() == PE.DataFlagOutDriver.data_flag_in_S_1) {
+            pe.setDataFlagOutN0(PE.DataFlagOutDriver.none);
+        }
+
+        if(pe.getDataFlagOutN1() == PE.DataFlagOutDriver.data_flag_in_S_0 || pe.getDataFlagOutN1() == PE.DataFlagOutDriver.data_flag_in_S_1) {
+            pe.setDataFlagOutN1(PE.DataFlagOutDriver.none);
+        }
+
+        if(pe.getDataFlagOutE0() == PE.DataFlagOutDriver.data_flag_in_S_0 || pe.getDataFlagOutE0() == PE.DataFlagOutDriver.data_flag_in_S_1) {
+            pe.setDataFlagOutE0(PE.DataFlagOutDriver.none);
+        }
+
+        if(pe.getDataFlagOutE1() == PE.DataFlagOutDriver.data_flag_in_S_0 || pe.getDataFlagOutE1() == PE.DataFlagOutDriver.data_flag_in_S_1) {
+            pe.setDataFlagOutE1(PE.DataFlagOutDriver.none);
+        }
     }
 
     private void setRows(int rows) {
@@ -307,6 +437,22 @@ public class CRC {
 
     public int getDynamicConfigLines() {
         return dynamicConfigLines;
+    }
+
+    public boolean areInputsNorth() {
+        return inputsNorth;
+    }
+
+    public void setInputsNorth(boolean inputsNorth) {
+        this.inputsNorth = inputsNorth;
+    }
+
+    public boolean areInputsSouth() {
+        return inputsSouth;
+    }
+
+    public void setInputsSouth(boolean inputsSouth) {
+        this.inputsSouth = inputsSouth;
     }
 
     public String getComment() {
@@ -443,6 +589,10 @@ public class CRC {
         jsonCRCDescription.put("staticConfigLines", staticConfigLines);
         //noinspection unchecked
         jsonCRCDescription.put("dynamicConfigLines", dynamicConfigLines);
+
+        jsonCRCDescription.put("inputsNorth", inputsNorth);
+        jsonCRCDescription.put("inputsSouth", inputsSouth);
+
         //noinspection unchecked
         jsonCRCDescription.put("comment", comment);
 

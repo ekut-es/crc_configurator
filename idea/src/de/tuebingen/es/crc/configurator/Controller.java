@@ -8,10 +8,12 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -136,7 +138,14 @@ public class Controller {
         if(newDialog.create) {
 
             try {
-                model.createCrcDescriptionFile(newDialog.getRows(), newDialog.getColumns(), newDialog.getStaticConfigLines(), newDialog.getDynamicConfigLines());
+                model.createCrcDescriptionFile(
+                        newDialog.getRows(),
+                        newDialog.getColumns(),
+                        newDialog.getStaticConfigLines(),
+                        newDialog.getDynamicConfigLines(),
+                        newDialog.areInputsNorth(),
+                        newDialog.areInputsSouth()
+                );
             } catch (Exception e) {
                 showErrorMessage(e.getMessage());
             }
@@ -531,11 +540,14 @@ public class Controller {
     }
 
     public void handleEditAction(ActionEvent actionEvent) {
+
         EditDialog editDialog = new EditDialog(
                 model.getCrc().getRows(),
                 model.getCrc().getColumns(),
                 model.getCrc().getStaticConfigLines(),
-                model.getCrc().getDynamicConfigLines()
+                model.getCrc().getDynamicConfigLines(),
+                model.getCrc().areInputsNorth(),
+                model.getCrc().areInputsSouth()
         );
 
         editDialog.showAndWait();
@@ -550,7 +562,9 @@ public class Controller {
                     editDialog.getRows(),
                     editDialog.getColumns(),
                     editDialog.getStaticConfigLines(),
-                    editDialog.getDynamicConfigLines()
+                    editDialog.getDynamicConfigLines(),
+                    editDialog.areInputsNorth(),
+                    editDialog.areInputsSouth()
             );
 
             this.displayStaticConfigTabs();

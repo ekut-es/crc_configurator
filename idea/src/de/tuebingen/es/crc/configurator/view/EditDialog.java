@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -24,6 +25,8 @@ public class EditDialog extends Stage {
     private int columns;
     private int staticConfigLines;
     private int dynamicConfigLines;
+    private boolean inputsSouth;
+    private boolean inputsNorth;
 
     public int getRows() {
         return rows;
@@ -41,9 +44,17 @@ public class EditDialog extends Stage {
         return dynamicConfigLines;
     }
 
+    public boolean areInputsNorth() {
+        return inputsNorth;
+    }
+
+    public boolean areInputsSouth() {
+        return inputsSouth;
+    }
+
     public boolean apply;
 
-    public EditDialog(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
+    public EditDialog(int rows, int columns, int staticConfigLines, int dynamicConfigLines, boolean inputsNorth, boolean inputsSouth) {
         super();
 
         this.setTitle("Edit CRC");
@@ -55,9 +66,9 @@ public class EditDialog extends Stage {
 
         Group root = new Group();
 
-        Scene scene = new Scene(root, 200, 330);
+        Scene scene = new Scene(root, 200, 390);
 
-        VBox vBox = new VBox(2);
+        VBox vBox = new VBox(5);
         vBox.setPadding(new Insets(10,10,10,10));
         vBox.setSpacing(20);
 
@@ -107,12 +118,6 @@ public class EditDialog extends Stage {
         GridPane.setConstraints(dynamicConfigLinesLabel, 0, 3);
         GridPane.setConstraints(dynamicConfigLinesTextField, 1, 3);
 
-        Label warningLabel = new Label("Caution:\nIf you decrease a value \nFU configurations, \nstatic configurations, \nand dynamic configurations \nwill be lost!");
-        warningLabel.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 12));
-        warningLabel.setTextFill(Color.web("#ff0000"));
-
-        warningLabel.setWrapText(true);
-
         gridPane.getChildren().addAll(
                 rowsLabel,
                 rowsTextField,
@@ -123,6 +128,20 @@ public class EditDialog extends Stage {
                 dynamicConfigLinesLabel,
                 dynamicConfigLinesTextField
         );
+
+        CheckBox inputsNorthCheckbox = new CheckBox();
+        inputsNorthCheckbox.setText("Inputs in the North");
+        inputsNorthCheckbox.setSelected(inputsNorth);
+
+        CheckBox inputsSouthCheckbox = new CheckBox();
+        inputsSouthCheckbox.setText("Inputs in the South");
+        inputsSouthCheckbox.setSelected(inputsSouth);
+
+        Label warningLabel = new Label("Caution:\nIf you decrease a value \nFU configurations, \nstatic configurations, \nand dynamic configurations \nwill be lost!");
+        warningLabel.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 12));
+        warningLabel.setTextFill(Color.web("#ff0000"));
+
+        warningLabel.setWrapText(true);
 
         Button cancelButton = new Button("Cancel");
         Button applyButton = new Button("Apply");
@@ -137,6 +156,8 @@ public class EditDialog extends Stage {
             this.columns = Integer.parseInt(columnsTextField.getText());
             this.staticConfigLines = Integer.parseInt(staticConfigLinesTextField.getText());
             this.dynamicConfigLines = Integer.parseInt(dynamicConfigLinesTextField.getText());
+            this.inputsNorth = inputsNorthCheckbox.isSelected();
+            this.inputsSouth = inputsSouthCheckbox.isSelected();
 
             this.close();
         });
@@ -146,6 +167,8 @@ public class EditDialog extends Stage {
         buttonHBox.getChildren().addAll(cancelButton,applyButton);
 
         vBox.getChildren().add(gridPane);
+        vBox.getChildren().add(inputsNorthCheckbox);
+        vBox.getChildren().add(inputsSouthCheckbox);
         vBox.getChildren().add(warningLabel);
         vBox.getChildren().add(buttonHBox);
 

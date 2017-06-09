@@ -12,13 +12,13 @@ public class DataFlagNorthDriverContextMenu extends ContextMenu {
 
     public PE.DataFlagOutDriver getSelectedDataFlagNorthDriver() { return selectedNorthDriver; }
 
-    public DataFlagNorthDriverContextMenu(PE.DataFlagOutDriver activeDataFlagNorthDriver, int rows, int row) {
+    public DataFlagNorthDriverContextMenu(PE.DataFlagOutDriver activeDataFlagNorthDriver, int rows, int row, boolean inputsSouth) {
 
         this.addMenuItem(activeDataFlagNorthDriver, "data_flag_out_FU");
         this.addMenuItem(activeDataFlagNorthDriver, "data_flag_in_W_0");
         this.addMenuItem(activeDataFlagNorthDriver, "data_flag_in_W_1");
 
-        if(row != rows-1) {
+        if(row != rows-1 || inputsSouth) {
             this.addMenuItem(activeDataFlagNorthDriver, "data_flag_in_S_0");
             this.addMenuItem(activeDataFlagNorthDriver, "data_flag_in_S_1");
         }

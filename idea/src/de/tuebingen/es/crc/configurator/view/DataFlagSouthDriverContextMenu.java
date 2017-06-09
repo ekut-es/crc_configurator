@@ -12,9 +12,9 @@ public class DataFlagSouthDriverContextMenu extends ContextMenu {
 
     public PE.DataFlagOutDriver getSelectedDataFlagSouthDriver() { return selectedSouthDriver; }
 
-    public DataFlagSouthDriverContextMenu(PE.DataFlagOutDriver activeDataSouthDriver, int row) {
+    public DataFlagSouthDriverContextMenu(PE.DataFlagOutDriver activeDataSouthDriver, int row, boolean inputsNorth) {
 
-        if(row != 0) {
+        if(row != 0 || inputsNorth) {
             this.addMenuItem(activeDataSouthDriver, "data_flag_in_N_0");
             this.addMenuItem(activeDataSouthDriver, "data_flag_in_N_1");
         }

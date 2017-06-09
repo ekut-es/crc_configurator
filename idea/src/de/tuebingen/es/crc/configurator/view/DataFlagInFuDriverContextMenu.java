@@ -12,9 +12,9 @@ public class DataFlagInFuDriverContextMenu extends ContextMenu {
 
     public PE.DataFlagInFuDriver getSelectedDataFlagInFuDriver() { return selectedInFuDriver; }
 
-    public DataFlagInFuDriverContextMenu(PE.DataFlagInFuDriver activeDataFlagInFuDriver, int rows, int row) {
+    public DataFlagInFuDriverContextMenu(PE.DataFlagInFuDriver activeDataFlagInFuDriver, int rows, int row, boolean inputsNorth, boolean inputsSouth) {
 
-        if(row != 0) {
+        if(row != 0 || inputsNorth) {
             this.addMenuItem(activeDataFlagInFuDriver, "data_flag_in_N_0");
             this.addMenuItem(activeDataFlagInFuDriver, "data_flag_in_N_1");
         }
@@ -22,7 +22,7 @@ public class DataFlagInFuDriverContextMenu extends ContextMenu {
         this.addMenuItem(activeDataFlagInFuDriver, "data_flag_in_W_0");
         this.addMenuItem(activeDataFlagInFuDriver, "data_flag_in_W_1");
 
-        if(row != rows-1) {
+        if(row != rows-1 || inputsSouth) {
             this.addMenuItem(activeDataFlagInFuDriver, "data_flag_in_S_0");
             this.addMenuItem(activeDataFlagInFuDriver, "data_flag_in_S_1");
         }

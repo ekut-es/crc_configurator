@@ -1,16 +1,15 @@
 package de.tuebingen.es.crc.configurator.model;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
-
 import de.tuebingen.es.crc.configurator.model.verilog.CRCVerilogGenerator;
 import de.tuebingen.es.crc.configurator.model.verilog.CRCVerilogQuestaSimScriptGenerator;
 import de.tuebingen.es.crc.configurator.model.verilog.CRCVerilogTestBenchGenerator;
 import de.tuebingen.es.crc.configurator.view.Observer;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 25/07/16.
@@ -82,8 +81,8 @@ public class Model implements Observable {
      * @param staticConfigLines
      * @param dynamicConfigLines
      */
-    public void createCrcDescriptionFile(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
-        crc = new CRC(rows, columns, staticConfigLines, dynamicConfigLines, this);
+    public void createCrcDescriptionFile(int rows, int columns, int staticConfigLines, int dynamicConfigLines, boolean inputsNorth, boolean inputsSouth) {
+        crc = new CRC(rows, columns, staticConfigLines, dynamicConfigLines, inputsNorth, inputsSouth, this);
         saved = false;
     }
 
@@ -167,10 +166,10 @@ public class Model implements Observable {
      * @param staticConfigLines
      * @param dynamicConfigLines
      */
-    public void editCrc(int rows, int columns, int staticConfigLines, int dynamicConfigLines) {
+    public void editCrc(int rows, int columns, int staticConfigLines, int dynamicConfigLines, boolean inputsNorth, boolean inputsSouth) {
         saved = false;
         crcWasResized = true;
-        crc.edit(rows, columns, staticConfigLines, dynamicConfigLines);
+        crc.edit(rows, columns, staticConfigLines, dynamicConfigLines, inputsNorth, inputsSouth);
         crcWasResized = false;
     }
 
