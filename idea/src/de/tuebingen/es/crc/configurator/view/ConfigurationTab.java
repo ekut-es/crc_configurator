@@ -175,6 +175,40 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
             }
         }
 
+        // draw input names
+        gc.setStroke(Color.BLACK);
+        gc.setFill(Color.BLACK);
+        gc.setLineWidth(2);
+
+        int x = CANVAS_PADDING;
+        int y;
+
+        for(int row = 0; row < model.getCrc().getRows(); row++) {
+            y = CANVAS_PADDING+inputsNorthPadding + ((PE_DRAW_SIZE+INTER_PE_DISTANCE)*row);
+            gc.fillText("W" + (2*row), x, y + 7 * peDrawSizeTwentieth);
+            gc.fillText("W" + (2*row+1), x, y + 11 * peDrawSizeTwentieth);
+        }
+
+
+        if(model.getCrc().areInputsNorth()) {
+            for(int column = 0; column < model.getCrc().getColumns(); column++) {
+                x = CANVAS_PADDING + (column * (PE_DRAW_SIZE + INTER_PE_DISTANCE)) + INTER_PE_DISTANCE;
+                y = CANVAS_PADDING + inputsNorthPadding - INTER_PE_DISTANCE;
+
+                gc.fillText("N" + (2*column), x + 10.5 * peDrawSizeTwentieth, y + 2 * peDrawSizeTwentieth);
+                gc.fillText("N" + (2*column+1), x + 14.5 * peDrawSizeTwentieth, y + 2 * peDrawSizeTwentieth);
+            }
+        }
+
+        if(model.getCrc().areInputsSouth()) {
+            for(int column = 0; column < model.getCrc().getColumns(); column++) {
+                x = CANVAS_PADDING + (column * (PE_DRAW_SIZE + INTER_PE_DISTANCE)) + INTER_PE_DISTANCE;
+                y = CANVAS_PADDING+inputsNorthPadding+((model.getCrc().getRows())*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
+                gc.fillText("S" + (2*column), x + (peDrawSizeTwentieth / 2), y - peDrawSizeTwentieth);
+                gc.fillText("S" + (2*column+1), x + 4.5 * peDrawSizeTwentieth, y - peDrawSizeTwentieth);
+            }
+        }
+
     }
 
     /**
