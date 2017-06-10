@@ -1,6 +1,7 @@
 package de.tuebingen.es.crc.configurator.model.verilog;
 
 import de.tuebingen.es.crc.configurator.model.CRC;
+import de.tuebingen.es.crc.configurator.model.FU;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -879,20 +880,20 @@ public class CRCVerilogGenerator {
 
                 VerilogPE pe = new VerilogPE("pe_" + row + "_" + column);
 
-                LinkedHashMap<String, Boolean> fuFunctions = crc.getFu(row, column).getFunctions();
+                LinkedHashMap<FU.FuMode, Boolean> availableFuModes = crc.getFu(row, column).getAvailableModes();
 
-                pe.op_add = fuFunctions.get("add");
-                pe.op_sub = fuFunctions.get("sub");
-                pe.op_mul = fuFunctions.get("mul");
-                pe.op_div = fuFunctions.get("div");
-                pe.op_and = fuFunctions.get("and");
-                pe.op_or = fuFunctions.get("or");
-                pe.op_xor = fuFunctions.get("xor");
-                pe.op_not = fuFunctions.get("not");
-                pe.op_shift_left = fuFunctions.get("shift_left");
-                pe.op_shift_right = fuFunctions.get("shift_right");
-                pe.op_compare = fuFunctions.get("compare");
-                pe.op_multiplex = fuFunctions.get("multiplex");
+                pe.op_add = availableFuModes.get(FU.FuMode.add);
+                pe.op_sub = availableFuModes.get(FU.FuMode.sub);
+                pe.op_mul = availableFuModes.get(FU.FuMode.mul);
+                pe.op_div = availableFuModes.get(FU.FuMode.div);
+                pe.op_and = availableFuModes.get(FU.FuMode.and);
+                pe.op_or = availableFuModes.get(FU.FuMode.or);
+                pe.op_xor = availableFuModes.get(FU.FuMode.xor);
+                pe.op_not = availableFuModes.get(FU.FuMode.not);
+                pe.op_shift_left = availableFuModes.get(FU.FuMode.shift_left);
+                pe.op_shift_right = availableFuModes.get(FU.FuMode.shift_right);
+                pe.op_compare = availableFuModes.get(FU.FuMode.compare);
+                pe.op_multiplex = availableFuModes.get(FU.FuMode.multiplex);
 
                 pe.static_config_content = "" + crc.getPeStaticConfigParameterBits(row, column).length() + "'b" + crc.getPeStaticConfigParameterBits(row, column);
 

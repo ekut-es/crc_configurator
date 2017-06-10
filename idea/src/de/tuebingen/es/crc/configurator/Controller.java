@@ -1,6 +1,7 @@
 package de.tuebingen.es.crc.configurator;
 
 import de.tuebingen.es.crc.configurator.model.Configuration;
+import de.tuebingen.es.crc.configurator.model.FU;
 import de.tuebingen.es.crc.configurator.model.Model;
 import de.tuebingen.es.crc.configurator.model.PE;
 import de.tuebingen.es.crc.configurator.view.*;
@@ -600,16 +601,16 @@ public class Controller {
      * if row and column are set to -1 the selected FU functions will be applied to all FUs
      * @param row
      * @param column
-     * @param fuFunctions
+     * @param fuModes
      */
-    public void setFuFunctions(int row, int column, LinkedHashMap<String, Boolean> fuFunctions) {
+    public void setFuModes(int row, int column, LinkedHashMap<FU.FuMode, Boolean> fuModes) {
 
         model.setSaved(false);
 
         if(row == -1 || column == -1) {
-            model.getCrc().setAllFuFunctions(fuFunctions);
+            model.getCrc().setAllFuModes(fuModes);
         } else {
-            model.getCrc().setFuFunctions(row, column, fuFunctions);
+            model.getCrc().setFuModes(row, column, fuModes);
         }
     }
 
@@ -626,7 +627,7 @@ public class Controller {
         }
     }
 
-    public void setPeFunction(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.FUFunction fuFunction) {
+    public void setPeFunction(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, FU.FuFunction fuFunction) {
         model.setSaved(false);
         this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setFuFunction(fuFunction);
     }

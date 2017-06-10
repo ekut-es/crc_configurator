@@ -4,51 +4,46 @@ import de.tuebingen.es.crc.configurator.model.FU;
 import de.tuebingen.es.crc.configurator.model.PE;
 import javafx.scene.control.ContextMenu;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 27/08/16.
  */
 public class FuFunctionContextMenu extends ContextMenu {
 
-    private PE.FUFunction selectedFuFunction = PE.FUFunction.none;
+    private FU.FuFunction selectedFuFunction = null;
 
-    public PE.FUFunction getSelectedFuFunction() {
+    public FU.FuFunction getSelectedFuFunction() {
         return selectedFuFunction;
     }
 
-    public FuFunctionContextMenu(FU fu, PE.FUFunction activeFuFunction) {
+    public FuFunctionContextMenu(FU fu, PE pe) {
 
-        LinkedHashMap<String, Boolean> fuFunctions = fu.getFunctions();
+        LinkedHashMap<FU.FuMode, Boolean> availableFuModes = fu.getAvailableModes();
 
-        fuFunctions.entrySet().stream().filter(Map.Entry::getValue).forEachOrdered(entry -> {
-            if (!Objects.equals(entry.getKey(), "compare") && !Objects.equals(entry.getKey(), "multiplex")) {
+        for(Map.Entry<FU.FuMode, Boolean> entry : availableFuModes.entrySet()) {
+            HashSet<FU.FuFunction> fuFunctions = FU.fuFunctionsOfFuMode.get(entry.getKey());
 
-                this.addMenuItem(activeFuFunction, entry.getKey());
-
-            } else if (Objects.equals(entry.getKey(), "compare")) {
-
-                this.addMenuItem(activeFuFunction, "compare_eq");
-                this.addMenuItem(activeFuFunction, "compare_neq");
-                this.addMenuItem(activeFuFunction, "compare_lt");
-                this.addMenuItem(activeFuFunction, "compare_gt");
-                this.addMenuItem(activeFuFunction, "compare_leq");
-                this.addMenuItem(activeFuFunction, "compare_geq");
-
-            } else if (Objects.equals(entry.getKey(), "multiplex")) {
-
-                this.addMenuItem(activeFuFunction, "mux_0");
-                this.addMenuItem(activeFuFunction, "mux_1");
+            if(entry.getValue()) {
+                for (FU.FuFunction fuFunction : fuFunctions) {
+                    this.addMenuItem(fuFunction, false);
+                }
             }
-        });
+        }
+
+        this.addMenuItem(FU.FuFunction.none, pe.getFuFunction() == FU.FuFunction.none);
     }
 
-    private void addMenuItem(PE.FUFunction activeFuFunction, String fuFunction) {
-        ConfigurationTabContextMenuItem menuItem = new ConfigurationTabContextMenuItem(fuFunction);
-        if (activeFuFunction == PE.FUFunction.valueOf(fuFunction)) menuItem.setSelected(true);
-        menuItem.setOnAction(event -> this.selectedFuFunction = PE.FUFunction.valueOf(fuFunction));
+    private void addMenuItem(FU.FuFunction fuFunction, boolean active) {
+
+        ConfigurationTabContextMenuItem menuItem = new ConfigurationTabContextMenuItem(FU.fuFunctionToName.get(fuFunction));
+
+        menuItem.setSelected(active);
+
+        menuItem.setOnAction(event -> this.selectedFuFunction = fuFunction);
+
         this.getItems().add(menuItem);
     }
 }

@@ -3,8 +3,10 @@ package de.tuebingen.es.crc.configurator.model;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 25/07/16.
@@ -109,21 +111,21 @@ public class CRC {
         this.staticConfigs = new HashMap<>();
         this.dynamicConfigs = new HashMap<>();
 
-        JSONArray pes = (JSONArray) jsonCrcDescription.get("PEs");
+        JSONArray pes = (JSONArray) jsonCrcDescription.get("pes");
 
         if(pes == null) {
-            throw new Exception("CRC description file does not contain 'PEs'!");
+            throw new Exception("CRC description file does not contain 'pes'!");
         }
 
-        // set functions in all FUs
+        // set modes in all FUs
         //noinspection unchecked
         for (JSONObject pe : (Iterable<JSONObject>) pes) {
             FU fu = getFu(Integer.parseInt(pe.get("row").toString()), Integer.parseInt(pe.get("column").toString()));
-            JSONArray fuFunctions = (JSONArray) pe.get("FUFunctions");
+            JSONArray fuModes = (JSONArray) pe.get("availableFuModes");
 
             //noinspection unchecked
-            for (String fuFunction : (Iterable<String>) fuFunctions) {
-                fu.setFunction(fuFunction, true);
+            for (String fuMode : (Iterable<String>) fuModes) {
+                fu.setMode(FU.FuMode.valueOf(fuMode), true);
             }
         }
 
@@ -166,10 +168,10 @@ public class CRC {
     private Configuration readConfigFromJSON(JSONObject config) throws Exception {
 
         // read PEs
-        JSONArray pes = (JSONArray) config.get("PEs");
+        JSONArray pes = (JSONArray) config.get("pes");
 
         if(pes == null) {
-            throw new Exception("CRC description file section staticConfigs does not contain 'PEs'!");
+            throw new Exception("CRC description file section staticConfigs does not contain 'pes'!");
         }
 
         Configuration configuration = new Configuration(this, Integer.parseInt(config.get("configNumber").toString()));
@@ -185,11 +187,11 @@ public class CRC {
             pe.setDataFlagOutE1(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutE1").toString()));
             pe.setDataFlagOutS0(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutS0").toString()));
             pe.setDataFlagOutS1(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutS1").toString()));
-            pe.setDataFlagInFu0(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFU0").toString()));
-            pe.setDataFlagInFu1(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFU1").toString()));
-            pe.setFlagInFuMux(PE.DataFlagInFuDriver.valueOf(peJson.get("flagInFUMux").toString()));
-            pe.setFuFunction(PE.FUFunction.valueOf(peJson.get("FUFunction").toString()));
-            pe.setSignedData(peJson.get("FUSignedness").toString().equals("signed"));
+            pe.setDataFlagInFu0(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFu0").toString()));
+            pe.setDataFlagInFu1(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFu1").toString()));
+            pe.setFlagInFuMux(PE.DataFlagInFuDriver.valueOf(peJson.get("flagInFuMux").toString()));
+            pe.setFuFunction(FU.FuFunction.valueOf(peJson.get("fuFunction").toString()));
+            pe.setSignedData(peJson.get("fuSignedness").toString().equals("signed"));
         }
 
         return configuration;
@@ -440,7 +442,7 @@ public class CRC {
         pe.setDataFlagOutE1(PE.DataFlagOutDriver.none);
         pe.setDataFlagOutS0(PE.DataFlagOutDriver.none);
         pe.setDataFlagOutS1(PE.DataFlagOutDriver.none);
-        pe.setFuFunction(PE.FUFunction.none);
+        pe.setFuFunction(FU.FuFunction.none);
     }
 
     private void setRows(int rows) {
@@ -546,70 +548,40 @@ public class CRC {
         return fuMatrix.get(row).get(column);
     }
 
-    public void setFuFunctions(int row, int column, LinkedHashMap<String, Boolean> fuFunctions) {
-        fuMatrix.get(row).get(column).setFunctions(fuFunctions);
+    public void setFuModes(int row, int column, LinkedHashMap<FU.FuMode, Boolean> fuFunctions) {
+        fuMatrix.get(row).get(column).setAvailableModes(fuFunctions);
 
         // check if function was removed which is used by a config and if so set function in config to none
         // static configs
         for(Configuration staticConfig : staticConfigs.values()) {
-            this.checkSetFuFunctionInPe(staticConfig.getPe(row, column), fuFunctions);
+            this.checkSetFuModesInPe(staticConfig.getPe(row, column), fuFunctions);
         }
 
         // dynamic configs
         for(Configuration dynamicConfig : dynamicConfigs.values()) {
-            this.checkSetFuFunctionInPe(dynamicConfig.getPe(row, column), fuFunctions);
+            this.checkSetFuModesInPe(dynamicConfig.getPe(row, column), fuFunctions);
         }
 
     }
 
-    public void setAllFuFunctions(LinkedHashMap<String, Boolean> fuFunctions) {
+    public void setAllFuModes(LinkedHashMap<FU.FuMode, Boolean> fuModes) {
         for(int i = 0; i < this.rows; i++) {
            for(int j = 0; j < this.columns; j++) {
-               this.setFuFunctions(i,j,fuFunctions);
+               this.setFuModes(i,j,fuModes);
            }
         }
     }
 
-    public void setFuSignedness(int row, int column, boolean fuSingedness) {
-
-    }
-
     /**
      * if the hardware model of the CRC was edited (enable or disabling of a FU function) it will be checked if a
-     * disabled FU functions is used in a PE and in set to NOP if necessary
+     * disabled FU functions is used in a PE and in set to nop if necessary
      * @param pe
-     * @param fuFunctions
+     * @param availableFuModes
      */
-    private void checkSetFuFunctionInPe(PE pe, LinkedHashMap<String, Boolean> fuFunctions) {
-        fuFunctions.entrySet().stream().filter(entry -> !entry.getValue()).forEachOrdered(entry -> {
-
-            if (!Objects.equals(entry.getKey(), "compare") && !Objects.equals(entry.getKey(), "multiplex")) {
-
-                if (pe.getFuFunction() == PE.FUFunction.valueOf(entry.getKey())) {
-                    pe.setFuFunction(PE.FUFunction.none);
-                }
-
-
-            } else if (Objects.equals(entry.getKey(), "compare")) {
-
-                if (
-                        pe.getFuFunction() == PE.FUFunction.compare_eq ||
-                                pe.getFuFunction() == PE.FUFunction.compare_neq ||
-                                pe.getFuFunction() == PE.FUFunction.compare_lt ||
-                                pe.getFuFunction() == PE.FUFunction.compare_gt ||
-                                pe.getFuFunction() == PE.FUFunction.compare_leq ||
-                                pe.getFuFunction() == PE.FUFunction.compare_geq) {
-                    pe.setFuFunction(PE.FUFunction.none);
-                }
-
-
-            } else if (Objects.equals(entry.getKey(), "multiplex")) {
-
-                if (pe.getFuFunction() == PE.FUFunction.mux_0 || pe.getFuFunction() == PE.FUFunction.mux_1) {
-                    pe.setFuFunction(PE.FUFunction.none);
-                }
-            }
-        });
+    private void checkSetFuModesInPe(PE pe, LinkedHashMap<FU.FuMode, Boolean> availableFuModes) {
+        if(pe.getFuFunction() != FU.FuFunction.none && !availableFuModes.get(FU.fuModeOfFuFunction.get(pe.getFuFunction()))) {
+            pe.setFuFunction(FU.FuFunction.none);
+        }
     }
 
     /**
@@ -644,22 +616,25 @@ public class CRC {
                 //noinspection unchecked
                 pe.put("column", j);
 
-                JSONArray fuFunctions = new JSONArray();
+                JSONArray availableFuModesJSON = new JSONArray();
 
-                LinkedHashMap<String, Boolean> fuFunctionsMap = this.getFu(i,j).getFunctions();
+                LinkedHashMap<FU.FuMode, Boolean> availableFuModes = this.getFu(i,j).getAvailableModes();
 
-                //noinspection unchecked
-                fuFunctions.addAll(fuFunctionsMap.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toList()));
+                for(Map.Entry<FU.FuMode, Boolean> availableFuMode : availableFuModes.entrySet()) {
+                    if(availableFuMode.getValue()) {
+                        availableFuModesJSON.add(FU.fuModeToName.get(availableFuMode.getKey()));
+                    }
+                }
 
-                //noinspection unchecked
-                pe.put("FUFunctions", fuFunctions);
+                pe.put("availableFuModes", availableFuModesJSON);
+
                 //noinspection unchecked
                 pes.add(pe);
             }
         }
 
         //noinspection unchecked
-        jsonCRCDescription.put("PEs", pes);
+        jsonCRCDescription.put("pes", pes);
 
 
         // process static configurations
@@ -674,7 +649,7 @@ public class CRC {
             //noinspection unchecked
             staticConfigJSON.put("comment", staticConfig.getComment());
             //noinspection unchecked
-            staticConfigJSON.put("PEs", this.configPesToJSON(staticConfig));
+            staticConfigJSON.put("pes", this.configPesToJSON(staticConfig));
 
             //noinspection unchecked
             staticConfigsJSON.add(staticConfigJSON);
@@ -696,7 +671,7 @@ public class CRC {
             //noinspection unchecked
             dynamicConfigJSON.put("comment", dynamicConfig.getComment());
             //noinspection unchecked
-            dynamicConfigJSON.put("PEs", this.configPesToJSON(dynamicConfig));
+            dynamicConfigJSON.put("pes", this.configPesToJSON(dynamicConfig));
 
             //noinspection unchecked
             dynamicConfigsJSON.add(dynamicConfigJSON);
@@ -738,15 +713,15 @@ public class CRC {
                 //noinspection unchecked
                 configPe.put("dataFlagOutS1", pe.getDataFlagOutS1().toString());
                 //noinspection unchecked
-                configPe.put("dataFlagInFU0", pe.getDataFlagInFu0().toString());
+                configPe.put("dataFlagInFu0", pe.getDataFlagInFu0().toString());
                 //noinspection unchecked
-                configPe.put("dataFlagInFU1", pe.getDataFlagInFu1().toString());
+                configPe.put("dataFlagInFu1", pe.getDataFlagInFu1().toString());
                 //noinspection unchecked
-                configPe.put("flagInFUMux", pe.getFlagInFuMux().toString());
+                configPe.put("flagInFuMux", pe.getFlagInFuMux().toString());
                 //noinspection unchecked
-                configPe.put("FUFunction", pe.getFuFunction().toString());
+                configPe.put("fuFunction", pe.getFuFunction().toString());
                 //noinspection unchecked
-                configPe.put("FUSignedness", pe.isSignedData() ? "signed" : "unsigned");
+                configPe.put("fuSignedness", pe.isSignedData() ? "signed" : "unsigned");
 
                 //noinspection unchecked
                 configPes.add(configPe);
@@ -767,22 +742,22 @@ public class CRC {
 
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
-                LinkedHashMap<String, Boolean> fuFunctions =  fuMatrix.get(i).get(j).getFunctions();
+                LinkedHashMap<FU.FuMode, Boolean> availableFuModes =  fuMatrix.get(i).get(j).getAvailableModes();
 
                 peBits = "";
 
-                peBits += (fuFunctions.get("add") ? "1" : "0");
-                peBits += (fuFunctions.get("sub") ? "1" : "0");
-                peBits += (fuFunctions.get("mul") ? "1" : "0");
-                peBits += (fuFunctions.get("div") ? "1" : "0");
-                peBits += (fuFunctions.get("and") ? "1" : "0");
-                peBits += (fuFunctions.get("or") ? "1" : "0");
-                peBits += (fuFunctions.get("xor") ? "1" : "0");
-                peBits += (fuFunctions.get("not") ? "1" : "0");
-                peBits += (fuFunctions.get("shift_left") ? "1" : "0");
-                peBits += (fuFunctions.get("shift_right") ? "1" : "0");
-                peBits += (fuFunctions.get("compare") ? "1" : "0");
-                peBits += (fuFunctions.get("multiplex") ? "1" : "0");
+                peBits += (availableFuModes.get(FU.FuMode.add) ? "1" : "0");
+                peBits += (availableFuModes.get(FU.FuMode.sub) ? "1" : "0");
+                peBits += (availableFuModes.get(FU.FuMode.mul) ? "1" : "0");
+                peBits += (availableFuModes.get(FU.FuMode.div) ? "1" : "0");
+                peBits += (availableFuModes.get(FU.FuMode.and) ? "1" : "0");
+                peBits += (availableFuModes.get(FU.FuMode.or) ? "1" : "0");
+                peBits += (availableFuModes.get(FU.FuMode.xor) ? "1" : "0");
+                peBits += (availableFuModes.get(FU.FuMode.not) ? "1" : "0");
+                peBits += (availableFuModes.get(FU.FuMode.shift_left) ? "1" : "0");
+                peBits += (availableFuModes.get(FU.FuMode.shift_right) ? "1" : "0");
+                peBits += (availableFuModes.get(FU.FuMode.compare) ? "1" : "0");
+                peBits += (availableFuModes.get(FU.FuMode.multiplex) ? "1" : "0");
 
                 bits = peBits + bits;
             }
@@ -842,18 +817,18 @@ public class CRC {
 
         bits += (pe.isActive() ? "1" : "0");
         bits += (pe.isSignedData() ? "1" : "0");
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS1());
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS0());
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE1());
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE0());
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN1());
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN0());
+        bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutS1());
+        bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutS0());
+        bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutE1());
+        bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutE0());
+        bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutN1());
+        bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutN0());
 
-        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getFlagInFuMux());
-        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFu1());
-        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFu0());
+        bits += PE.dataFlagInFuDriverToBits.get(pe.getFlagInFuMux());
+        bits += PE.dataFlagInFuDriverToBits.get(pe.getDataFlagInFu1());
+        bits += PE.dataFlagInFuDriverToBits.get(pe.getDataFlagInFu0());
 
-        bits += PeFuFunctionBitsMap.getBits(pe.getFuFunction());
+        bits += FU.getFuFunctionToBits.get(pe.getFuFunction());
 
         return bits;
     }
@@ -873,18 +848,18 @@ public class CRC {
 
         bits += (pe.isActive() ? "1" : "0");
         bits += (pe.isSignedData() ? "1" : "0");
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS1());
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutS0());
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE1());
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutE0());
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN1());
-        bits += PeDataFlagOutDriverBitsMap.getBits(pe.getDataFlagOutN0());
+        bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutS1());
+        bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutS0());
+        bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutE1());
+        bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutE0());
+        bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutN1());
+        bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutN0());
 
-        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getFlagInFuMux());
-        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFu1());
-        bits += PeDataFlagInFuDriverBitsMap.getBits(pe.getDataFlagInFu0());
+        bits += PE.dataFlagInFuDriverToBits.get(pe.getFlagInFuMux());
+        bits += PE.dataFlagInFuDriverToBits.get(pe.getDataFlagInFu1());
+        bits += PE.dataFlagInFuDriverToBits.get(pe.getDataFlagInFu0());
 
-        bits += PeFuFunctionBitsMap.getBits(pe.getFuFunction());
+        bits += FU.getFuFunctionToBits.get(pe.getFuFunction());
 
         return bits;
     }

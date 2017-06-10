@@ -2,6 +2,7 @@ package de.tuebingen.es.crc.configurator.view;
 
 import de.tuebingen.es.crc.configurator.Controller;
 import de.tuebingen.es.crc.configurator.model.Configuration;
+import de.tuebingen.es.crc.configurator.model.FU;
 import de.tuebingen.es.crc.configurator.model.Model;
 import de.tuebingen.es.crc.configurator.model.PE;
 import javafx.scene.canvas.Canvas;
@@ -17,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.awt.*;
+import java.util.HashMap;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 26/07/16.
@@ -27,6 +29,30 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         STATIC, DYNAMIC
     }
 
+    private static final int peDrawSizeTwentieth = (PE_DRAW_SIZE/20);
+
+    private static final HashMap<FU.FuFunction, Double> fuFunctionSignXOffset = new HashMap<FU.FuFunction, Double>() {{
+        put(FU.FuFunction.none, 1.8*peDrawSizeTwentieth);
+        put(FU.FuFunction.add, 2.5*peDrawSizeTwentieth);
+        put(FU.FuFunction.sub, 2.5*peDrawSizeTwentieth);
+        put(FU.FuFunction.mul, 2.5*peDrawSizeTwentieth);
+        put(FU.FuFunction.div, 2.5*peDrawSizeTwentieth);
+        put(FU.FuFunction.and, 1.3*peDrawSizeTwentieth);
+        put(FU.FuFunction.or, 2.0*peDrawSizeTwentieth);
+        put(FU.FuFunction.xor, 1.2*peDrawSizeTwentieth);
+        put(FU.FuFunction.not, 1.2*peDrawSizeTwentieth);
+        put(FU.FuFunction.shift_left, 2.0*peDrawSizeTwentieth);
+        put(FU.FuFunction.shift_right, 2.0*peDrawSizeTwentieth);
+        put(FU.FuFunction.compare_eq, 2.0*peDrawSizeTwentieth);
+        put(FU.FuFunction.compare_neq, 2.0*peDrawSizeTwentieth);
+        put(FU.FuFunction.compare_lt, 2.5*peDrawSizeTwentieth);
+        put(FU.FuFunction.compare_gt, 2.5*peDrawSizeTwentieth);
+        put(FU.FuFunction.compare_leq, 2.0*peDrawSizeTwentieth);
+        put(FU.FuFunction.compare_geq, 2.5*peDrawSizeTwentieth);
+        put(FU.FuFunction.mux_0, 0.5*peDrawSizeTwentieth);
+        put(FU.FuFunction.mux_1, 0.5*peDrawSizeTwentieth);
+    }};
+
     private final Model model;
     private final Controller controller;
     private GraphicsContext gc;
@@ -36,7 +62,6 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
     private final int number;
     private final ConfigurationTabType configurationTabType;
 
-    private final int peDrawSizeTwentieth = (PE_DRAW_SIZE/20);
 
     private int inputsNorthPadding;
     private int inputsSouthPadding;
@@ -251,77 +276,17 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawFU(gc, x, y, false);
 
         // draw function into FU
-        PE.FUFunction fuFunction = this.getConfig().getPe(row, column).getFuFunction();
+        FU.FuFunction fuFunction = this.getConfig().getPe(row, column).getFuFunction();
 
-        String fuFunctionString = FuFunctionStringMap.getString(fuFunction);
+        String fuFunctionSign = FU.fuFunctionToSign.get(fuFunction);
 
-        double fuFunctionStringOffset;
-
-        switch (fuFunction) {
-            case add:
-                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
-                break;
-            case sub:
-                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
-                break;
-            case mul:
-                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
-                break;
-            case div:
-                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
-                break;
-            case and:
-                fuFunctionStringOffset = 1.3*peDrawSizeTwentieth;
-                break;
-            case or:
-                fuFunctionStringOffset = 2*peDrawSizeTwentieth;
-                break;
-            case xor:
-                fuFunctionStringOffset = 1.2*peDrawSizeTwentieth;
-                break;
-            case not:
-                fuFunctionStringOffset = 1.2*peDrawSizeTwentieth;
-                break;
-            case shift_left:
-                fuFunctionStringOffset = 2*peDrawSizeTwentieth;
-                break;
-            case shift_right:
-                fuFunctionStringOffset = 2*peDrawSizeTwentieth;
-                break;
-            case compare_eq:
-                fuFunctionStringOffset = 2*peDrawSizeTwentieth;
-                break;
-            case compare_neq:
-                fuFunctionStringOffset = 2*peDrawSizeTwentieth;
-                break;
-            case compare_lt:
-                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
-                break;
-            case compare_gt:
-                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
-                break;
-            case compare_leq:
-                fuFunctionStringOffset = 2*peDrawSizeTwentieth;
-                break;
-            case compare_geq:
-                fuFunctionStringOffset = 2.5*peDrawSizeTwentieth;
-                break;
-            case mux_0:
-                fuFunctionStringOffset = 0.5*peDrawSizeTwentieth;
-                break;
-            case mux_1:
-                fuFunctionStringOffset = 0.5*peDrawSizeTwentieth;
-                break;
-            default:
-                fuFunctionStringOffset = 1.2*peDrawSizeTwentieth;
-                break;
-        }
+        double fuFunctionSignOffset = fuFunctionSignXOffset.get(fuFunction);
 
         Font defaultFont = gc.getFont();
         Font fontBold = Font.font(defaultFont.getName(), FontWeight.BOLD, defaultFont.getSize()+2);
 
         gc.setFont(fontBold);
-        gc.fillText(fuFunctionString, 7*peDrawSizeTwentieth+fuFunctionStringOffset+x, 8*peDrawSizeTwentieth+y);
+        gc.fillText(fuFunctionSign, 7*peDrawSizeTwentieth+fuFunctionSignOffset+x, 8*peDrawSizeTwentieth+y);
         gc.setFont(defaultFont);
 
         // draw singed or unsigned
@@ -2547,12 +2512,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     yNormalized >= 6.5*peDrawSizeTwentieth &&
                     yNormalized <= 8.5*peDrawSizeTwentieth) {
 
-                 FuFunctionContextMenu fuFunctionContextMenu = new FuFunctionContextMenu(model.getCrc().getFu(row, column), this.getConfig().getPe(row, column).getFuFunction());
+                 FuFunctionContextMenu fuFunctionContextMenu = new FuFunctionContextMenu(model.getCrc().getFu(row, column), this.getConfig().getPe(row, column));
                  contextMenu = fuFunctionContextMenu;
                  fuFunctionContextMenu.show(this.getContent(), p.x, p.y);
 
                  fuFunctionContextMenu.setOnHiding(event -> {
-                     if(fuFunctionContextMenu.getSelectedFuFunction() != PE.FUFunction.none) {
+                     if(fuFunctionContextMenu.getSelectedFuFunction() != null) {
                         controller.setPeFunction(configurationTabType, number, finalRow, finalColumn, fuFunctionContextMenu.getSelectedFuFunction());
                      }
                  });

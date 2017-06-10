@@ -1,5 +1,6 @@
 package de.tuebingen.es.crc.configurator.view;
 
+import de.tuebingen.es.crc.configurator.model.FU;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -18,20 +19,20 @@ import java.util.Map;
 /**
  * Created by Konstantin (Konze) Lübeck on 26/07/16.
  */
-public class FuFunctionsDialog extends Stage {
+public class FuModesDialog extends Stage {
 
     public boolean modelHasChanged;
     private boolean applyToAll;
-    private final LinkedHashMap<String, Boolean> fuFunctions;
-    private final LinkedHashMap<String, CheckBox> fuFunctionCheckboxes;
+    private final LinkedHashMap<FU.FuMode, Boolean> availableFuModes;
+    private final LinkedHashMap<FU.FuMode, CheckBox> fuModeCheckboxes;
 
-    public FuFunctionsDialog(int row, int column, LinkedHashMap<String, Boolean> fuFunctions) {
+    public FuModesDialog(int row, int column, LinkedHashMap<FU.FuMode, Boolean> availableFuModes) {
 
         super();
-        this.fuFunctions = new LinkedHashMap<>();
-        this.fuFunctions.putAll(fuFunctions);
+        this.availableFuModes = new LinkedHashMap<>();
+        this.availableFuModes.putAll(availableFuModes);
 
-        fuFunctionCheckboxes = new LinkedHashMap<>();
+        fuModeCheckboxes = new LinkedHashMap<>();
         modelHasChanged = false;
         applyToAll = false;
 
@@ -43,16 +44,16 @@ public class FuFunctionsDialog extends Stage {
 
         Scene scene = new Scene(root, 150, 500);
 
-        VBox vBox = new VBox(fuFunctions.size()+2);
+        VBox vBox = new VBox(availableFuModes.size()+2);
         vBox.setPadding(new Insets(10,10,10,10));
 
-        vBox.getChildren().add(new Text("FU Functions PE " + row + "," + column));
+        vBox.getChildren().add(new Text("FU Modes PE " + row + "," + column));
 
-        for(Map.Entry<String, Boolean> function : fuFunctions.entrySet())  {
+        for(Map.Entry<FU.FuMode, Boolean> fuMode : availableFuModes.entrySet())  {
             CheckBox checkBox = new CheckBox();
-            checkBox.setText(function.getKey());
-            checkBox.setSelected(function.getValue());
-            fuFunctionCheckboxes.put(function.getKey(), checkBox);
+            checkBox.setText(FU.fuModeToName.get(fuMode.getKey()));
+            checkBox.setSelected(fuMode.getValue());
+            fuModeCheckboxes.put(fuMode.getKey(), checkBox);
             vBox.getChildren().add(checkBox);
         }
 
@@ -69,8 +70,8 @@ public class FuFunctionsDialog extends Stage {
 
         // save changes to model an close dialog when "Save" button was pressed
         saveButton.setOnAction(event -> {
-            for(Map.Entry<String, CheckBox> function : fuFunctionCheckboxes.entrySet()) {
-                this.fuFunctions.replace(function.getKey(), function.getValue().isSelected());
+            for(Map.Entry<FU.FuMode, CheckBox> function : fuModeCheckboxes.entrySet()) {
+                this.availableFuModes.replace(function.getKey(), function.getValue().isSelected());
             }
 
             applyToAll = checkBoxApplyToAll.isSelected();
@@ -91,8 +92,8 @@ public class FuFunctionsDialog extends Stage {
         this.setScene(scene);
     }
 
-    public LinkedHashMap<String, Boolean> getFuFunctions() {
-        return this.fuFunctions;
+    public LinkedHashMap<FU.FuMode, Boolean> getAvailableFuModes() {
+        return this.availableFuModes;
     }
 
     public Boolean getApplyToAll() {

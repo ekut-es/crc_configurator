@@ -158,34 +158,34 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
         int x = CANVAS_PADDING+(column*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
         int y = CANVAS_PADDING+(row*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+(PE_DRAW_SIZE+(PE_DRAW_SIZE/10));
 
-        LinkedHashMap<String, Boolean> fuFunctions = fu.getFunctions();
+        LinkedHashMap<FU.FuMode, Boolean> availableFuModes = fu.getAvailableModes();
 
-        String fuFunctionsString = "";
+        String fuModesString = "";
 
         int i = 0;
 
-        for(Map.Entry<String, Boolean> function : fuFunctions.entrySet())  {
+        for(Map.Entry<FU.FuMode, Boolean> function : availableFuModes.entrySet())  {
             if(function.getValue()) {
 
                 if(i != 0) {
-                    fuFunctionsString += ", ";
+                    fuModesString += ", ";
                 }
 
                 if((i != 0) && (i % 3 == 0)) {
-                    fuFunctionsString += "\n";
+                    fuModesString += "\n";
                 }
 
-                fuFunctionsString += function.getKey() ;
+                fuModesString += function.getKey() ;
 
                 i++;
             }
         }
 
-        if(fuFunctionsString.isEmpty()) {
-            fuFunctionsString = "nop";
+        if(fuModesString.isEmpty()) {
+            fuModesString = "nop";
         }
 
-        gc.fillText(fuFunctionsString, x, y);
+        gc.fillText(fuModesString, x, y);
     }
 
     /**
@@ -218,7 +218,7 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
 
             Point p = MouseInfo.getPointerInfo().getLocation();
 
-            FuFunctionsDialog dialog = new FuFunctionsDialog(row, column, model.getCrc().getFu(row, column).getFunctions());
+            FuModesDialog dialog = new FuModesDialog(row, column, model.getCrc().getFu(row, column).getAvailableModes());
 
             dialog.setX(p.x-100);
             dialog.setY(p.y-80);
@@ -228,9 +228,9 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
             // data was changed -> update model
             if(dialog.modelHasChanged) {
                 if(dialog.getApplyToAll()) {
-                    controller.setFuFunctions(-1, -1, dialog.getFuFunctions());
+                    controller.setFuModes(-1, -1, dialog.getAvailableFuModes());
                 } else {
-                    controller.setFuFunctions(row, column, dialog.getFuFunctions());
+                    controller.setFuModes(row, column, dialog.getAvailableFuModes());
                 }
             }
         }
