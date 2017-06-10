@@ -71,7 +71,7 @@ public class Main extends Application {
         Model model = new Model();
 
         Controller controller = fxmlLoader.getController();
-        controller.initModel(model);
+        controller.initModelViewController(model);
         controller.setStage(primaryStage);
 
         int stageWidth = 2*ConfiguratorTab.CANVAS_PADDING+2*ConfiguratorTab.PE_DRAW_SIZE+3*ConfiguratorTab.INTER_PE_DISTANCE+10;

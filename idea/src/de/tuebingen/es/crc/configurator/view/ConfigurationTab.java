@@ -69,6 +69,10 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         return number;
     }
 
+    public ConfigurationTabType getConfigurationTabType() {
+        return configurationTabType;
+    }
+
     protected void selectionChanged() {
         if(!this.isSelected()) {
             scrollPaneVvalue = scrollPane.getVvalue();

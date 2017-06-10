@@ -1,10 +1,5 @@
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.TabPane?>
-
 <VBox fx:id="mainVBox" prefHeight="500" prefWidth="500" xmlns:fx="http://javafx.com/fxml" fx:controller="de.tuebingen.es.crc.configurator.Controller">
     <MenuBar fx:id="mainMenuBar">
         <Menu fx:id="menuFile" text="File">
@@ -16,15 +11,20 @@
             <MenuItem fx:id="menuItemSaveAs" text="Save As" disable="true" onAction="#handleSaveAsAction"
                       accelerator="Shift+Shortcut+S"/>
             <MenuItem fx:id="menuItemReload" text="Reload" disable="true" onAction="#handleReloadAction" accelerator="Shortcut+R"/>
+            <SeparatorMenuItem/>
             <MenuItem fx:id="menuItemExportBits" text="Export Bits" disable="true"
                       onAction="#handleExportBitsAction"/>
             <MenuItem fx:id="menuItemExportPNG" text="Export PNG" disable="true"
                       onAction="#handleExportPNGAction" accelerator="Shortcut+P"/>
             <MenuItem fx:id="menuItemExportVerilog" text="Export Verilog Code" disable="true" onAction="#handleExportVerilogAction"/>
+            <SeparatorMenuItem/>
             <MenuItem fx:id="menuItemClose" text="Close" disable="true" onAction="#handleCloseAction"
                       accelerator="Shortcut+W"/>
             <SeparatorMenuItem/>
             <MenuItem text="Quit" onAction="#handleQuitAction" accelerator="Shortcut+Q"/>
+        </Menu>
+        <Menu fx:id="menuConfiguration" text="Configuration">
+            <MenuItem fx:id="menuItemResetConfiguration" text="Reset Configuration" disable="true" onAction="#handleResetConfiguration"/>
         </Menu>
         <Menu fx:id="menuText" text="Help">
             <MenuItem text="Documentation" onAction="#handleDocumentationAction"/>

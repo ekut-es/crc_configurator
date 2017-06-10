@@ -60,6 +60,9 @@ public class Controller {
     private MenuItem menuItemExportPNG;
 
     @FXML
+    private MenuItem menuItemResetConfiguration;
+
+    @FXML
     private MenuItem menuItemExportVerilog;
 
     @FXML
@@ -74,7 +77,7 @@ public class Controller {
      * initializes the model
      * @param model
      */
-    public void initModel(Model model) {
+    public void initModelViewController(Model model) {
         if(this.model != null) {
             throw new IllegalStateException("Model can only be initialzied once.");
         }
@@ -83,6 +86,16 @@ public class Controller {
 
         staticConfigurationTabs = new ArrayList<>();
         dynamicConfigurationTabs = new ArrayList<>();
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
+            if(newTab != null) {
+                if (newTab.getClass() == ConfigurationTab.class) {
+                    menuItemResetConfiguration.setDisable(false);
+                } else {
+                    menuItemResetConfiguration.setDisable(true);
+                }
+            }
+        });
     }
 
     public void setStage(Stage stage) {
@@ -424,6 +437,30 @@ public class Controller {
     }
 
     /**
+     * removes all tabs from tab pane, adjusts menu, and resets model
+     */
+    private void closeCrcDescriptionFile() {
+        tabPane.getTabs().clear();
+
+        // delete hardware model tab
+        model.removeObserver(hardwareModelTab);
+        hardwareModelTab = null;
+        this.closeAllStaticConfigTabs();
+        this.closeAllDynamicConfigTabs();
+
+        model = new Model();
+        menuItemEdit.setDisable(true);
+        menuItemSave.setDisable(true);
+        menuItemSaveAs.setDisable(true);
+        menuItemReload.setDisable(true);
+        menuItemExportBits.setDisable(true);
+        menuItemExportPNG.setDisable(true);
+        menuItemExportVerilog.setDisable(true);
+        menuItemClose.setDisable(true);
+        stage.setTitle("CRC Configurator");
+    }
+
+    /**
      * checks if file was saved before closing it and presents a warning if necessary
      * quits Application
      */
@@ -450,28 +487,9 @@ public class Controller {
         }
     }
 
-    /**
-     * removes all tabs from tab pane, adjusts menu, and resets model
-     */
-    private void closeCrcDescriptionFile() {
-        tabPane.getTabs().clear();
-
-        // delete hardware model tab
-        model.removeObserver(hardwareModelTab);
-        hardwareModelTab = null;
-        this.closeAllStaticConfigTabs();
-        this.closeAllDynamicConfigTabs();
-
-        model = new Model();
-        menuItemEdit.setDisable(true);
-        menuItemSave.setDisable(true);
-        menuItemSaveAs.setDisable(true);
-        menuItemReload.setDisable(true);
-        menuItemExportBits.setDisable(true);
-        menuItemExportPNG.setDisable(true);
-        menuItemExportVerilog.setDisable(true);
-        menuItemClose.setDisable(true);
-        stage.setTitle("CRC Configurator");
+    public void handleResetConfiguration(ActionEvent actionEvent) {
+        ConfigurationTab configurationTab = (ConfigurationTab) tabPane.getSelectionModel().getSelectedItem();
+        model.resetConfig(configurationTab.getConfigurationTabType(), configurationTab.getNumber());
     }
 
     /**
@@ -668,7 +686,6 @@ public class Controller {
         this.getConfig(configurationTabType, configurationNumber).setComment(comment);
     }
 
-
     public void handleReloadAction(ActionEvent actionEvent) {
         File crcDescriptionFile = new File(model.getCrcDescriptionFilePath());
 
@@ -685,7 +702,6 @@ public class Controller {
                 break;
             }
         }
-
     }
 }
 

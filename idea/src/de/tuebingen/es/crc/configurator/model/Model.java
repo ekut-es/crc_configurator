@@ -3,6 +3,7 @@ package de.tuebingen.es.crc.configurator.model;
 import de.tuebingen.es.crc.configurator.model.verilog.CRCVerilogGenerator;
 import de.tuebingen.es.crc.configurator.model.verilog.CRCVerilogQuestaSimScriptGenerator;
 import de.tuebingen.es.crc.configurator.model.verilog.CRCVerilogTestBenchGenerator;
+import de.tuebingen.es.crc.configurator.view.ConfigurationTab;
 import de.tuebingen.es.crc.configurator.view.Observer;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -171,6 +172,15 @@ public class Model implements Observable {
         crcWasResized = true;
         crc.edit(rows, columns, staticConfigLines, dynamicConfigLines, inputsNorth, inputsSouth);
         crcWasResized = false;
+    }
+
+    public void resetConfig(ConfigurationTab.ConfigurationTabType configurationTabType, int num) {
+        saved = false;
+        if(configurationTabType == ConfigurationTab.ConfigurationTabType.STATIC) {
+            crc.resetStaticConfig(num);
+        } else {
+            crc.resetDynamicConfig(num);
+        }
     }
 
     private void checkFile(File file) throws Exception {

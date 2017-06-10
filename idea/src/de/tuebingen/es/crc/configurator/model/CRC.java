@@ -406,6 +406,43 @@ public class CRC {
         }
     }
 
+    public void resetStaticConfig(int num) {
+        Configuration staticConfig = this.staticConfigs.get(num);
+
+        for(int row = 0; row < this.rows; row++) {
+            for(int column = 0; column < this.columns; column++) {
+                this.resetPe(staticConfig.getPe(row, column));
+            }
+        }
+
+        this.notifyAllObservers();
+    }
+
+    public void resetDynamicConfig(int num) {
+        Configuration dynamicConfig = this.dynamicConfigs.get(num);
+
+        for(int row = 0; row < this.rows; row++) {
+            for(int column = 0; column < this.columns; column++) {
+                this.resetPe(dynamicConfig.getPe(row, column));
+            }
+        }
+
+        this.notifyAllObservers();
+    }
+
+    private void resetPe(PE pe) {
+        pe.setDataFlagInFu0(PE.DataFlagInFuDriver.none);
+        pe.setDataFlagInFu1(PE.DataFlagInFuDriver.none);
+        pe.setFlagInFuMux(PE.DataFlagInFuDriver.none);
+        pe.setDataFlagOutN0(PE.DataFlagOutDriver.none);
+        pe.setDataFlagOutN1(PE.DataFlagOutDriver.none);
+        pe.setDataFlagOutE0(PE.DataFlagOutDriver.none);
+        pe.setDataFlagOutE1(PE.DataFlagOutDriver.none);
+        pe.setDataFlagOutS0(PE.DataFlagOutDriver.none);
+        pe.setDataFlagOutS1(PE.DataFlagOutDriver.none);
+        pe.setFuFunction(PE.FUFunction.none);
+    }
+
     private void setRows(int rows) {
         this.rows = (rows < 2) ? 2 : rows;
     }
