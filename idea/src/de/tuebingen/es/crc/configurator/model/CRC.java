@@ -189,7 +189,7 @@ public class CRC {
             pe.setDataFlagOutS1(PE.DataFlagOutDriver.valueOf(peJson.get("dataFlagOutS1").toString()));
             pe.setDataFlagInFu0(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFu0").toString()));
             pe.setDataFlagInFu1(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFu1").toString()));
-            pe.setFlagInFuMux(PE.DataFlagInFuDriver.valueOf(peJson.get("flagInFuMux").toString()));
+            pe.setDataFlagInFuMux(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFuMux").toString()));
             pe.setFuFunction(FU.FuFunction.valueOf(peJson.get("fuFunction").toString()));
             pe.setSignedData(peJson.get("fuSignedness").toString().equals("signed"));
         }
@@ -357,8 +357,8 @@ public class CRC {
             pe.setDataFlagInFu1(PE.DataFlagInFuDriver.none);
         }
 
-        if(pe.getFlagInFuMux() == PE.DataFlagInFuDriver.data_flag_in_N_0 || pe.getFlagInFuMux() == PE.DataFlagInFuDriver.data_flag_in_N_1) {
-            pe.setFlagInFuMux(PE.DataFlagInFuDriver.none);
+        if(pe.getDataFlagInFuMux() == PE.DataFlagInFuDriver.data_flag_in_N_0 || pe.getDataFlagInFuMux() == PE.DataFlagInFuDriver.data_flag_in_N_1) {
+            pe.setDataFlagInFuMux(PE.DataFlagInFuDriver.none);
         }
 
         if(pe.getDataFlagOutE0() == PE.DataFlagOutDriver.data_flag_in_N_0 || pe.getDataFlagOutE0() == PE.DataFlagOutDriver.data_flag_in_N_1) {
@@ -435,7 +435,7 @@ public class CRC {
     private void resetPe(PE pe) {
         pe.setDataFlagInFu0(PE.DataFlagInFuDriver.none);
         pe.setDataFlagInFu1(PE.DataFlagInFuDriver.none);
-        pe.setFlagInFuMux(PE.DataFlagInFuDriver.none);
+        pe.setDataFlagInFuMux(PE.DataFlagInFuDriver.none);
         pe.setDataFlagOutN0(PE.DataFlagOutDriver.none);
         pe.setDataFlagOutN1(PE.DataFlagOutDriver.none);
         pe.setDataFlagOutE0(PE.DataFlagOutDriver.none);
@@ -717,7 +717,7 @@ public class CRC {
                 //noinspection unchecked
                 configPe.put("dataFlagInFu1", pe.getDataFlagInFu1().toString());
                 //noinspection unchecked
-                configPe.put("flagInFuMux", pe.getFlagInFuMux().toString());
+                configPe.put("dataFlagInFuMux", pe.getDataFlagInFuMux().toString());
                 //noinspection unchecked
                 configPe.put("fuFunction", pe.getFuFunction().toString());
                 //noinspection unchecked
@@ -824,7 +824,7 @@ public class CRC {
         bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutN1());
         bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutN0());
 
-        bits += PE.dataFlagInFuDriverToBits.get(pe.getFlagInFuMux());
+        bits += PE.dataFlagInFuDriverToBits.get(pe.getDataFlagInFuMux());
         bits += PE.dataFlagInFuDriverToBits.get(pe.getDataFlagInFu1());
         bits += PE.dataFlagInFuDriverToBits.get(pe.getDataFlagInFu0());
 
@@ -855,7 +855,7 @@ public class CRC {
         bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutN1());
         bits += PE.dataFlagOutDriverToBits.get(pe.getDataFlagOutN0());
 
-        bits += PE.dataFlagInFuDriverToBits.get(pe.getFlagInFuMux());
+        bits += PE.dataFlagInFuDriverToBits.get(pe.getDataFlagInFuMux());
         bits += PE.dataFlagInFuDriverToBits.get(pe.getDataFlagInFu1());
         bits += PE.dataFlagInFuDriverToBits.get(pe.getDataFlagInFu0());
 

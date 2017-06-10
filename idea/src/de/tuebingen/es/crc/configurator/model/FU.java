@@ -10,11 +10,11 @@ import java.util.LinkedHashMap;
 public class FU {
 
     public enum FuMode {
-        add, sub, mul, div, and, or, xor, not, shift_left, shift_right, compare, multiplex
-    };
+        add, sub, mul, div, and, or, xor, not, shift_left, shift_right, compare, multiplex, mula
+    }
 
     public enum FuFunction {
-        none, add, sub, mul, div, and, or, xor, not, shift_left, shift_right, compare_eq, compare_neq, compare_lt, compare_gt, compare_leq, compare_geq, mux_0, mux_1
+        none, add, sub, mul, div, and, or, xor, not, shift_left, shift_right, compare_eq, compare_neq, compare_lt, compare_gt, compare_leq, compare_geq, mux_0, mux_1, mula
     }
 
     /*
@@ -47,6 +47,7 @@ public class FU {
         put(FuMode.shift_right, "shift_right");
         put(FuMode.compare, "compare");
         put(FuMode.multiplex, "multiplex");
+        put(FuMode.mula, "mula");
     }};
 
     public static final HashMap<FuMode, HashSet<FuFunction>> fuFunctionsOfFuMode = new HashMap<FuMode, HashSet<FuFunction>>() {{
@@ -72,6 +73,7 @@ public class FU {
             add(FuFunction.mux_0);
             add(FuFunction.mux_1);
         }});
+        put(FuMode.mula, new HashSet<FuFunction>(){{ add(FuFunction.mula); }});
     }};
 
     public static final HashMap<FuFunction, FuMode> fuModeOfFuFunction = new HashMap<FuFunction, FuMode>() {{
@@ -93,6 +95,7 @@ public class FU {
         put(FuFunction.compare_geq, FuMode.compare);
         put(FuFunction.mux_0, FuMode.multiplex);
         put(FuFunction.mux_1, FuMode.multiplex);
+        put(FuFunction.mula, FuMode.mula);
     }};
 
     public static final HashMap<FuFunction, String> fuFunctionToName = new HashMap<FuFunction, String>() {{
@@ -115,6 +118,7 @@ public class FU {
         put(FuFunction.compare_geq, "compare_geq");
         put(FuFunction.mux_0, "mux_0");
         put(FuFunction.mux_1, "mux_1");
+        put(FuFunction.mula, "mula");
     }};
 
     public static final HashMap<FuFunction, String> fuFunctionToSign = new HashMap<FuFunction, String>() {{
@@ -137,6 +141,7 @@ public class FU {
         put(FuFunction.compare_geq, ">=");
         put(FuFunction.mux_0, "mux 0");
         put(FuFunction.mux_1, "mux 1");
+        put(FuFunction.mula, "× +");
     }};
 
     public static final HashMap<FuFunction, String> getFuFunctionToBits = new HashMap<FuFunction, String>() {{
@@ -159,6 +164,7 @@ public class FU {
         put(FuFunction.compare_geq, "01111");
         put(FuFunction.mux_0, "10000");
         put(FuFunction.mux_1, "10001");
+        put(FuFunction.mula, "10010");
     }};
 
     private LinkedHashMap<FuMode, Boolean> availableModes;

@@ -42,7 +42,7 @@ public class FuModesDialog extends Stage {
 
         Group root = new Group();
 
-        Scene scene = new Scene(root, 150, 500);
+        Scene scene = new Scene(root, 150, 540);
 
         VBox vBox = new VBox(availableFuModes.size()+2);
         vBox.setPadding(new Insets(10,10,10,10));

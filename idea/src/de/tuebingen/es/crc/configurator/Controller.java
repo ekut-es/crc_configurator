@@ -644,7 +644,7 @@ public class Controller {
 
     public void setPeFlagInFuMuxDriver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagInFuDriver dataFlagInFuDriver) {
         model.setSaved(false);
-        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setFlagInFuMux(dataFlagInFuDriver);
+        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setDataFlagInFuMux(dataFlagInFuDriver);
     }
 
     public void setPeDataFlagN0Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
