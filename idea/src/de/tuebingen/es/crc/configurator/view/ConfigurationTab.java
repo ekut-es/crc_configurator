@@ -51,6 +51,9 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         put(FU.FuFunction.compare_geq, 2.5*peDrawSizeTwentieth);
         put(FU.FuFunction.mux_0, 0.8*peDrawSizeTwentieth);
         put(FU.FuFunction.mux_1, 0.8*peDrawSizeTwentieth);
+        put(FU.FuFunction.dsp_add, 0.8*peDrawSizeTwentieth);
+        put(FU.FuFunction.dsp_mul, 0.8*peDrawSizeTwentieth);
+        put(FU.FuFunction.dsp_mula, 0.2*peDrawSizeTwentieth);
     }};
 
     private final Model model;

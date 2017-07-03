@@ -10,29 +10,33 @@ import java.util.LinkedHashMap;
 public class FU {
 
     public enum FuMode {
-        add, sub, mul, div, and, or, xor, not, shift_left, shift_right, compare, multiplex
+        add, sub, mul, div, and, or, xor, not, shift_left, shift_right, compare, multiplex, dsp48
     }
 
     public enum FuFunction {
-        none, add, sub, mul, div, and, or, xor, not, shift_left, shift_right, compare_eq, compare_neq, compare_lt, compare_gt, compare_leq, compare_geq, mux_0, mux_1
+        none,
+        add,
+        sub,
+        mul,
+        div,
+        and,
+        or,
+        xor,
+        not,
+        shift_left,
+        shift_right,
+        compare_eq,
+        compare_neq,
+        compare_lt,
+        compare_gt,
+        compare_leq,
+        compare_geq,
+        mux_0,
+        mux_1,
+        dsp_add,
+        dsp_mul,
+        dsp_mula
     }
-
-    /*
-    public static final HashMap<String, FuMode> nameToFuMode = new HashMap<String, FuMode>() {{
-        put("add", FuMode.add);
-        put("sub", FuMode.sub);
-        put("mul", FuMode.mul);
-        put("div", FuMode.div);
-        put("and", FuMode.and);
-        put("or", FuMode.or);
-        put("xor", FuMode.xor);
-        put("not", FuMode.not);
-        put("shift_left", FuMode.shift_left);
-        put("shift_right", FuMode.shift_right);
-        put("compare", FuMode.compare);
-        put("multiplex", FuMode.multiplex);
-    }};
-    */
 
     public static final HashMap<FuMode, String> fuModeToName = new HashMap<FuMode, String>() {{
         put(FuMode.add, "add");
@@ -47,6 +51,7 @@ public class FU {
         put(FuMode.shift_right, "shift_right");
         put(FuMode.compare, "compare");
         put(FuMode.multiplex, "multiplex");
+        put(FuMode.dsp48, "dsp48");
     }};
 
     public static final HashMap<FuMode, HashSet<FuFunction>> fuFunctionsOfFuMode = new HashMap<FuMode, HashSet<FuFunction>>() {{
@@ -72,6 +77,11 @@ public class FU {
             add(FuFunction.mux_0);
             add(FuFunction.mux_1);
         }});
+        put(FuMode.dsp48, new HashSet<FuFunction>(){{
+            add(FuFunction.dsp_add);
+            add(FuFunction.dsp_mul);
+            add(FuFunction.dsp_mula);
+        }});
     }};
 
     public static final HashMap<FuFunction, FuMode> fuModeOfFuFunction = new HashMap<FuFunction, FuMode>() {{
@@ -93,6 +103,9 @@ public class FU {
         put(FuFunction.compare_geq, FuMode.compare);
         put(FuFunction.mux_0, FuMode.multiplex);
         put(FuFunction.mux_1, FuMode.multiplex);
+        put(FuFunction.dsp_add, FuMode.dsp48);
+        put(FuFunction.dsp_mul, FuMode.dsp48);
+        put(FuFunction.dsp_mula, FuMode.dsp48);
     }};
 
     public static final HashMap<FuFunction, String> fuFunctionToName = new HashMap<FuFunction, String>() {{
@@ -115,6 +128,9 @@ public class FU {
         put(FuFunction.compare_geq, "compare_geq");
         put(FuFunction.mux_0, "mux_0");
         put(FuFunction.mux_1, "mux_1");
+        put(FuFunction.dsp_add, "dsp_add");
+        put(FuFunction.dsp_mul, "dsp_mul");
+        put(FuFunction.dsp_mula, "dsp_mula");
     }};
 
     public static final HashMap<FuFunction, String> fuFunctionToSign = new HashMap<FuFunction, String>() {{
@@ -135,8 +151,11 @@ public class FU {
         put(FuFunction.compare_gt, ">");
         put(FuFunction.compare_leq, "<=");
         put(FuFunction.compare_geq, ">=");
-        put(FuFunction.mux_0, "mux 0");
-        put(FuFunction.mux_1, "mux 1");
+        put(FuFunction.mux_0, "mux0");
+        put(FuFunction.mux_1, "mux1");
+        put(FuFunction.dsp_add, "dsp+");
+        put(FuFunction.dsp_mul, "dsp×");
+        put(FuFunction.dsp_mula, "dsp×+");
     }};
 
     public static final HashMap<FuFunction, String> getFuFunctionToBits = new HashMap<FuFunction, String>() {{
@@ -159,6 +178,9 @@ public class FU {
         put(FuFunction.compare_geq, "01111");
         put(FuFunction.mux_0, "10000");
         put(FuFunction.mux_1, "10001");
+        put(FuFunction.dsp_add, "10010");
+        put(FuFunction.dsp_mul, "10011");
+        put(FuFunction.dsp_mula, "10100");
     }};
 
     private LinkedHashMap<FuMode, Boolean> availableModes;
