@@ -54,7 +54,7 @@ public class PE {
     private DataFlagInFuDriver dataFlagInFUMux;
     private FU.FuFunction fuFunction;
 
-    private int constantRegContent;
+    private long constantRegContent;
 
     public PE(Configuration configuration) {
         this.configuration = configuration;
@@ -69,8 +69,8 @@ public class PE {
         dataFlagInFU0 = DataFlagInFuDriver.none;
         dataFlagInFU1 = DataFlagInFuDriver.none;
         dataFlagInFUMux = DataFlagInFuDriver.none;
-        fuFunction = FU.FuFunction.none;
         constantRegContent = 0;
+        fuFunction = FU.FuFunction.none;
     }
 
     /**
@@ -87,6 +87,7 @@ public class PE {
         this.dataFlagInFU0 = pe.getDataFlagInFu0();
         this.dataFlagInFU1 = pe.getDataFlagInFu1();
         this.dataFlagInFUMux = pe.getDataFlagInFuMux();
+        this.constantRegContent = pe.getConstantRegContent();
         this.fuFunction = pe.getFuFunction();
 
         this.checkSetActive();
@@ -195,11 +196,11 @@ public class PE {
         configuration.notifyAllObservers();
     }
 
-    public int getConstantRegContent() {
+    public long getConstantRegContent() {
         return constantRegContent;
     }
 
-    public void setConstantRegContent(int constantRegContent) {
+    public void setConstantRegContent(long constantRegContent) {
         this.constantRegContent = constantRegContent;
         configuration.notifyAllObservers();
     }

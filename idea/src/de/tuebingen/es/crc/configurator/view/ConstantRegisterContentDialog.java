@@ -1,20 +1,19 @@
 package de.tuebingen.es.crc.configurator.view;
 
 import de.tuebingen.es.crc.configurator.model.PE;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import static de.tuebingen.es.crc.configurator.model.Truncator.truncateNumber;
 
 /**
  * Created by luebeck on 7/4/17.
@@ -25,7 +24,7 @@ public class ConstantRegisterContentDialog extends Stage {
     private int row;
     private int column;
 
-    private int constantRegisterContent;
+    private long constantRegisterContent;
 
     public boolean apply;
 
@@ -33,16 +32,17 @@ public class ConstantRegisterContentDialog extends Stage {
     private final String allowedPrefixStringHexadecimal = "[0-9]+'h, 0x";
     private final String allowedPrefixStringBinary = "[0-9]+'b, 0b";
 
-    public int getConstantRegisterContent() {
+    public long getConstantRegisterContent() {
         return constantRegisterContent;
     }
 
-    private String removePrefix(String number) {
-        number = number.replaceAll("(^[0-9]+'d|^[0-9]+'h|^[0-9]+'b|^0x|^0b)", "");
+    private String removeFormat(String number) {
+        number = number.replaceAll("(^[0-9]+'d|^[0-9]+'h|^[0-9]+'b|^0x|^0b|_| )", "");
+
         return number;
     }
 
-    public ConstantRegisterContentDialog(PE pe, int row, int column) {
+    public ConstantRegisterContentDialog(PE pe, int row, int column, int dataWidth) {
         super();
 
         this.pe = pe;
@@ -64,7 +64,7 @@ public class ConstantRegisterContentDialog extends Stage {
         vBox.setPadding(new Insets(10,10,10,10));
         vBox.setSpacing(20);
 
-        TextField contentTextField = new TextField("0x" + Integer.toHexString(pe.getConstantRegContent()));
+        TextField contentTextField = new TextField("0x" + Long.toHexString(pe.getConstantRegContent()));
 
         final ToggleGroup toggleGroup = new ToggleGroup();
 
@@ -93,15 +93,15 @@ public class ConstantRegisterContentDialog extends Stage {
         toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if(radioButtonDecimal.isSelected()) {
                 allowedPrefixLabel.setText("Allowed Prefix: " + allowedPrefixStringDecimal);
-                contentTextField.setText(removePrefix(contentTextField.getText()));
+                contentTextField.setText(removeFormat(contentTextField.getText()));
             }
             else if(radioButtonHexadecimal.isSelected()) {
                 allowedPrefixLabel.setText("Allowed Prefix: " + allowedPrefixStringHexadecimal);
-                contentTextField.setText(removePrefix(contentTextField.getText()));
+                contentTextField.setText(removeFormat(contentTextField.getText()));
             }
             else if(radioButtonBinary.isSelected()) {
                 allowedPrefixLabel.setText("Allowed Prefix: " + allowedPrefixStringBinary);
-                contentTextField.setText(removePrefix(contentTextField.getText()));
+                contentTextField.setText(removeFormat(contentTextField.getText()));
             }
         });
 
@@ -116,11 +116,11 @@ public class ConstantRegisterContentDialog extends Stage {
         applyButton.setOnAction(event -> {
 
             if (radioButtonDecimal.isSelected()) {
-                constantRegisterContent = Integer.parseInt(removePrefix(contentTextField.getText()), 10);
+                constantRegisterContent = truncateNumber(Long.parseLong(removeFormat(contentTextField.getText()), 10), dataWidth);
             } else if (radioButtonHexadecimal.isSelected()) {
-                constantRegisterContent = Integer.parseInt(removePrefix(contentTextField.getText()), 16);
+                constantRegisterContent = truncateNumber(Long.parseLong(removeFormat(contentTextField.getText()), 16), dataWidth);
             } else if (radioButtonBinary.isSelected()) {
-                constantRegisterContent = Integer.parseInt(removePrefix(contentTextField.getText()), 2);
+                constantRegisterContent = truncateNumber(Long.parseLong(removeFormat(contentTextField.getText()), 2), dataWidth);
             }
 
             apply = true;

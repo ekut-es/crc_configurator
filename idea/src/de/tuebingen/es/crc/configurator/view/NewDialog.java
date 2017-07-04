@@ -24,6 +24,7 @@ public class NewDialog extends Stage {
     private int dynamicConfigLines;
     private boolean inputsNorth;
     private boolean inputsSouth;
+    private int dataWidth;
 
     public int getRows() {
         return rows;
@@ -49,6 +50,10 @@ public class NewDialog extends Stage {
         return inputsSouth;
     }
 
+    public int getDataWidth() {
+        return dataWidth;
+    }
+
     public boolean create;
 
     public NewDialog() {
@@ -62,7 +67,7 @@ public class NewDialog extends Stage {
 
         Group root = new Group();
 
-        Scene scene = new Scene(root, 200, 280);
+        Scene scene = new Scene(root, 200, 310);
 
         VBox vBox = new VBox(4);
         vBox.setPadding(new Insets(10,10,10,10));
@@ -100,6 +105,14 @@ public class NewDialog extends Stage {
         dynamicConfigLinesTextField.setMaxWidth(40);
         dynamicConfigLinesTextField.setText("0");
 
+        Label dataWidthLabel = new Label("Data Width");
+        NumberTextField dataWidthTextField = new NumberTextField();
+        dataWidthTextField.setMinNumber(8);
+        dataWidthTextField.setMaxNumber(64);
+        dataWidthTextField.setMinWidth(40);
+        dataWidthTextField.setMaxWidth(40);
+        dataWidthTextField.setText("32");
+
         GridPane.setConstraints(rowsLabel, 0, 0);
         GridPane.setConstraints(rowsTextField, 1, 0);
 
@@ -112,6 +125,9 @@ public class NewDialog extends Stage {
         GridPane.setConstraints(dynamicConfigLinesLabel, 0, 3);
         GridPane.setConstraints(dynamicConfigLinesTextField, 1, 3);
 
+        GridPane.setConstraints(dataWidthLabel, 0, 4);
+        GridPane.setConstraints(dataWidthTextField, 1, 4);
+
         gridPane.getChildren().addAll(
                 rowsLabel,
                 rowsTextField,
@@ -120,7 +136,9 @@ public class NewDialog extends Stage {
                 staticConfigLinesLabel,
                 staticConfigLinesTextField,
                 dynamicConfigLinesLabel,
-                dynamicConfigLinesTextField
+                dynamicConfigLinesTextField,
+                dataWidthLabel,
+                dataWidthTextField
         );
 
         CheckBox inputsSouthCheckbox = new CheckBox();
@@ -144,6 +162,7 @@ public class NewDialog extends Stage {
             dynamicConfigLines = Integer.parseInt(dynamicConfigLinesTextField.getText());
             inputsNorth = inputsNorthCheckbox.isSelected();
             inputsSouth = inputsSouthCheckbox.isSelected();
+            dataWidth = Integer.parseInt(dataWidthTextField.getText());
             this.close();
         });
 

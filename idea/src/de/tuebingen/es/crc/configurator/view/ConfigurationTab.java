@@ -278,7 +278,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         gc.save();
         gc.translate(x+1.2*peDrawSizeTwentieth,y+5.8*peDrawSizeTwentieth);
         gc.rotate(-90);
-        gc.fillText("0x" + Integer.toHexString(this.getConfig().getPe(row, column).getConstantRegContent()), 0, 0, 5.6*peDrawSizeTwentieth);
+        gc.fillText("0x" + Long.toHexString(this.getConfig().getPe(row, column).getConstantRegContent()), 0, 0, 5.6*peDrawSizeTwentieth);
         gc.restore();
     }
     /**
@@ -2628,7 +2628,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                     pe = model.getCrc().getDynamicConfig(number).getPe(finalRow, finalColumn);
                 }
 
-                ConstantRegisterContentDialog constantRegisterContentDialog = new ConstantRegisterContentDialog(pe, finalRow, finalColumn);
+                ConstantRegisterContentDialog constantRegisterContentDialog = new ConstantRegisterContentDialog(pe, finalRow, finalColumn, model.getCrc().getDataWidth());
                 constantRegisterContentDialog.showAndWait();
 
                 if(constantRegisterContentDialog.apply) {

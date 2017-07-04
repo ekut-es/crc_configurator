@@ -158,8 +158,8 @@ public class Controller {
                         newDialog.getStaticConfigLines(),
                         newDialog.getDynamicConfigLines(),
                         newDialog.areInputsNorth(),
-                        newDialog.areInputsSouth()
-                );
+                        newDialog.areInputsSouth(),
+                        newDialog.getDataWidth());
             } catch (Exception e) {
                 showErrorMessage(e.getMessage());
             }
@@ -566,8 +566,8 @@ public class Controller {
                 model.getCrc().getStaticConfigLines(),
                 model.getCrc().getDynamicConfigLines(),
                 model.getCrc().areInputsNorth(),
-                model.getCrc().areInputsSouth()
-        );
+                model.getCrc().areInputsSouth(),
+                model.getCrc().getDataWidth());
 
         editDialog.showAndWait();
 
@@ -583,8 +583,8 @@ public class Controller {
                     editDialog.getStaticConfigLines(),
                     editDialog.getDynamicConfigLines(),
                     editDialog.areInputsNorth(),
-                    editDialog.areInputsSouth()
-            );
+                    editDialog.areInputsSouth(),
+                    editDialog.getDataWidth());
 
             this.displayStaticConfigTabs();
             this.displayDynamicConfigTabs();
@@ -677,7 +677,7 @@ public class Controller {
         this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutS1(dataFlagOutDriver);
     }
 
-    public void setPeConstantRegisterContent(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, int constantRegsiterContent) {
+    public void setPeConstantRegisterContent(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, long constantRegsiterContent) {
         model.setSaved(false);
         this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setConstantRegContent(constantRegsiterContent);
     }

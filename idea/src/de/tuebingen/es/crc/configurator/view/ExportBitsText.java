@@ -87,6 +87,7 @@ public class ExportBitsText {
         String buffer;
         String text = "";
 
+        /*
         text += "Bits for the CRC Core Verilog Module (crc_core.v)\n\n";
         text += "PE_OP_PARAMETERS:\n";
         text += getString(crc.getPeOpParametersBits(), cLikeHexRepresentation);
@@ -94,13 +95,18 @@ public class ExportBitsText {
         text += "PE_STATIC_CONFIG_PARAMETERS:\n";
         text += getString(crc.getStaticConfigParameterBits(), cLikeHexRepresentation);
         text += "\n\n\n";
+        */
         text += "Bits for Single PEs (pe.v) ";
 
         for(int i = 0; i < crc.getRows(); i++) {
             for(int j = 0; j < crc.getColumns(); j++) {
                 text += "PE " + i + "," + j + ":\n";
                 text += "static_config_content:\n";
-                text += getString(crc.getPeStaticConfigParameterBits(i,j), cLikeHexRepresentation);
+                text += getString(crc.getPeStaticConfigParameterBits(i, j), cLikeHexRepresentation);
+                text += "\n\n";
+
+                text += "static_const_reg_content:\n";
+                text += getString(crc.getPeStaticConstRegContentBits(i, j), cLikeHexRepresentation);
                 text += "\n\n";
 
                 HashMap<Integer, Configuration> dynamicConfigs = crc.getDynamicConfigs();
@@ -108,6 +114,10 @@ public class ExportBitsText {
                 for(Map.Entry<Integer, Configuration> entry : dynamicConfigs.entrySet()) {
                     text += "dynamic_config_content_" + entry.getKey() + ":\n";
                     text += getString(crc.getPeDynamicConfigParameterBits(i, j, entry.getKey()), cLikeHexRepresentation);
+                    text += "\n\n";
+
+                    text += "dynamic_const_reg_content_:" + entry.getKey() + "\n";
+                    text += getString(crc.getPeDynamicConstRegContentBits(i, j, entry.getKey()), cLikeHexRepresentation);
                     text += "\n\n";
                 }
             }

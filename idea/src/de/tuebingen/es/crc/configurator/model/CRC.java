@@ -21,6 +21,7 @@ public class CRC {
     private int dynamicConfigLines;
     private boolean inputsNorth;
     private boolean inputsSouth;
+    private int dataWidth;
 
     private String comment;
 
@@ -47,9 +48,10 @@ public class CRC {
      * @param dynamicConfigLines
      * @param inputsNorth
      * @param inputsSouth
+     * @param dataWidth
      * @param model
      */
-    public CRC(int rows, int columns, int staticConfigLines, int dynamicConfigLines, boolean inputsNorth, boolean inputsSouth, Model model) {
+    public CRC(int rows, int columns, int staticConfigLines, int dynamicConfigLines, boolean inputsNorth, boolean inputsSouth, int dataWidth, Model model) {
         this.model = model;
         this.setRows(rows);
         this.setColumns(columns);
@@ -57,6 +59,7 @@ public class CRC {
         this.setDynamicConfigLines(dynamicConfigLines);
         this.setInputsNorth(inputsNorth);
         this.setInputsSouth(inputsSouth);
+        this.setDataWidth(dataWidth);
         this.setComment("");
 
         this.generateFuMatrix();
@@ -103,6 +106,7 @@ public class CRC {
             this.setInputsSouth(false);
         }
 
+        this.setDataWidth(Integer.parseInt(jsonCrcDescription.get("dataWidth").toString()));
 
         this.setComment(jsonCrcDescription.get("comment").toString());
 
@@ -190,7 +194,7 @@ public class CRC {
             pe.setDataFlagInFu0(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFu0").toString()));
             pe.setDataFlagInFu1(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFu1").toString()));
             pe.setDataFlagInFuMux(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFuMux").toString()));
-            pe.setConstantRegContent(Integer.parseInt(peJson.get("constRegContent").toString()));
+            pe.setConstantRegContent(Long.parseLong(peJson.get("constRegContent").toString()));
             pe.setFuFunction(FU.FuFunction.valueOf(peJson.get("fuFunction").toString()));
             pe.setSignedData(peJson.get("fuSignedness").toString().equals("signed"));
         }
@@ -206,8 +210,9 @@ public class CRC {
      * @param dynamicConfigLines
      * @param inputsNorth
      * @param inputsSouth
+     * @param dataWidth
      */
-    public void edit(int rows, int columns, int staticConfigLines, int dynamicConfigLines, boolean inputsNorth, boolean inputsSouth) {
+    public void edit(int rows, int columns, int staticConfigLines, int dynamicConfigLines, boolean inputsNorth, boolean inputsSouth, int dataWidth) {
 
 
         // save current FU matrix in temp FU matrix
@@ -346,6 +351,36 @@ public class CRC {
         this.inputsNorth = inputsNorth;
         this.inputsSouth = inputsSouth;
 
+        // if data width reduced changed truncate all const reg contents
+        if(dataWidth < this.dataWidth) {
+            // loop through static configs
+            for(int i = 0; i < this.staticConfigLines; i++) {
+
+                Configuration staticConfig = staticConfigs.get(i);
+
+                for(int row = 0; row < this.rows; row++) {
+                    for(int column = 0; column < this.columns; column++) {
+                        System.out.println(row + "," + column);
+                        truncateConstantRegisterContent(staticConfig.getPe(row, column), dataWidth);
+                    }
+                }
+            }
+
+            // loop through dynamic configs
+            for(int i = 0; i < this.dynamicConfigLines; i++) {
+
+                Configuration dynamicConfig = dynamicConfigs.get(i);
+
+                for(int row = 0; row < this.rows; row++) {
+                    for(int column = 0; column < this.columns; column++) {
+                        truncateConstantRegisterContent(dynamicConfig.getPe(row, column), dataWidth);
+                    }
+                }
+            }
+        }
+
+        this.dataWidth = dataWidth;
+
         this.notifyAllObservers();
     }
 
@@ -407,6 +442,10 @@ public class CRC {
         if(pe.getDataFlagOutE1() == PE.DataFlagOutDriver.data_flag_in_S_0 || pe.getDataFlagOutE1() == PE.DataFlagOutDriver.data_flag_in_S_1) {
             pe.setDataFlagOutE1(PE.DataFlagOutDriver.none);
         }
+    }
+
+    private void truncateConstantRegisterContent(PE pe, int dataWidth) {
+        pe.setConstantRegContent(Truncator.truncateNumber(pe.getConstantRegContent(), dataWidth));
     }
 
     public void resetStaticConfig(int num) {
@@ -493,6 +532,14 @@ public class CRC {
 
     public void setInputsSouth(boolean inputsSouth) {
         this.inputsSouth = inputsSouth;
+    }
+
+    public int getDataWidth() {
+        return dataWidth;
+    }
+
+    public void setDataWidth(int dataWidth) {
+        this.dataWidth = (dataWidth < 8) ? 8 : (dataWidth > 64) ? 64 : dataWidth;
     }
 
     public String getComment() {
@@ -602,6 +649,8 @@ public class CRC {
 
         jsonCRCDescription.put("inputsNorth", inputsNorth);
         jsonCRCDescription.put("inputsSouth", inputsSouth);
+
+        jsonCRCDescription.put("dataWidth", dataWidth);
 
         //noinspection unchecked
         jsonCRCDescription.put("comment", comment);
@@ -804,6 +853,19 @@ public class CRC {
         return bits;
     }
 
+    public String getPeStaticConstRegContentBits(int row, int column) {
+
+        String bits = "";
+
+        for(Map.Entry<Integer, Configuration> entry : staticConfigs.entrySet()) {
+            bits = this.getPeStaticConstRegContentBits(row, column, entry.getKey()) + bits;
+        }
+
+        System.out.println();
+
+        return bits;
+    }
+
     /**
      * bits for a static config of a PE
      * @param row
@@ -835,6 +897,20 @@ public class CRC {
         return bits;
     }
 
+    private String getPeStaticConstRegContentBits(int row, int column, int configNumber) {
+
+        PE pe = staticConfigs.get(configNumber).getPe(row, column);
+
+        String bits = Long.toBinaryString(pe.getConstantRegContent());
+
+        // add leading zeros
+        while(bits.length() < dataWidth) {
+            bits = "0" + bits;
+        }
+
+        return bits;
+    }
+
     /**
      * bits for a dynamic config of a PE
      * @param row
@@ -862,6 +938,20 @@ public class CRC {
         bits += PE.dataFlagInFuDriverToBits.get(pe.getDataFlagInFu0());
 
         bits += FU.getFuFunctionToBits.get(pe.getFuFunction());
+
+        return bits;
+    }
+
+    public String getPeDynamicConstRegContentBits(int row, int column, int configNumber) {
+
+        PE pe = dynamicConfigs.get(configNumber).getPe(row, column);
+
+        String bits = Long.toBinaryString(pe.getConstantRegContent());
+
+        // add leading zeros
+        while(bits.length() < dataWidth) {
+            bits = "0" + bits;
+        }
 
         return bits;
     }

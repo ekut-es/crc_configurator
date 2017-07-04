@@ -81,9 +81,10 @@ public class Model implements Observable {
      * @param columns
      * @param staticConfigLines
      * @param dynamicConfigLines
+     * @param dataWidth
      */
-    public void createCrcDescriptionFile(int rows, int columns, int staticConfigLines, int dynamicConfigLines, boolean inputsNorth, boolean inputsSouth) {
-        crc = new CRC(rows, columns, staticConfigLines, dynamicConfigLines, inputsNorth, inputsSouth, this);
+    public void createCrcDescriptionFile(int rows, int columns, int staticConfigLines, int dynamicConfigLines, boolean inputsNorth, boolean inputsSouth, int dataWidth) {
+        crc = new CRC(rows, columns, staticConfigLines, dynamicConfigLines, inputsNorth, inputsSouth, dataWidth, this);
         saved = false;
     }
 
@@ -166,11 +167,12 @@ public class Model implements Observable {
      * @param columns
      * @param staticConfigLines
      * @param dynamicConfigLines
+     * @param dataWidth
      */
-    public void editCrc(int rows, int columns, int staticConfigLines, int dynamicConfigLines, boolean inputsNorth, boolean inputsSouth) {
+    public void editCrc(int rows, int columns, int staticConfigLines, int dynamicConfigLines, boolean inputsNorth, boolean inputsSouth, int dataWidth) {
         saved = false;
         crcWasResized = true;
-        crc.edit(rows, columns, staticConfigLines, dynamicConfigLines, inputsNorth, inputsSouth);
+        crc.edit(rows, columns, staticConfigLines, dynamicConfigLines, inputsNorth, inputsSouth, dataWidth);
         crcWasResized = false;
     }
 
