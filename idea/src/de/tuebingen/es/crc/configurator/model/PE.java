@@ -14,7 +14,7 @@ public class PE {
     }
 
     public enum DataFlagInFuDriver {
-        none, data_flag_in_N_0, data_flag_in_N_1, data_flag_in_S_0, data_flag_in_S_1, data_flag_in_W_0, data_flag_in_W_1
+        none, data_flag_in_N_0, data_flag_in_N_1, data_flag_in_S_0, data_flag_in_S_1, data_flag_in_W_0, data_flag_in_W_1, const_reg
     }
 
     public static final HashMap<DataFlagInFuDriver, String> dataFlagInFuDriverToBits = new HashMap<DataFlagInFuDriver, String>() {{
@@ -25,6 +25,7 @@ public class PE {
         put(DataFlagInFuDriver.data_flag_in_S_1, "011");
         put(DataFlagInFuDriver.data_flag_in_W_0, "100");
         put(DataFlagInFuDriver.data_flag_in_W_1, "101");
+        put(DataFlagInFuDriver.const_reg, "110");
     }};
 
     public static final HashMap<DataFlagOutDriver, String> dataFlagOutDriverToBits = new HashMap<DataFlagOutDriver, String>() {{
@@ -52,6 +53,44 @@ public class PE {
     private DataFlagInFuDriver dataFlagInFU1;
     private DataFlagInFuDriver dataFlagInFUMux;
     private FU.FuFunction fuFunction;
+
+    private int constantRegContent;
+
+    public PE(Configuration configuration) {
+        this.configuration = configuration;
+        active = false;
+        signedData = false;
+        dataFlagOutN0 = DataFlagOutDriver.none;
+        dataFlagOutN1 = DataFlagOutDriver.none;
+        dataFlagOutE0 = DataFlagOutDriver.none;
+        dataFlagOutE1 = DataFlagOutDriver.none;
+        dataFlagOutS0 = DataFlagOutDriver.none;
+        dataFlagOutS1 = DataFlagOutDriver.none;
+        dataFlagInFU0 = DataFlagInFuDriver.none;
+        dataFlagInFU1 = DataFlagInFuDriver.none;
+        dataFlagInFUMux = DataFlagInFuDriver.none;
+        fuFunction = FU.FuFunction.none;
+        constantRegContent = 0;
+    }
+
+    /**
+     * copies content of another PE
+     * @param pe
+     */
+    public void copy(PE pe) {
+        this.signedData = pe.isSignedData();
+        this.dataFlagOutN0 = pe.getDataFlagOutN0();
+        this.dataFlagOutN1 = pe.getDataFlagOutN1();
+        this.dataFlagOutE0 = pe.getDataFlagOutE0();
+        this.dataFlagOutE1 = pe.getDataFlagOutE1();
+        this.dataFlagOutS0 = pe.getDataFlagOutS1();
+        this.dataFlagInFU0 = pe.getDataFlagInFu0();
+        this.dataFlagInFU1 = pe.getDataFlagInFu1();
+        this.dataFlagInFUMux = pe.getDataFlagInFuMux();
+        this.fuFunction = pe.getFuFunction();
+
+        this.checkSetActive();
+    }
 
     public boolean isActive() {
         return active;
@@ -156,6 +195,15 @@ public class PE {
         configuration.notifyAllObservers();
     }
 
+    public int getConstantRegContent() {
+        return constantRegContent;
+    }
+
+    public void setConstantRegContent(int constantRegContent) {
+        this.constantRegContent = constantRegContent;
+        configuration.notifyAllObservers();
+    }
+
     public FU.FuFunction getFuFunction() {
         return fuFunction;
     }
@@ -165,40 +213,7 @@ public class PE {
         configuration.notifyAllObservers();
     }
 
-    public PE(Configuration configuration) {
-        this.configuration = configuration;
-        active = false;
-        signedData = false;
-        dataFlagOutN0 = DataFlagOutDriver.none;
-        dataFlagOutN1 = DataFlagOutDriver.none;
-        dataFlagOutE0 = DataFlagOutDriver.none;
-        dataFlagOutE1 = DataFlagOutDriver.none;
-        dataFlagOutS0 = DataFlagOutDriver.none;
-        dataFlagOutS1 = DataFlagOutDriver.none;
-        dataFlagInFU0 = DataFlagInFuDriver.none;
-        dataFlagInFU1 = DataFlagInFuDriver.none;
-        dataFlagInFUMux = DataFlagInFuDriver.none;
-        fuFunction = FU.FuFunction.none;
-    }
 
-    /**
-     * copies content of another PE
-     * @param pe
-     */
-    public void copy(PE pe) {
-        this.signedData = pe.isSignedData();
-        this.dataFlagOutN0 = pe.getDataFlagOutN0();
-        this.dataFlagOutN1 = pe.getDataFlagOutN1();
-        this.dataFlagOutE0 = pe.getDataFlagOutE0();
-        this.dataFlagOutE1 = pe.getDataFlagOutE1();
-        this.dataFlagOutS0 = pe.getDataFlagOutS1();
-        this.dataFlagInFU0 = pe.getDataFlagInFu0();
-        this.dataFlagInFU1 = pe.getDataFlagInFu1();
-        this.dataFlagInFUMux = pe.getDataFlagInFuMux();
-        this.fuFunction = pe.getFuFunction();
-
-        this.checkSetActive();
-    }
 
     /**
      * checks if the PE is active

@@ -149,7 +149,7 @@ public class EditDialog extends Stage {
         // close dialog when "Cancel" button was pressed
         cancelButton.setOnAction(event -> this.close());
 
-        // set variable when "Create" button was pressed
+        // set variables and close when "Apply" button was pressed
         applyButton.setOnAction(event -> {
             apply = true;
             this.rows = Integer.parseInt(rowsTextField.getText());

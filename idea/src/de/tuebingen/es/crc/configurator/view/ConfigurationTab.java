@@ -32,7 +32,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
     private static final int peDrawSizeTwentieth = (PE_DRAW_SIZE/20);
 
     private static final HashMap<FU.FuFunction, Double> fuFunctionSignXOffset = new HashMap<FU.FuFunction, Double>() {{
-        put(FU.FuFunction.none, 1.8*peDrawSizeTwentieth);
+        put(FU.FuFunction.none, 1.5*peDrawSizeTwentieth);
         put(FU.FuFunction.add, 2.5*peDrawSizeTwentieth);
         put(FU.FuFunction.sub, 2.5*peDrawSizeTwentieth);
         put(FU.FuFunction.mul, 2.5*peDrawSizeTwentieth);
@@ -257,6 +257,30 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
     }
 
+    private void drawConstantRegister(GraphicsContext gc, int x, int y, int row, int column) {
+        // draw constant register
+        gc.strokePolygon(
+                new double[] {
+                        0+x,
+                        1.6*peDrawSizeTwentieth+x,
+                        1.6*peDrawSizeTwentieth+x,
+                        0+x
+                },
+                new double[]{
+                        0+y,
+                        0+y,
+                        6*peDrawSizeTwentieth+y,
+                        6*peDrawSizeTwentieth+y
+                },
+                4);
+
+        // constant register content
+        gc.save();
+        gc.translate(x+1.2*peDrawSizeTwentieth,y+5.8*peDrawSizeTwentieth);
+        gc.rotate(-90);
+        gc.fillText("0x" + Integer.toHexString(this.getConfig().getPe(row, column).getConstantRegContent()), 0, 0, 5.6*peDrawSizeTwentieth);
+        gc.restore();
+    }
     /**
      * draws a PE
      * @param gc
@@ -279,6 +303,10 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         // draw FU
         this.drawFU(gc, x, y, false);
 
+        // draw constant register
+        this.drawConstantRegister(gc, x, y, row, column);
+
+
         // draw function into FU
         FU.FuFunction fuFunction = this.getConfig().getPe(row, column).getFuFunction();
 
@@ -297,9 +325,9 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         boolean signedData = this.getConfig().getPe(row, column).isSignedData();
 
         if(!signedData) {
-            gc.fillText("unsigned", 7.2*peDrawSizeTwentieth+x, 13*peDrawSizeTwentieth+y);
+            gc.fillText("unsigned", 7.2*peDrawSizeTwentieth+x, 13*peDrawSizeTwentieth+y, 5.6*peDrawSizeTwentieth);
         } else {
-            gc.fillText("signed", 8*peDrawSizeTwentieth+x, 13*peDrawSizeTwentieth+y);
+            gc.fillText("signed", 8*peDrawSizeTwentieth+x, 13*peDrawSizeTwentieth+y, 5.6*peDrawSizeTwentieth);
         }
 
         // draw FU pads
@@ -484,6 +512,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
         }
 
+        // draws all connections for debugging purposes
         /*
         this.drawInternalConnectionFuToN0(x, y);
         this.drawInternalConnectionFuToN1(x, y);
@@ -518,7 +547,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
 
         this.drawInternalConnectionS1ToInFu0(x, y);
         this.drawInternalConnectionS1ToInFu1(x, y);
-        this.drawInternalConnectionS1toInFUMux(x, y);
+        this.drawInternalConnectionS1ToInFuMux(x, y);
         this.drawInternalConnectionS1ToN0(x, y);
         this.drawInternalConnectionS1ToN1(x, y);
         this.drawInternalConnectionS1ToE0(x, y);
@@ -543,7 +572,12 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawInternalConnectionW1ToE1(x, y);
         this.drawInternalConnectionW1ToS1(x, y);
         this.drawInternalConnectionW1ToS1(x, y);
+
+        this.drawInternalConnectionConstRegToFu0(x, y);
+        this.drawInternalConnectionConstRegToFu1(x, y);
+        this.drawInternalConnectionConstRegToFuMux(x, y);
         */
+
 
         // internal connection
         // * -> FU0
@@ -567,6 +601,9 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 break;
             case data_flag_in_W_1:
                 this.drawInternalConnectionW1ToInFu0(x, y);
+                break;
+            case const_reg:
+                this.drawInternalConnectionConstRegToFu0(x, y);
                 break;
         }
 
@@ -592,6 +629,9 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
             case data_flag_in_W_1:
                 this.drawInternalConnectionW1ToInFu1(x, y);
                 break;
+            case const_reg:
+                this.drawInternalConnectionConstRegToFu1(x, y);
+                break;
         }
 
         // * -> FUMux
@@ -615,6 +655,9 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 break;
             case data_flag_in_W_1:
                 this.drawInternalConnectionW1ToInFuMux(x, y);
+                break;
+            case const_reg:
+                this.drawInternalConnectionConstRegToFuMux(x, y);
                 break;
         }
 
@@ -756,6 +799,8 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 break;
         }
     }
+
+
 
     private void drawConnectionN0ToS0(double x, double y, boolean crcInput) {
 
@@ -1238,7 +1283,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 5
         );
 
-        this.drawArrowTipInFU0(x,y);
+        this.drawArrowTipInFu0(x,y);
     }
 
     private void drawInternalConnectionN0ToInFu1(double x, double y) {
@@ -1261,7 +1306,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 5
         );
 
-        this.drawArrowTipInFU1(x,y);
+        this.drawArrowTipInFu1(x,y);
     }
 
     private void drawInternalConnectionN0ToInFuMux(double x, double y) {
@@ -1290,7 +1335,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 8
         );
 
-        this.drawArrowTipInFUMux(x,y);
+        this.drawArrowTipInFuMux(x,y);
     }
 
     private void drawInternalConnectionN0ToE0(double x, double y) {
@@ -1409,7 +1454,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 5
         );
 
-        this.drawArrowTipInFU0(x,y);
+        this.drawArrowTipInFu0(x,y);
     }
 
     private void drawInternalConnectionN1ToInFu1(double x, double y) {
@@ -1432,7 +1477,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 5
         );
 
-        this.drawArrowTipInFU1(x,y);
+        this.drawArrowTipInFu1(x,y);
     }
 
    private void drawInternalConnectionN1ToInFuMux(double x, double y) {
@@ -1461,7 +1506,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 8
         );
 
-        this.drawArrowTipInFUMux(x,y);
+        this.drawArrowTipInFuMux(x,y);
     }
 
     private void drawInternalConnectionN1ToE0(double x, double y) {
@@ -1580,7 +1625,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 5
         );
 
-        this.drawArrowTipInFU0(x,y);
+        this.drawArrowTipInFu0(x,y);
     }
 
     private void drawInternalConnectionS0ToInFu1(double x, double y) {
@@ -1603,7 +1648,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 5
         );
 
-        this.drawArrowTipInFU1(x,y);
+        this.drawArrowTipInFu1(x,y);
     }
 
     private void drawInternalConnectionS0ToInFuMux(double x, double y) {
@@ -1624,7 +1669,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 4
         );
 
-        this.drawArrowTipInFUMux(x, y);
+        this.drawArrowTipInFuMux(x, y);
     }
 
     private void drawInternalConnectionS0ToE0(double x, double y) {
@@ -1739,7 +1784,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 5
         );
 
-        this.drawArrowTipInFU0(x,y);
+        this.drawArrowTipInFu0(x,y);
     }
 
     private void drawInternalConnectionS1ToInFu1(double x, double y) {
@@ -1762,7 +1807,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 5
         );
 
-        this.drawArrowTipInFU1(x,y);
+        this.drawArrowTipInFu1(x,y);
     }
 
     private void drawInternalConnectionS1ToInFuMux(double x, double y) {
@@ -1783,7 +1828,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 4
         );
 
-        this.drawArrowTipInFUMux(x, y);
+        this.drawArrowTipInFuMux(x, y);
     }
 
     private void drawInternalConnectionS1ToE0(double x, double y) {
@@ -1908,7 +1953,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 4
         );
 
-        this.drawArrowTipInFU0(x, y);
+        this.drawArrowTipInFu0(x, y);
     }
 
     private void drawInternalConnectionW0ToInFu1(double x, double y) {
@@ -1929,7 +1974,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 4
         );
 
-        this.drawArrowTipInFU1(x, y);
+        this.drawArrowTipInFu1(x, y);
     }
 
     private void drawInternalConnectionW0ToInFuMux(double x, double y) {
@@ -1952,7 +1997,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 5
         );
 
-        this.drawArrowTipInFUMux(x, y);
+        this.drawArrowTipInFuMux(x, y);
     }
 
     private void drawInternalConnectionW0ToN0(double x, double y) {
@@ -2127,7 +2172,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 4
         );
 
-        this.drawArrowTipInFU0(x, y);
+        this.drawArrowTipInFu0(x, y);
     }
 
     private void drawInternalConnectionW1ToInFu1(double x, double y) {
@@ -2148,7 +2193,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 4
         );
 
-        this.drawArrowTipInFU1(x, y);
+        this.drawArrowTipInFu1(x, y);
     }
 
     private void drawInternalConnectionW1ToInFuMux(double x, double y) {
@@ -2171,7 +2216,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 5
         );
 
-        this.drawArrowTipInFUMux(x, y);
+        this.drawArrowTipInFuMux(x, y);
     }
 
     private void drawInternalConnectionW1ToN0(double x, double y) {
@@ -2322,6 +2367,67 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         this.drawArrowTipS1(x, y);
     }
 
+    private void drawInternalConnectionConstRegToFu0(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+0.8*peDrawSizeTwentieth,
+                        x+0.8*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth-12-1,
+                },
+                new double[] {
+                        y+6*peDrawSizeTwentieth,
+                        y+6*peDrawSizeTwentieth+6,
+                        y+6*peDrawSizeTwentieth+6
+                },
+                3
+        );
+
+        this.drawArrowTipInFu0(x,y);
+
+    }
+
+    private void drawInternalConnectionConstRegToFu1(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+0.8*peDrawSizeTwentieth,
+                        x+0.8*peDrawSizeTwentieth,
+                        x+7*peDrawSizeTwentieth-12-1,
+                },
+                new double[] {
+                        y+6*peDrawSizeTwentieth,
+                        y+13*peDrawSizeTwentieth+6,
+                        y+13*peDrawSizeTwentieth+6
+                },
+                3
+        );
+
+        this.drawArrowTipInFu1(x,y);
+    }
+
+    private void drawInternalConnectionConstRegToFuMux(double x, double y) {
+
+        gc.strokePolyline(
+                new double[] {
+                        x+0.8*peDrawSizeTwentieth,
+                        x+0.8*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth,
+                        x+10*peDrawSizeTwentieth
+                },
+                new double[] {
+                        y+6*peDrawSizeTwentieth,
+                        y+17.5*peDrawSizeTwentieth,
+                        y+17.5*peDrawSizeTwentieth,
+                        y+14.5*peDrawSizeTwentieth+12+1
+                },
+                4
+        );
+
+        this.drawArrowTipInFuMux(x,y);
+    }
+
+
     private void drawArrowTipN0(double x, double y) {
         gc.fillPolygon(
                 new double[] {
@@ -2418,7 +2524,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         );
     }
 
-    private void drawArrowTipInFU0(double x, double y) {
+    private void drawArrowTipInFu0(double x, double y) {
         gc.fillPolygon(
                 new double[] {
                         x+7*peDrawSizeTwentieth-12,
@@ -2434,7 +2540,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         );
     }
 
-    private void drawArrowTipInFU1(double x, double y) {
+    private void drawArrowTipInFu1(double x, double y) {
         gc.fillPolygon(
                 new double[] {
                         x+7*peDrawSizeTwentieth-12,
@@ -2450,7 +2556,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         );
     }
 
-    private void drawArrowTipInFUMux(double x, double y) {
+    private void drawArrowTipInFuMux(double x, double y) {
         gc.fillPolygon(
                 new double[] {
                         x+10*peDrawSizeTwentieth,
@@ -2508,6 +2614,27 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
             int finalColumn = column;
 
             // check if a pad and which pad was clicked
+
+            // const reg
+            if(     xNormalized >= 0*peDrawSizeTwentieth &&
+                    xNormalized <= 1.6*peDrawSizeTwentieth &&
+                    yNormalized >= 0*peDrawSizeTwentieth &&
+                    yNormalized <= 6*peDrawSizeTwentieth) {
+
+                PE pe = null;
+                if(this.configurationTabType == ConfigurationTabType.STATIC) {
+                    pe = model.getCrc().getStaticConfig(number).getPe(finalRow, finalColumn);
+                } else {
+                    pe = model.getCrc().getDynamicConfig(number).getPe(finalRow, finalColumn);
+                }
+
+                ConstantRegisterContentDialog constantRegisterContentDialog = new ConstantRegisterContentDialog(pe, finalRow, finalColumn);
+                constantRegisterContentDialog.showAndWait();
+
+                if(constantRegisterContentDialog.apply) {
+                    controller.setPeConstantRegisterContent(configurationTabType, number, finalRow, finalColumn, constantRegisterContentDialog.getConstantRegisterContent());
+                }
+            }
 
             // FU Function
              if(

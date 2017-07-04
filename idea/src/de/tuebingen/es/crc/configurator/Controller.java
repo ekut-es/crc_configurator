@@ -107,7 +107,7 @@ public class Controller {
      * displays a error dialog with a text
      * @param errorMessage
      */
-    private void showErrorMessage(String errorMessage) {
+    public void showErrorMessage(String errorMessage) {
         Alert dialog = new Alert(Alert.AlertType.ERROR);
         dialog.setTitle("Error");
         dialog.setContentText(errorMessage);
@@ -675,6 +675,11 @@ public class Controller {
     public void setPeDataFlagS1Driver(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, PE.DataFlagOutDriver dataFlagOutDriver) {
         model.setSaved(false);
         this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutS1(dataFlagOutDriver);
+    }
+
+    public void setPeConstantRegisterContent(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, int constantRegsiterContent) {
+        model.setSaved(false);
+        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setConstantRegContent(constantRegsiterContent);
     }
 
     public void setCrcComment(String comment) {

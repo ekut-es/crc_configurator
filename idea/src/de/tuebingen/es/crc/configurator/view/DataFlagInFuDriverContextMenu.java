@@ -27,6 +27,7 @@ public class DataFlagInFuDriverContextMenu extends ContextMenu {
             this.addMenuItem(activeDataFlagInFuDriver, "data_flag_in_S_1");
         }
 
+        this.addMenuItem(activeDataFlagInFuDriver, "const_reg");
     }
 
     private void addMenuItem(PE.DataFlagInFuDriver activeDataFlagInFuDriver, String dataFlagInFuDriver) {
