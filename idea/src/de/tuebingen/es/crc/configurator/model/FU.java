@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 public class FU {
 
     public enum FuMode {
-        add, sub, mul, div, and, or, xor, not, shift_left, shift_right, compare, multiplex, dsp48, lut_8bit
+        add, sub, mul, div, and, or, xor, not, shift_left, shift_right, compare, multiplex, dsp48, lut_8bit, max, min
     }
 
     public enum FuFunction {
@@ -36,7 +36,9 @@ public class FU {
         dsp_add,
         dsp_mul,
         dsp_mula,
-        lut_8bit
+        lut_8bit,
+        max,
+        min
     }
 
     public static final HashMap<FuMode, String> fuModeToName = new HashMap<FuMode, String>() {{
@@ -54,6 +56,8 @@ public class FU {
         put(FuMode.multiplex, "multiplex");
         put(FuMode.dsp48, "dsp48");
         put(FuMode.lut_8bit, "lut_8bit");
+        put(FuMode.max, "max");
+        put(FuMode.min, "min");
     }};
 
     public static final HashMap<FuMode, HashSet<FuFunction>> fuFunctionsOfFuMode = new HashMap<FuMode, HashSet<FuFunction>>() {{
@@ -85,6 +89,8 @@ public class FU {
             add(FuFunction.dsp_mula);
         }});
         put(FuMode.lut_8bit, new HashSet<FuFunction>(){{ add(FuFunction.lut_8bit); }});
+        put(FuMode.max, new HashSet<FuFunction>(){{ add(FuFunction.max); }});
+        put(FuMode.min, new HashSet<FuFunction>(){{ add(FuFunction.min); }});
     }};
 
     public static final HashMap<FuFunction, FuMode> fuModeOfFuFunction = new HashMap<FuFunction, FuMode>() {{
@@ -110,6 +116,8 @@ public class FU {
         put(FuFunction.dsp_mul, FuMode.dsp48);
         put(FuFunction.dsp_mula, FuMode.dsp48);
         put(FuFunction.lut_8bit, FuMode.lut_8bit);
+        put(FuFunction.max, FuMode.max);
+        put(FuFunction.min, FuMode.min);
     }};
 
     public static final HashMap<FuFunction, String> fuFunctionToName = new HashMap<FuFunction, String>() {{
@@ -136,6 +144,8 @@ public class FU {
         put(FuFunction.dsp_mul, "dsp_mul");
         put(FuFunction.dsp_mula, "dsp_mula");
         put(FuFunction.lut_8bit, "lut_8bit");
+        put(FuFunction.max, "max");
+        put(FuFunction.min, "min");
     }};
 
     public static final HashMap<FuFunction, String> fuFunctionToSign = new HashMap<FuFunction, String>() {{
@@ -162,6 +172,8 @@ public class FU {
         put(FuFunction.dsp_mul, "dsp×");
         put(FuFunction.dsp_mula, "dsp×+");
         put(FuFunction.lut_8bit, "lut8");
+        put(FuFunction.max, "max");
+        put(FuFunction.min, "min");
     }};
 
     public static final HashMap<FuFunction, String> getFuFunctionToBits = new HashMap<FuFunction, String>() {{
@@ -188,6 +200,8 @@ public class FU {
         put(FuFunction.dsp_mul, "10011");
         put(FuFunction.dsp_mula, "10100");
         put(FuFunction.lut_8bit, "10101");
+        put(FuFunction.max, "10110");
+        put(FuFunction.min, "10111");
     }};
 
     private LinkedHashMap<FuMode, Boolean> availableModes;
