@@ -614,6 +614,17 @@ public class Controller {
         }
     }
 
+    public void setFuLut8BitContentHexString(int row, int column, String lut8BitContentHexString) {
+
+        model.setSaved(false);
+
+        if(row == -1 || column == -1) {
+            model.getCrc().setAllFuLut8BitContentHexString(lut8BitContentHexString);
+        } else {
+            model.getCrc().setFuLut8BitContentHexString(row, column, lut8BitContentHexString);
+        }
+    }
+
     public void setFuSignedness(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, boolean fuSingedness) {
         model.setSaved(false);
         this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setSignedData(fuSingedness);

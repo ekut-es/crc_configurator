@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class FuModesDialog extends Stage {
 
-    public boolean modelHasChanged;
+    private boolean modelHasChanged;
     private boolean applyToAll;
     private final LinkedHashMap<FU.FuMode, Boolean> availableFuModes;
     private final LinkedHashMap<FU.FuMode, CheckBox> fuModeCheckboxes;
@@ -98,5 +98,9 @@ public class FuModesDialog extends Stage {
 
     public Boolean getApplyToAll() {
         return this.applyToAll;
+    }
+
+    public boolean hasModelChanged() {
+        return modelHasChanged;
     }
 }

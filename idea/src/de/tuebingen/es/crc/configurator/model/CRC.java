@@ -131,6 +131,8 @@ public class CRC {
             for (String fuMode : (Iterable<String>) fuModes) {
                 fu.setMode(FU.FuMode.valueOf(fuMode), true);
             }
+
+            fu.setLut8BitContentHexString(pe.get("lut8BitContentHexString").toString());
         }
 
         // generate static configs
@@ -613,9 +615,21 @@ public class CRC {
     }
 
     public void setAllFuModes(LinkedHashMap<FU.FuMode, Boolean> fuModes) {
-        for(int i = 0; i < this.rows; i++) {
-           for(int j = 0; j < this.columns; j++) {
-               this.setFuModes(i,j,fuModes);
+        for(int row = 0; row < this.rows; row++) {
+           for(int column = 0; column < this.columns; column++) {
+               this.setFuModes(row, column, fuModes);
+           }
+        }
+    }
+
+    public void setFuLut8BitContentHexString(int row, int column, String lut8BitContentHexString) {
+        fuMatrix.get(row).get(column).setLut8BitContentHexString(lut8BitContentHexString);
+    }
+
+    public void setAllFuLut8BitContentHexString(String lut8BitContentHexString) {
+        for(int row = 0; row < this.rows; row++) {
+           for(int column = 0; column < this.columns; column++) {
+               this.setFuLut8BitContentHexString(row, column, lut8BitContentHexString);
            }
         }
     }
@@ -677,6 +691,7 @@ public class CRC {
                 }
 
                 pe.put("availableFuModes", availableFuModesJSON);
+                pe.put("lut8BitContentHexString", this.getFu(i,j).getLut8BitContentHexString());
 
                 //noinspection unchecked
                 pes.add(pe);

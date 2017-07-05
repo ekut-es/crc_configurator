@@ -158,6 +158,8 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
         int x = CANVAS_PADDING+(column*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
         int y = CANVAS_PADDING+(row*(PE_DRAW_SIZE+INTER_PE_DISTANCE))+(PE_DRAW_SIZE+(PE_DRAW_SIZE/10));
 
+        boolean lut8bitAvailable = false;
+
         LinkedHashMap<FU.FuMode, Boolean> availableFuModes = fu.getAvailableModes();
 
         String fuModesString = "";
@@ -166,6 +168,10 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
 
         for(Map.Entry<FU.FuMode, Boolean> function : availableFuModes.entrySet())  {
             if(function.getValue()) {
+
+                if(function.getKey() == FU.FuMode.lut_8bit) {
+                    lut8bitAvailable = true;
+                }
 
                 if(i != 0) {
                     fuModesString += ", ";
@@ -186,6 +192,10 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
         }
 
         gc.fillText(fuModesString, x, y);
+
+        if(lut8bitAvailable) {
+            gc.fillText("set lut_8bit_content", PE_DRAW_SIZE-(peDrawSizeTwentieth*14)+CANVAS_PADDING+(column*(PE_DRAW_SIZE+INTER_PE_DISTANCE)), PE_DRAW_SIZE-(peDrawSizeTwentieth)+CANVAS_PADDING+(row*(PE_DRAW_SIZE+INTER_PE_DISTANCE)));
+        }
     }
 
     /**
@@ -213,28 +223,57 @@ public class HardwareModelTab extends ConfiguratorTab implements Observer {
             }
         }
 
-        // if was clicked on PE
+        // if PE was clicked determine on what
         if(row != -1) {
+
+            int xOffset = CANVAS_PADDING+INTER_PE_DISTANCE+(column*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
+            int yOffset = CANVAS_PADDING+(row*(PE_DRAW_SIZE+INTER_PE_DISTANCE));
+
+            int xNormalized = x - xOffset;
+            int yNormalized = y - yOffset;
 
             Point p = MouseInfo.getPointerInfo().getLocation();
 
-            FuModesDialog dialog = new FuModesDialog(row, column, model.getCrc().getFu(row, column).getAvailableModes());
+            FU fu =  model.getCrc().getFu(row, column);
+            LinkedHashMap<FU.FuMode, Boolean> availableFuModes = fu.getAvailableModes();
 
-            dialog.setX(p.x-100);
-            dialog.setY(p.y-80);
+            if(     availableFuModes.get(FU.FuMode.lut_8bit) &&
+                    yNormalized >= 17.5*peDrawSizeTwentieth &&
+                    yNormalized < 20*peDrawSizeTwentieth) {
 
-            dialog.showAndWait();
+                Lut8BitContentDialog dialog = new Lut8BitContentDialog(row, column, fu.getLut8BitContentHexString());
 
-            // data was changed -> update model
-            if(dialog.modelHasChanged) {
-                if(dialog.getApplyToAll()) {
-                    controller.setFuModes(-1, -1, dialog.getAvailableFuModes());
-                } else {
-                    controller.setFuModes(row, column, dialog.getAvailableFuModes());
+                dialog.setX(p.x - 100);
+                dialog.setY(p.y - 80);
+
+                dialog.showAndWait();
+
+                // data was changed -> update model
+                if(dialog.hasModelChanged()) {
+                    if(dialog.getApplyToAll()) {
+                        controller.setFuLut8BitContentHexString(-1, -1, dialog.getLut8BitContentHexString());
+                    } else {
+                        controller.setFuLut8BitContentHexString(row, column, dialog.getLut8BitContentHexString());
+                    }
+                }
+
+            } else {
+                FuModesDialog dialog = new FuModesDialog(row, column, model.getCrc().getFu(row, column).getAvailableModes());
+
+                dialog.setX(p.x - 100);
+                dialog.setY(p.y - 80);
+
+                dialog.showAndWait();
+
+                // data was changed -> update model
+                if(dialog.hasModelChanged()) {
+                    if (dialog.getApplyToAll()) {
+                        controller.setFuModes(-1, -1, dialog.getAvailableFuModes());
+                    } else {
+                        controller.setFuModes(row, column, dialog.getAvailableFuModes());
+                    }
                 }
             }
         }
     }
-
-
 }

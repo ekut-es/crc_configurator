@@ -87,6 +87,5 @@ public abstract class ConfiguratorTab extends Tab {
         outerVBox.getChildren().add(innerVBox);
 
         return commentTextArea;
-    }
-
+   }
 }

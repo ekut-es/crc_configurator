@@ -193,6 +193,8 @@ public class FU {
     private LinkedHashMap<FuMode, Boolean> availableModes;
     private final CRC crc;
 
+    private String lut8BitContentHexString;
+
     public FU(CRC crc) {
 
         this.crc = crc;
@@ -203,6 +205,7 @@ public class FU {
             availableModes.put(fuMode, false);
         }
 
+        this.lut8BitContentHexString = "fffefdfcfbfaf9f8f7f6f5f4f3f2f1f0efeeedecebeae9e8e7e6e5e4e3e2e1e0dfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0bfbebdbcbbbab9b8b7b6b5b4b3b2b1b0afaeadacabaaa9a8a7a6a5a4a3a2a1a09f9e9d9c9b9a999897969594939291908f8e8d8c8b8a898887868584838281807f7e7d7c7b7a797877767574737271706f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403f3e3d3c3b3a393837363534333231302f2e2d2c2b2a292827262524232221201f1e1d1c1b1a191817161514131211100f0e0d0c0b0a09080706050403020100";
     }
 
     public FU(CRC crc, FU fu) {
@@ -213,6 +216,8 @@ public class FU {
         for (FuMode fuMode : FuMode.values()) {
             availableModes.put(fuMode, fu.getAvailableModes().get(fuMode));
         }
+
+        this.lut8BitContentHexString = fu.getLut8BitContentHexString();
     }
 
     public LinkedHashMap<FuMode, Boolean> getAvailableModes() {
@@ -237,5 +242,19 @@ public class FU {
         this.availableModes = new LinkedHashMap<>();
         this.availableModes.putAll(availableModes);
         crc.notifyAllObservers();
+    }
+
+    public String getLut8BitContentHexString() {
+        return lut8BitContentHexString;
+    }
+
+    public void setLut8BitContentHexString(String lut8BitContentHexString) {
+        if(lut8BitContentHexString.length() > 512) {
+            this.lut8BitContentHexString = lut8BitContentHexString.substring(lut8BitContentHexString.length()-512);
+        } else if(lut8BitContentHexString.length() < 512) {
+            this.lut8BitContentHexString = String.format("%128s", lut8BitContentHexString).replace(' ', '0');
+        } else {
+            this.lut8BitContentHexString = lut8BitContentHexString;
+        }
     }
 }
