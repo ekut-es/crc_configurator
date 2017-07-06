@@ -1,6 +1,7 @@
 package de.tuebingen.es.crc.configurator.model;
 
 import de.tuebingen.es.crc.configurator.model.verilog.CRCVerilogGenerator;
+import de.tuebingen.es.crc.configurator.model.verilog.CRCVerilogPreprocessorGenerator;
 import de.tuebingen.es.crc.configurator.model.verilog.CRCVerilogQuestaSimScriptGenerator;
 import de.tuebingen.es.crc.configurator.model.verilog.CRCVerilogTestBenchGenerator;
 import de.tuebingen.es.crc.configurator.view.ConfigurationTab;
@@ -198,7 +199,7 @@ public class Model implements Observable {
 
     }
 
-    public void exportVerilogCode(File verilogFile, boolean fifosBetweenPes, int interPeFifoLength, int inputFifoLength, int outputFifoLength, boolean generateTestbenchAndQuestaSimScript, File testBenchFile, File questaSimScript) throws Exception {
+    public void exportVerilogCode(File verilogFile, boolean fifosBetweenPes, int interPeFifoLength, int inputFifoLength, int outputFifoLength, boolean generateTestbenchAndQuestaSimScript, File testBenchFile, File questaSimScript, boolean generatePreprocessor, File preprocessorFile, int clockCycle) throws Exception {
 
         // check verilog file
         this.checkFile(verilogFile);
@@ -280,6 +281,32 @@ public class Model implements Observable {
                 questaSimScriptFileWriter.flush();
                 //noinspection ThrowFromFinallyBlock
                 questaSimScriptFileWriter.close();
+            }
+        }
+
+        if(generatePreprocessor) {
+            // check test bench file
+            this.checkFile(preprocessorFile);
+
+            // generate test bench file
+            CRCVerilogPreprocessorGenerator crcVerilogPreprocessorGenerator = new CRCVerilogPreprocessorGenerator(this.crc, clockCycle);
+
+            if(!preprocessorFile.exists()) {
+                preprocessorFile.createNewFile();
+            }
+
+            FileWriter preprocessorFileWriter = new FileWriter(preprocessorFile);
+
+            // write test bench file
+            try {
+                preprocessorFileWriter.write(crcVerilogPreprocessorGenerator.generate());
+            } catch (Exception e) {
+                throw new Exception("Can't write to file '" + preprocessorFile.getAbsolutePath() + "'!");
+            } finally {
+                //noinspection ThrowFromFinallyBlock
+                preprocessorFileWriter.flush();
+                //noinspection ThrowFromFinallyBlock
+                preprocessorFileWriter.close();
             }
         }
     }

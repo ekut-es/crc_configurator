@@ -404,33 +404,19 @@ public class Controller {
 
         if(exportVerilogDialog.wasExportPressed()) {
             try {
-                // do not generate a test bench/QuestaSim script
-                if(!exportVerilogDialog.generateTestbenchAndQuestaSimScript()) {
-                    this.model.exportVerilogCode(
-                            exportVerilogDialog.getVerilogFile(),
-                            exportVerilogDialog.areFifosBetweenPes(),
-                            exportVerilogDialog.getInterPeFifoLength(),
-                            exportVerilogDialog.getInputFifoLength(),
-                            exportVerilogDialog.getOutputFifoLength(),
-                            false,
-                            null,
-                            null
-                    );
-                }
+                this.model.exportVerilogCode(
+                        exportVerilogDialog.getVerilogFile(),
+                        exportVerilogDialog.areFifosBetweenPes(),
+                        exportVerilogDialog.getInterPeFifoLength(),
+                        exportVerilogDialog.getInputFifoLength(),
+                        exportVerilogDialog.getOutputFifoLength(),
+                        exportVerilogDialog.generateTestbenchAndQuestaSimScript(),
+                        (exportVerilogDialog.generateTestbenchAndQuestaSimScript() ? exportVerilogDialog.getTestBenchFile() : null),
+                        (exportVerilogDialog.generateTestbenchAndQuestaSimScript() ? exportVerilogDialog.getQuestaSimScript() : null),
+                        exportVerilogDialog.generatePreprocessor(),
+                        (exportVerilogDialog.generatePreprocessor() ? exportVerilogDialog.getPreprocessorFile() : null),
+                        (exportVerilogDialog.generatePreprocessor() ? exportVerilogDialog.getClockCycle() : 10));
 
-                // do generate a test bench/QuestaSim script
-                else {
-                    this.model.exportVerilogCode(
-                            exportVerilogDialog.getVerilogFile(),
-                            exportVerilogDialog.areFifosBetweenPes(),
-                            exportVerilogDialog.getInterPeFifoLength(),
-                            exportVerilogDialog.getInputFifoLength(),
-                            exportVerilogDialog.getOutputFifoLength(),
-                            true,
-                            exportVerilogDialog.getTestBenchFile(),
-                            exportVerilogDialog.getQuestaSimScript()
-                    );
-                }
             } catch (Exception e) {
                 showErrorMessage(e.getMessage());
             }

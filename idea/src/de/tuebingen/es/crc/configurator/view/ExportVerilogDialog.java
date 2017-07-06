@@ -1,6 +1,7 @@
 package de.tuebingen.es.crc.configurator.view;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -28,6 +29,8 @@ public class ExportVerilogDialog extends Stage {
     private int inputFifoLength;
     private int outputFifoLength;
     private boolean generateTestbenchAndQuestaSimScript;
+    private boolean generatePreprocessor;
+    private int clockCycle;
     private boolean export;
 
     public ExportVerilogDialog(String crcDescriptionFilePath) {
@@ -42,9 +45,9 @@ public class ExportVerilogDialog extends Stage {
 
         Group root = new Group();
 
-        Scene scene = new Scene(root, 400, 450);
+        Scene scene = new Scene(root, 400, 575);
 
-        VBox vBox = new VBox(7);
+        VBox vBox = new VBox(10);
         vBox.setPadding(new Insets(10,10,10,10));
         vBox.setSpacing(20);
 
@@ -57,7 +60,7 @@ public class ExportVerilogDialog extends Stage {
         gridPane.setVgap(10);
 
         // Label and TextField for inter pe fifo length
-        Label interPeFifoLengthLabel = new Label("Length of FIFOs between PEs:");
+        Label interPeFifoLengthLabel = new Label("Length of FIFOs between PEs");
 
         NumberTextField interPeFifoLengthTextField = new NumberTextField();
         interPeFifoLengthTextField.setMaxDigits(2);
@@ -80,7 +83,7 @@ public class ExportVerilogDialog extends Stage {
         });
 
         // Label and TextField for input fifo length
-        Label inputFifoLengthLabel = new Label("Length of input FIFOs (W):");
+        Label inputFifoLengthLabel = new Label("Length of input FIFOs (W)");
 
         NumberTextField inputFifoLengthTextField = new NumberTextField();
         inputFifoLengthTextField.setMaxDigits(2);
@@ -91,7 +94,7 @@ public class ExportVerilogDialog extends Stage {
 
 
         // Label and TextField for output fifo length
-        Label outputFifoLengthLabel = new Label("Length of output FIFOs (E):");
+        Label outputFifoLengthLabel = new Label("Length of output FIFOs (E)");
 
         NumberTextField outputFifoLengthTextField = new NumberTextField();
         outputFifoLengthTextField.setMaxDigits(2);
@@ -121,7 +124,7 @@ public class ExportVerilogDialog extends Stage {
         );
 
         // Label, TextField and Choose Button for Verilog File Path
-        Label pathToVerilogFileLabel = new Label("Path to Verilog File:");
+        Label pathToVerilogFileLabel = new Label("Path to Verilog File");
 
         TextField pathToVerilogFileTextField = new TextField();
         pathToVerilogFileTextField.setMinWidth(312);
@@ -163,7 +166,7 @@ public class ExportVerilogDialog extends Stage {
         CheckBox generateTestBenchAndQuestaSimScriptCheckBox = new CheckBox("Generate test bench and QuestaSim script");
 
         // label for text field for path to testbench file
-        Label pathToTestBenchFileLabel = new Label("Path to test bench file:");
+        Label pathToTestBenchFileLabel = new Label("Path to test bench file");
 
         // read only text field for path to testbench file
         TextField pathToTestBenchFileTextField = new TextField();
@@ -174,7 +177,7 @@ public class ExportVerilogDialog extends Stage {
         pathToTestBenchFileVBox.getChildren().addAll(pathToTestBenchFileLabel, pathToTestBenchFileTextField);
 
         // label for text field for path to QuestaSim Script
-        Label pathToQuestaSimScriptLabel = new Label("Path to QuestaSim script:");
+        Label pathToQuestaSimScriptLabel = new Label("Path to QuestaSim script");
 
         // read only text field for path to QuestaSim Script
         TextField pathToQuestaSimScriptTextField = new TextField();
@@ -195,12 +198,64 @@ public class ExportVerilogDialog extends Stage {
             }
         });
 
+
+        // check box for the generation of a preprocessor.v
+        CheckBox generatePreprocessorCheckBox = new CheckBox("Generate preprocessor.v");
+
+        // label for text field for path to testbench file
+        Label pathToPreprocessorLabel = new Label("Path to preprocessor.v");
+
+        // read only text field for path to preprocessor.v
+        TextField pathToPreprocessorTextField = new TextField();
+        pathToPreprocessorTextField.setEditable(false);
+        pathToPreprocessorTextField.setText("...");
+
+        VBox pathToPreprocessorVBox = new VBox();
+        pathToPreprocessorVBox.getChildren().addAll(pathToPreprocessorLabel, pathToPreprocessorTextField);
+
+        // label for clock cycle
+        Label clockCycleLabel = new Label("Clock Cycle ");
+        clockCycleLabel.setMinHeight(20);
+        clockCycleLabel.setAlignment(Pos.BOTTOM_LEFT);
+
+        // number text field for clock cycle
+        NumberTextField clockCycleTextField = new NumberTextField();
+        clockCycleTextField.setEditable(false);
+        clockCycleTextField.setMinNumber(1);
+        clockCycleTextField.setMaxNumber(999);
+        clockCycleTextField.setMaxDigits(3);
+        clockCycleTextField.setText("20");
+        clockCycleTextField.setMaxWidth(45);
+        clockCycleTextField.setMinWidth(45);
+
+        // nano seconds label
+        Label nanoSecondsLabel = new Label("ns");
+        nanoSecondsLabel.setMinHeight(20);
+        nanoSecondsLabel.setAlignment(Pos.BOTTOM_LEFT);
+
+        HBox clockCycleHBox = new HBox(3);
+        clockCycleHBox.getChildren().addAll(clockCycleLabel, clockCycleTextField, nanoSecondsLabel);
+
+        generatePreprocessorCheckBox.setOnAction(event -> {
+            if(generatePreprocessorCheckBox.isSelected()) {
+                verilogFile = new File(pathToVerilogFileTextField.getText());
+                pathToPreprocessorTextField.setText(this.getPreprocessorPath());
+                clockCycleTextField.setEditable(true);
+            } else {
+                pathToPreprocessorTextField.setText("...");
+                clockCycleTextField.setEditable(false);
+            }
+        });
+
         // update test bench file and QuestaSim script text field when path to verilog file changes
         pathToVerilogFileTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            verilogFile = new File(pathToVerilogFileTextField.getText());
             if(generateTestBenchAndQuestaSimScriptCheckBox.isSelected()) {
-                verilogFile = new File(pathToVerilogFileTextField.getText());
                 pathToTestBenchFileTextField.setText(this.getTestBenchFilePath());
                 pathToQuestaSimScriptTextField.setText(this.getQuestaSimScriptPath());
+            }
+            if(generatePreprocessorCheckBox.isSelected()) {
+                pathToPreprocessorTextField.setText(this.getPreprocessorPath());
             }
         });
 
@@ -218,6 +273,8 @@ public class ExportVerilogDialog extends Stage {
             inputFifoLength = inputFifoLengthTextField.getNumber();
             outputFifoLength = outputFifoLengthTextField.getNumber();
             generateTestbenchAndQuestaSimScript = generateTestBenchAndQuestaSimScriptCheckBox.isSelected();
+            generatePreprocessor = generatePreprocessorCheckBox.isSelected();
+            clockCycle = clockCycleTextField.getNumber();
             export = true;
             this.close();
         });
@@ -233,6 +290,9 @@ public class ExportVerilogDialog extends Stage {
         vBox.getChildren().add(generateTestBenchAndQuestaSimScriptCheckBox);
         vBox.getChildren().add(pathToTestBenchFileVBox);
         vBox.getChildren().add(pathToQuestaSimScriptVBox);
+        vBox.getChildren().add(generatePreprocessorCheckBox);
+        vBox.getChildren().add(pathToPreprocessorVBox);
+        vBox.getChildren().add(clockCycleHBox);
         vBox.getChildren().add(buttonHBox);
 
         root.getChildren().add(vBox);
@@ -248,6 +308,10 @@ public class ExportVerilogDialog extends Stage {
         return verilogFile.getAbsolutePath().substring(0, verilogFile.getAbsolutePath().lastIndexOf('.')) + "_tb_questa_rtl.do";
     }
 
+    private String getPreprocessorPath() {
+        return verilogFile.getAbsolutePath().substring(0, verilogFile.getAbsolutePath().lastIndexOf('/')) + "/preprocessor.v";
+    }
+
     public File getVerilogFile() {
         return verilogFile;
     }
@@ -260,6 +324,11 @@ public class ExportVerilogDialog extends Stage {
     public File getQuestaSimScript() {
         File questaSimScript = new File(this.getQuestaSimScriptPath());
         return questaSimScript;
+    }
+
+    public File getPreprocessorFile() {
+        File preprocessorFile = new File(this.getPreprocessorPath());
+        return preprocessorFile;
     }
 
     public boolean areFifosBetweenPes() {
@@ -278,8 +347,16 @@ public class ExportVerilogDialog extends Stage {
         return outputFifoLength;
     }
 
+    public int getClockCycle() {
+        return clockCycle;
+    }
+
     public boolean generateTestbenchAndQuestaSimScript() {
         return generateTestbenchAndQuestaSimScript;
+    }
+
+    public boolean generatePreprocessor() {
+        return generatePreprocessor;
     }
 
     public boolean wasExportPressed() {
