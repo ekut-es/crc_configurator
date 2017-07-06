@@ -24,7 +24,8 @@ public class ConstantRegisterContentDialog extends Stage {
     private int row;
     private int column;
 
-    private long constantRegisterContent;
+    private long constantRegisterDataContent;
+    private boolean constantRegisterFlagContent;
 
     public boolean apply;
 
@@ -32,8 +33,11 @@ public class ConstantRegisterContentDialog extends Stage {
     private final String allowedPrefixStringHexadecimal = "[0-9]+'h, 0x";
     private final String allowedPrefixStringBinary = "[0-9]+'b, 0b";
 
-    public long getConstantRegisterContent() {
-        return constantRegisterContent;
+    public long getConstantRegisterDataContent() {
+        return constantRegisterDataContent;
+    }
+    public boolean getConstantRegisterFlagContent() {
+        return constantRegisterFlagContent;
     }
 
     private String removeFormat(String number) {
@@ -58,13 +62,13 @@ public class ConstantRegisterContentDialog extends Stage {
 
         Group root = new Group();
 
-        Scene scene = new Scene(root, 280, 165);
+        Scene scene = new Scene(root, 280, 200);
 
-        VBox vBox = new VBox(4);
+        VBox vBox = new VBox(5);
         vBox.setPadding(new Insets(10,10,10,10));
         vBox.setSpacing(20);
 
-        TextField contentTextField = new TextField("0x" + Long.toHexString(pe.getConstantRegContent()));
+        TextField contentTextField = new TextField("0x" + Long.toHexString(pe.getConstantRegisterDataContent()));
 
         final ToggleGroup toggleGroup = new ToggleGroup();
 
@@ -137,6 +141,8 @@ public class ConstantRegisterContentDialog extends Stage {
             }
         });
 
+        CheckBox flagCheckBox = new CheckBox("Set Flag");
+        flagCheckBox.setSelected(pe.getConstantRegisterFlagContent());
 
         Button cancelButton = new Button("Cancel");
         Button applyButton = new Button("Apply");
@@ -148,16 +154,19 @@ public class ConstantRegisterContentDialog extends Stage {
         applyButton.setOnAction(event -> {
 
             if (radioButtonDecimal.isSelected()) {
-                constantRegisterContent = truncateNumber(Long.parseLong(removeFormat(contentTextField.getText()), 10), dataWidth);
+                constantRegisterDataContent = truncateNumber(Long.parseLong(removeFormat(contentTextField.getText()), 10), dataWidth);
             } else if (radioButtonHexadecimal.isSelected()) {
-                constantRegisterContent = truncateNumber(Long.parseLong(removeFormat(contentTextField.getText()), 16), dataWidth);
+                constantRegisterDataContent = truncateNumber(Long.parseLong(removeFormat(contentTextField.getText()), 16), dataWidth);
             } else if (radioButtonBinary.isSelected()) {
-                constantRegisterContent = truncateNumber(Long.parseLong(removeFormat(contentTextField.getText()), 2), dataWidth);
+                constantRegisterDataContent = truncateNumber(Long.parseLong(removeFormat(contentTextField.getText()), 2), dataWidth);
             }
+
+            constantRegisterFlagContent = flagCheckBox.isSelected();
 
             apply = true;
             this.close();
         });
+
 
         HBox hBoxCancelApply = new HBox(2);
         hBoxCancelApply.setSpacing(15);
@@ -167,6 +176,7 @@ public class ConstantRegisterContentDialog extends Stage {
         vBox.getChildren().add(contentTextField);
         vBox.getChildren().add(allowedPrefixLabel);
         vBox.getChildren().add(hBoxRadixRadioButtons);
+        vBox.getChildren().add(flagCheckBox);
         vBox.getChildren().add(hBoxCancelApply);
 
         root.getChildren().add(vBox);

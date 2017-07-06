@@ -280,7 +280,7 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         gc.save();
         gc.translate(x+1.2*peDrawSizeTwentieth,y+5.8*peDrawSizeTwentieth);
         gc.rotate(-90);
-        gc.fillText("0x" + Long.toHexString(this.getConfig().getPe(row, column).getConstantRegContent()), 0, 0, 5.6*peDrawSizeTwentieth);
+        gc.fillText((this.getConfig().getPe(row,column).getConstantRegisterFlagContent() ? "1" : "0" ) +  ",0x" + Long.toHexString(this.getConfig().getPe(row, column).getConstantRegisterDataContent()), 0, 0, 5.6*peDrawSizeTwentieth);
         gc.restore();
     }
     /**
@@ -2634,7 +2634,8 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
                 constantRegisterContentDialog.showAndWait();
 
                 if(constantRegisterContentDialog.apply) {
-                    controller.setPeConstantRegisterContent(configurationTabType, number, finalRow, finalColumn, constantRegisterContentDialog.getConstantRegisterContent());
+                    controller.setPeConstantRegisterDataContent(configurationTabType, number, finalRow, finalColumn, constantRegisterContentDialog.getConstantRegisterDataContent());
+                    controller.setPeConstantRegisterFlagContent(configurationTabType, number, finalRow, finalColumn, constantRegisterContentDialog.getConstantRegisterFlagContent());
                 }
             }
 

@@ -674,9 +674,14 @@ public class Controller {
         this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setDataFlagOutS1(dataFlagOutDriver);
     }
 
-    public void setPeConstantRegisterContent(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, long constantRegsiterContent) {
+    public void setPeConstantRegisterDataContent(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, long constantRegisterDataContent) {
         model.setSaved(false);
-        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setConstantRegContent(constantRegsiterContent);
+        this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setConstantRegisterDataContent(constantRegisterDataContent);
+    }
+
+    public void setPeConstantRegisterFlagContent(ConfigurationTab.ConfigurationTabType configurationTabType, int configurationNumber, int row, int column, boolean constantRegisterFlagContent) {
+       model.setSaved(false);
+       this.getConfig(configurationTabType, configurationNumber).getPe(row, column).setConstantRegisterFlagContent(constantRegisterFlagContent);
     }
 
     public void setCrcComment(String comment) {

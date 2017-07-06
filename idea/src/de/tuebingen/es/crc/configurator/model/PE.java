@@ -54,7 +54,8 @@ public class PE {
     private DataFlagInFuDriver dataFlagInFUMux;
     private FU.FuFunction fuFunction;
 
-    private long constantRegContent;
+    private long constantRegisterDataContent;
+    private boolean constantRegisterFlagContent;
 
     public PE(Configuration configuration) {
         this.configuration = configuration;
@@ -69,7 +70,8 @@ public class PE {
         dataFlagInFU0 = DataFlagInFuDriver.none;
         dataFlagInFU1 = DataFlagInFuDriver.none;
         dataFlagInFUMux = DataFlagInFuDriver.none;
-        constantRegContent = 0;
+        constantRegisterDataContent = 0;
+        constantRegisterFlagContent = false;
         fuFunction = FU.FuFunction.none;
     }
 
@@ -87,7 +89,8 @@ public class PE {
         this.dataFlagInFU0 = pe.getDataFlagInFu0();
         this.dataFlagInFU1 = pe.getDataFlagInFu1();
         this.dataFlagInFUMux = pe.getDataFlagInFuMux();
-        this.constantRegContent = pe.getConstantRegContent();
+        this.constantRegisterDataContent = pe.getConstantRegisterDataContent();
+        this.constantRegisterFlagContent = pe.getConstantRegisterFlagContent();
         this.fuFunction = pe.getFuFunction();
 
         this.checkSetActive();
@@ -196,12 +199,21 @@ public class PE {
         configuration.notifyAllObservers();
     }
 
-    public long getConstantRegContent() {
-        return constantRegContent;
+    public long getConstantRegisterDataContent() {
+        return constantRegisterDataContent;
     }
 
-    public void setConstantRegContent(long constantRegContent) {
-        this.constantRegContent = constantRegContent;
+    public void setConstantRegisterDataContent(long constantRegisterDataContent) {
+        this.constantRegisterDataContent = constantRegisterDataContent;
+        configuration.notifyAllObservers();
+    }
+
+    public boolean getConstantRegisterFlagContent() {
+        return constantRegisterFlagContent;
+    }
+
+    public void setConstantRegisterFlagContent(boolean constantRegisterFlagContent) {
+        this.constantRegisterFlagContent = constantRegisterFlagContent;
         configuration.notifyAllObservers();
     }
 

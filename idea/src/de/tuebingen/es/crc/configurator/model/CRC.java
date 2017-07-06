@@ -196,7 +196,8 @@ public class CRC {
             pe.setDataFlagInFu0(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFu0").toString()));
             pe.setDataFlagInFu1(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFu1").toString()));
             pe.setDataFlagInFuMux(PE.DataFlagInFuDriver.valueOf(peJson.get("dataFlagInFuMux").toString()));
-            pe.setConstantRegContent(Long.parseLong(peJson.get("constRegContent").toString()));
+            pe.setConstantRegisterDataContent(Long.parseLong(peJson.get("constRegDataContent").toString()));
+            pe.setConstantRegisterFlagContent(Boolean.parseBoolean(peJson.get("constRegFlagContent").toString()));
             pe.setFuFunction(FU.FuFunction.valueOf(peJson.get("fuFunction").toString()));
             pe.setSignedData(peJson.get("fuSignedness").toString().equals("signed"));
         }
@@ -362,7 +363,7 @@ public class CRC {
 
                 for(int row = 0; row < this.rows; row++) {
                     for(int column = 0; column < this.columns; column++) {
-                        truncateConstantRegisterContent(staticConfig.getPe(row, column), dataWidth);
+                        truncateConstantRegisterDataContent(staticConfig.getPe(row, column), dataWidth);
                     }
                 }
             }
@@ -374,7 +375,7 @@ public class CRC {
 
                 for(int row = 0; row < this.rows; row++) {
                     for(int column = 0; column < this.columns; column++) {
-                        truncateConstantRegisterContent(dynamicConfig.getPe(row, column), dataWidth);
+                        truncateConstantRegisterDataContent(dynamicConfig.getPe(row, column), dataWidth);
                     }
                 }
             }
@@ -445,8 +446,8 @@ public class CRC {
         }
     }
 
-    private void truncateConstantRegisterContent(PE pe, int dataWidth) {
-        pe.setConstantRegContent(Truncator.truncateNumber(pe.getConstantRegContent(), dataWidth));
+    private void truncateConstantRegisterDataContent(PE pe, int dataWidth) {
+        pe.setConstantRegisterDataContent(Truncator.truncateNumber(pe.getConstantRegisterDataContent(), dataWidth));
     }
 
     public void resetStaticConfig(int num) {
@@ -483,7 +484,8 @@ public class CRC {
         pe.setDataFlagOutE1(PE.DataFlagOutDriver.none);
         pe.setDataFlagOutS0(PE.DataFlagOutDriver.none);
         pe.setDataFlagOutS1(PE.DataFlagOutDriver.none);
-        pe.setConstantRegContent(0);
+        pe.setConstantRegisterDataContent(0);
+        pe.setConstantRegisterFlagContent(false);
         pe.setFuFunction(FU.FuFunction.none);
     }
 
@@ -783,7 +785,8 @@ public class CRC {
                 configPe.put("dataFlagInFu1", pe.getDataFlagInFu1().toString());
                 //noinspection unchecked
                 configPe.put("dataFlagInFuMux", pe.getDataFlagInFuMux().toString());
-                configPe.put("constRegContent", pe.getConstantRegContent());
+                configPe.put("constRegDataContent", pe.getConstantRegisterDataContent());
+                configPe.put("constRegFlagContent", pe.getConstantRegisterFlagContent());
                 //noinspection unchecked
                 configPe.put("fuFunction", pe.getFuFunction().toString());
                 //noinspection unchecked
@@ -915,12 +918,15 @@ public class CRC {
 
         PE pe = staticConfigs.get(configNumber).getPe(row, column);
 
-        String bits = Long.toBinaryString(pe.getConstantRegContent());
+        String bits = Long.toBinaryString(pe.getConstantRegisterDataContent());
 
         // add leading zeros
         while(bits.length() < dataWidth) {
             bits = "0" + bits;
         }
+
+        // add flag
+        bits = (pe.getConstantRegisterFlagContent() ? "1" : "0") + bits;
 
         return bits;
     }
@@ -960,7 +966,7 @@ public class CRC {
 
         PE pe = dynamicConfigs.get(configNumber).getPe(row, column);
 
-        String bits = Long.toBinaryString(pe.getConstantRegContent());
+        String bits = Long.toBinaryString(pe.getConstantRegisterDataContent());
 
         // add leading zeros
         while(bits.length() < dataWidth) {
