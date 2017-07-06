@@ -525,7 +525,7 @@ public class CRCVerilogGenerator {
 
         pe.valid_bit_out_E_0 = peValidBitOutE0.name;
 
-        pe.ext_input_ready_E_0 = "!output_fifo_full[" + (row*2) + ":" + (row*2) + "]";
+        pe.ext_input_ready_E_0 = "!output_fifo_full_E[" + (row*2) + ":" + (row*2) + "]";
 
         // data output to the east 1
         VerilogWire peDataOutE1 = new VerilogWire("pe_" + row + "_" + column + "_data_out_E_1", "`DATA_WIDTH");
@@ -543,7 +543,7 @@ public class CRCVerilogGenerator {
 
         pe.valid_bit_out_E_1 = peValidBitOutE1.name;
 
-        pe.ext_input_ready_E_1 = "!output_fifo_full[" + (row*2+1) + ":" + (row*2+1) + "]";
+        pe.ext_input_ready_E_1 = "!output_fifo_full_E[" + (row*2+1) + ":" + (row*2+1) + "]";
     }
 
     private void connectPeDataFlagOutSouth(VerilogPE pe, int row, int column) {
@@ -741,14 +741,14 @@ public class CRCVerilogGenerator {
                         "    valid_bit_in_W,\n" +
                         "    config_select_in_W,\n" +
                         "\n" +
-                        "    data_out,\n" +
-                        "    flag_out,\n" +
-                        "    valid_bit_out,\n" +
-                        "    config_select_out,\n" +
+                        "    data_out_E,\n" +
+                        "    flag_out_E,\n" +
+                        "    valid_bit_out_E,\n" +
+                        "    config_select_out_E,\n" +
                         "\n" +
                         "    input_fifo_full_W,\n" +
-                        "    output_fifo_full,\n" +
-                        "    output_fifo_read\n" +
+                        "    output_fifo_full_E,\n" +
+                        "    output_fifo_read_E\n" +
                         ");\n\n";
 
         String inputs = "/* -------------------------------------------------------------------------\n" +
@@ -767,112 +767,112 @@ public class CRCVerilogGenerator {
                         "    input wire [(" + crc.getRows() + "*2)-1:0] valid_bit_in_W;\n" +
                         "    input wire [(" + crc.getRows() + "*`CONFIG_SELECT_WIDTH*2)-1:0] config_select_in_W;\n" +
                         "\n" +
-                        "    input wire [(" + crc.getRows() + "*2)-1:0] output_fifo_read;\n\n";
+                        "    input wire [(" + crc.getRows() + "*2)-1:0] output_fifo_read_E;\n\n";
 
         String outputs = "/* -------------------------------------------------------------------------\n" +
                         " *                                   OUTPUTS\n" +
                         " * ------------------------------------------------------------------------- */\n" +
-                        "    output wire [(" + crc.getRows() + "*`DATA_WIDTH*2)-1:0] data_out;\n" +
-                        "    output wire [(" + crc.getRows() + "*2)-1:0] flag_out;\n" +
-                        "    output wire [(" + crc.getRows() + "*2)-1:0] valid_bit_out;\n" +
-                        "    output wire [(" + crc.getRows() + "*`CONFIG_SELECT_WIDTH*2)-1:0] config_select_out;\n" +
+                        "    output wire [(" + crc.getRows() + "*`DATA_WIDTH*2)-1:0] data_out_E;\n" +
+                        "    output wire [(" + crc.getRows() + "*2)-1:0] flag_out_E;\n" +
+                        "    output wire [(" + crc.getRows() + "*2)-1:0] valid_bit_out_E;\n" +
+                        "    output wire [(" + crc.getRows() + "*`CONFIG_SELECT_WIDTH*2)-1:0] config_select_out_E;\n" +
                         "\n" +
                         "    output wire [" + (crc.getRows()*crc.getColumns()) + "-1:0] flag_exception;\n" +
                         "\n" +
                         "    output wire [(" + crc.getRows() + "*2)-1:0] input_fifo_full_W;\n" +
-                        "    output wire [(" + crc.getRows() + "*2)-1:0] output_fifo_full;\n\n";
+                        "    output wire [(" + crc.getRows() + "*2)-1:0] output_fifo_full_E;\n\n";
 
 
 
 
-        // generate input FIFOs
+        // generate input FIFOs west
         for(int row = 0; row < crc.getRows(); row++) {
 
             // input FIFO for data_in_0
-            int inputFifoNumber = 2*row;
+            int inputFifoWestNumber = 2*row;
 
-            VerilogInputFifo inputFifo0 = new VerilogInputFifo("input_fifo_W_" + inputFifoNumber);
-            inputFifo0.data_in = "data_in_W[`DATA_WIDTH*" + (inputFifoNumber+1) + "-1:`DATA_WIDTH*" + inputFifoNumber + "]";
-            inputFifo0.flag_in = "flag_in_W[" + inputFifoNumber + ":" + inputFifoNumber + "]";
-            inputFifo0.valid_bit_in = "valid_bit_in_W[" + inputFifoNumber + ":" + inputFifoNumber + "]";
-            inputFifo0.config_select_in = "config_select_in_W[`CONFIG_SELECT_WIDTH*" + (inputFifoNumber+1) + "-1:`CONFIG_SELECT_WIDTH*" + inputFifoNumber + "]";
+            VerilogInputFifo inputFifoWest0 = new VerilogInputFifo("input_fifo_W_" + inputFifoWestNumber);
+            inputFifoWest0.data_in = "data_in_W[`DATA_WIDTH*" + (inputFifoWestNumber+1) + "-1:`DATA_WIDTH*" + inputFifoWestNumber + "]";
+            inputFifoWest0.flag_in = "flag_in_W[" + inputFifoWestNumber + ":" + inputFifoWestNumber + "]";
+            inputFifoWest0.valid_bit_in = "valid_bit_in_W[" + inputFifoWestNumber + ":" + inputFifoWestNumber + "]";
+            inputFifoWest0.config_select_in = "config_select_in_W[`CONFIG_SELECT_WIDTH*" + (inputFifoWestNumber+1) + "-1:`CONFIG_SELECT_WIDTH*" + inputFifoWestNumber + "]";
 
             VerilogWire peWestmostColumnInputReadyW0 = new VerilogWire("pe_" + row + "_0_input_ready_W_0");
             wires.add(peWestmostColumnInputReadyW0);
 
-            inputFifo0.ext_input_ready = peWestmostColumnInputReadyW0.name;
+            inputFifoWest0.ext_input_ready = peWestmostColumnInputReadyW0.name;
 
             VerilogWire peWestmostColumnConfigSelectOutW0 = new VerilogWire("pe_" + row + "_0_config_select_out_W_0", "`CONFIG_SELECT_WIDTH");
             wires.add(peWestmostColumnConfigSelectOutW0);
 
-            inputFifo0.ext_config_select_in = peWestmostColumnConfigSelectOutW0.name;
+            inputFifoWest0.ext_config_select_in = peWestmostColumnConfigSelectOutW0.name;
 
-            VerilogWire inputFifo0DataOut = new VerilogWire("input_fifo_W_" + inputFifoNumber + "_data_out", "`DATA_WIDTH");
+            VerilogWire inputFifo0DataOut = new VerilogWire("input_fifo_W_" + inputFifoWestNumber + "_data_out", "`DATA_WIDTH");
             wires.add(inputFifo0DataOut);
 
-            inputFifo0.data_out = inputFifo0DataOut.name;
+            inputFifoWest0.data_out = inputFifo0DataOut.name;
 
-            VerilogWire inputFifo0FlagOut = new VerilogWire("input_fifo_W_" + inputFifoNumber + "_flag_out");
+            VerilogWire inputFifo0FlagOut = new VerilogWire("input_fifo_W_" + inputFifoWestNumber + "_flag_out");
             wires.add(inputFifo0FlagOut);
 
-            inputFifo0.flag_out = inputFifo0FlagOut.name;
+            inputFifoWest0.flag_out = inputFifo0FlagOut.name;
 
-            VerilogWire inputFifo0ValidBitOut = new VerilogWire("input_fifo_W_" + inputFifoNumber + "_valid_bit_out");
+            VerilogWire inputFifo0ValidBitOut = new VerilogWire("input_fifo_W_" + inputFifoWestNumber + "_valid_bit_out");
             wires.add(inputFifo0ValidBitOut);
 
-            inputFifo0.valid_bit_out = inputFifo0ValidBitOut.name;
+            inputFifoWest0.valid_bit_out = inputFifo0ValidBitOut.name;
 
-            VerilogWire inputFifo0ConfigSelectOut = new  VerilogWire("input_fifo_W_" + inputFifoNumber + "_config_select_out", "`CONFIG_SELECT_WIDTH");
+            VerilogWire inputFifo0ConfigSelectOut = new  VerilogWire("input_fifo_W_" + inputFifoWestNumber + "_config_select_out", "`CONFIG_SELECT_WIDTH");
             wires.add(inputFifo0ConfigSelectOut);
 
-            inputFifo0.config_select_out = inputFifo0ConfigSelectOut.name;
+            inputFifoWest0.config_select_out = inputFifo0ConfigSelectOut.name;
 
-            inputFifo0.full = "input_fifo_full_W[" + inputFifoNumber + ":" + inputFifoNumber + "]";
+            inputFifoWest0.full = "input_fifo_full_W[" + inputFifoWestNumber + ":" + inputFifoWestNumber + "]";
 
-            inputFifosWest.add(inputFifo0);
+            inputFifosWest.add(inputFifoWest0);
 
             // input FIFO for data_in_1
-            inputFifoNumber = 2*row+1;
+            inputFifoWestNumber = 2*row+1;
 
-            VerilogInputFifo inputFifo1 = new VerilogInputFifo("input_fifo_W_" + inputFifoNumber);
-            inputFifo1.data_in = "data_in_W[`DATA_WIDTH*" + (inputFifoNumber+1) + "-1:`DATA_WIDTH*" + inputFifoNumber + "]";
-            inputFifo1.flag_in = "flag_in_W[" + inputFifoNumber + ":" + inputFifoNumber + "]";
-            inputFifo1.valid_bit_in = "valid_bit_in_W[" + inputFifoNumber + ":" + inputFifoNumber + "]";
-            inputFifo1.config_select_in = "config_select_in_W[`CONFIG_SELECT_WIDTH*" + (inputFifoNumber+1) + "-1:`CONFIG_SELECT_WIDTH*" + inputFifoNumber + "]";
+            VerilogInputFifo inputFifoWest1 = new VerilogInputFifo("input_fifo_W_" + inputFifoWestNumber);
+            inputFifoWest1.data_in = "data_in_W[`DATA_WIDTH*" + (inputFifoWestNumber+1) + "-1:`DATA_WIDTH*" + inputFifoWestNumber + "]";
+            inputFifoWest1.flag_in = "flag_in_W[" + inputFifoWestNumber + ":" + inputFifoWestNumber + "]";
+            inputFifoWest1.valid_bit_in = "valid_bit_in_W[" + inputFifoWestNumber + ":" + inputFifoWestNumber + "]";
+            inputFifoWest1.config_select_in = "config_select_in_W[`CONFIG_SELECT_WIDTH*" + (inputFifoWestNumber+1) + "-1:`CONFIG_SELECT_WIDTH*" + inputFifoWestNumber + "]";
 
             VerilogWire peWestmostColumnInputReadyW1 = new VerilogWire("pe_" + row + "_0_input_ready_W_1");
             wires.add(peWestmostColumnInputReadyW1);
 
-            inputFifo1.ext_input_ready = peWestmostColumnInputReadyW1.name;
+            inputFifoWest1.ext_input_ready = peWestmostColumnInputReadyW1.name;
 
             VerilogWire peWestmostColumnConfigSelectOutW1 = new VerilogWire("pe_" + row + "_0_config_select_out_W_1", "`CONFIG_SELECT_WIDTH");
             wires.add(peWestmostColumnConfigSelectOutW1);
 
-            inputFifo1.ext_config_select_in = peWestmostColumnConfigSelectOutW1.name;
+            inputFifoWest1.ext_config_select_in = peWestmostColumnConfigSelectOutW1.name;
 
-            VerilogWire inputFifo1DataOut = new VerilogWire("input_fifo_W_" + inputFifoNumber + "_data_out", "`DATA_WIDTH");
+            VerilogWire inputFifo1DataOut = new VerilogWire("input_fifo_W_" + inputFifoWestNumber + "_data_out", "`DATA_WIDTH");
             wires.add(inputFifo1DataOut);
 
-            inputFifo1.data_out = inputFifo1DataOut.name;
+            inputFifoWest1.data_out = inputFifo1DataOut.name;
 
-            VerilogWire inputFifo1FlagOut = new VerilogWire("input_fifo_W_" + inputFifoNumber + "_flag_out");
+            VerilogWire inputFifo1FlagOut = new VerilogWire("input_fifo_W_" + inputFifoWestNumber + "_flag_out");
             wires.add(inputFifo1FlagOut);
 
-            inputFifo1.flag_out = inputFifo1FlagOut.name;
+            inputFifoWest1.flag_out = inputFifo1FlagOut.name;
 
-            VerilogWire inputFifo1ValidBitOut = new VerilogWire("input_fifo_W_" + inputFifoNumber + "_valid_bit_out");
+            VerilogWire inputFifo1ValidBitOut = new VerilogWire("input_fifo_W_" + inputFifoWestNumber + "_valid_bit_out");
             wires.add(inputFifo1ValidBitOut);
 
-            inputFifo1.valid_bit_out = inputFifo1ValidBitOut.name;
+            inputFifoWest1.valid_bit_out = inputFifo1ValidBitOut.name;
 
-            VerilogWire inputFifo1ConfigSelectOut = new  VerilogWire("input_fifo_W_" + inputFifoNumber + "_config_select_out", "`CONFIG_SELECT_WIDTH");
+            VerilogWire inputFifo1ConfigSelectOut = new  VerilogWire("input_fifo_W_" + inputFifoWestNumber + "_config_select_out", "`CONFIG_SELECT_WIDTH");
             wires.add(inputFifo1ConfigSelectOut);
 
-            inputFifo1.config_select_out = inputFifo1ConfigSelectOut.name;
+            inputFifoWest1.config_select_out = inputFifo1ConfigSelectOut.name;
 
-            inputFifo1.full = "input_fifo_full_W[" + inputFifoNumber + ":" + inputFifoNumber + "]";
+            inputFifoWest1.full = "input_fifo_full_W[" + inputFifoWestNumber + ":" + inputFifoWestNumber + "]";
 
-            inputFifosWest.add(inputFifo1);
+            inputFifosWest.add(inputFifoWest1);
         }
 
         for(int row = 0; row < crc.getRows(); row++) {
@@ -1968,48 +1968,48 @@ public class CRCVerilogGenerator {
             }
         }
 
-        // generate output FIFOs
+        // generate output FIFOs east
         for(int row = 0; row < crc.getRows(); row++) {
 
             // output FIFO for data_out_0
-            int outputFifoNumber = 2 * row;
+            int outputFifoEastNumber = 2 * row;
 
-            VerilogOutputFifo outputFifo0 = new VerilogOutputFifo("output_fifo_" + outputFifoNumber);
-            outputFifo0.data_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_data_out_E_0";
-            outputFifo0.flag_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_flag_out_E_0";
-            outputFifo0.valid_bit_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_valid_bit_out_E_0";
-            outputFifo0.config_select_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_config_select_out_E_0";
+            VerilogOutputFifo outputFifoEast0 = new VerilogOutputFifo("output_fifo_" + outputFifoEastNumber);
+            outputFifoEast0.data_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_data_out_E_0";
+            outputFifoEast0.flag_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_flag_out_E_0";
+            outputFifoEast0.valid_bit_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_valid_bit_out_E_0";
+            outputFifoEast0.config_select_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_config_select_out_E_0";
 
-            outputFifo0.read = "output_fifo_read[" + outputFifoNumber + ":" + outputFifoNumber + "]";
+            outputFifoEast0.read = "output_fifo_read_E[" + outputFifoEastNumber + ":" + outputFifoEastNumber + "]";
 
-            outputFifo0.data_out = "data_out[(" + (outputFifoNumber+1) + "*`DATA_WIDTH)-1:" + outputFifoNumber + "*`DATA_WIDTH]";
-            outputFifo0.flag_out = "flag_out[" + outputFifoNumber + ":" + outputFifoNumber + "]";
-            outputFifo0.valid_bit_out = "valid_bit_out[" + outputFifoNumber + ":" + outputFifoNumber + "]";
-            outputFifo0.config_select_out = "config_select_out[(" + (outputFifoNumber+1) + "*`CONFIG_SELECT_WIDTH)-1:" + outputFifoNumber + "*`CONFIG_SELECT_WIDTH]";
+            outputFifoEast0.data_out = "data_out_E[(" + (outputFifoEastNumber+1) + "*`DATA_WIDTH)-1:" + outputFifoEastNumber + "*`DATA_WIDTH]";
+            outputFifoEast0.flag_out = "flag_out_E[" + outputFifoEastNumber + ":" + outputFifoEastNumber + "]";
+            outputFifoEast0.valid_bit_out = "valid_bit_out_E[" + outputFifoEastNumber + ":" + outputFifoEastNumber + "]";
+            outputFifoEast0.config_select_out = "config_select_out_E[(" + (outputFifoEastNumber+1) + "*`CONFIG_SELECT_WIDTH)-1:" + outputFifoEastNumber + "*`CONFIG_SELECT_WIDTH]";
 
-            outputFifo0.full = "output_fifo_full[" + outputFifoNumber + ":" + outputFifoNumber + "]";
+            outputFifoEast0.full = "output_fifo_full_E[" + outputFifoEastNumber + ":" + outputFifoEastNumber + "]";
 
-            outputFifosEast.add(outputFifo0);
+            outputFifosEast.add(outputFifoEast0);
 
             // output FIFO for data_out_0
-            outputFifoNumber = 2 * row + 1;
+            outputFifoEastNumber = 2 * row + 1;
 
-            VerilogOutputFifo outputFifo1 = new VerilogOutputFifo("output_fifo_" + outputFifoNumber);
-            outputFifo1.data_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_data_out_E_1";
-            outputFifo1.flag_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_flag_out_E_1";
-            outputFifo1.valid_bit_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_valid_bit_out_E_1";
-            outputFifo1.config_select_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_config_select_out_E_1";
+            VerilogOutputFifo outputFifoEast1 = new VerilogOutputFifo("output_fifo_" + outputFifoEastNumber);
+            outputFifoEast1.data_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_data_out_E_1";
+            outputFifoEast1.flag_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_flag_out_E_1";
+            outputFifoEast1.valid_bit_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_valid_bit_out_E_1";
+            outputFifoEast1.config_select_in = "pe_" + row + "_" + (crc.getColumns()-1) + "_config_select_out_E_1";
 
-            outputFifo1.read = "output_fifo_read[" + outputFifoNumber + ":" + outputFifoNumber + "]";
+            outputFifoEast1.read = "output_fifo_read_E[" + outputFifoEastNumber + ":" + outputFifoEastNumber + "]";
 
-            outputFifo1.data_out = "data_out[(" + (outputFifoNumber+1) + "*`DATA_WIDTH)-1:" + outputFifoNumber + "*`DATA_WIDTH]";
-            outputFifo1.flag_out = "flag_out[" + outputFifoNumber + ":" + outputFifoNumber + "]";
-            outputFifo1.valid_bit_out = "valid_bit_out[" + outputFifoNumber + ":" + outputFifoNumber + "]";
-            outputFifo1.config_select_out = "config_select_out[(" + (outputFifoNumber+1) + "*`CONFIG_SELECT_WIDTH)-1:" + outputFifoNumber + "*`CONFIG_SELECT_WIDTH]";
+            outputFifoEast1.data_out = "data_out_E[(" + (outputFifoEastNumber+1) + "*`DATA_WIDTH)-1:" + outputFifoEastNumber + "*`DATA_WIDTH]";
+            outputFifoEast1.flag_out = "flag_out_E[" + outputFifoEastNumber + ":" + outputFifoEastNumber + "]";
+            outputFifoEast1.valid_bit_out = "valid_bit_out_E[" + outputFifoEastNumber + ":" + outputFifoEastNumber + "]";
+            outputFifoEast1.config_select_out = "config_select_out_E[(" + (outputFifoEastNumber+1) + "*`CONFIG_SELECT_WIDTH)-1:" + outputFifoEastNumber + "*`CONFIG_SELECT_WIDTH]";
 
-            outputFifo1.full = "output_fifo_full[" + outputFifoNumber + ":" + outputFifoNumber + "]";
+            outputFifoEast1.full = "output_fifo_full_E[" + outputFifoEastNumber + ":" + outputFifoEastNumber + "]";
 
-            outputFifosEast.add(outputFifo1);
+            outputFifosEast.add(outputFifoEast1);
         }
 
         module += inputs;

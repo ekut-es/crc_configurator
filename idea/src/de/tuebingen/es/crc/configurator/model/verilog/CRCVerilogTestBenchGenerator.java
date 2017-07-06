@@ -46,14 +46,14 @@ public class CRCVerilogTestBenchGenerator {
         // macros for data outputs
         for(int row = 0; row < crc.getRows(); row++) {
             int i = 2*row;
-            macros += "`define VALID_BIT_OUT_" + i + "  valid_bit_out[" + i + ":" + i + "]\n";
-            macros += "`define FLAG_OUT_" + i + " flag_out[" + i + ":" + i + "]\n";
-            macros += "`define DATA_OUT_" + i + " data_out[" + (i+1) + "*`DATA_WIDTH-1:" + i + "*`DATA_WIDTH]\n\n";
+            macros += "`define VALID_BIT_OUT_E" + i + "  valid_bit_out_E[" + i + ":" + i + "]\n";
+            macros += "`define FLAG_OUT_E" + i + " flag_out_E[" + i + ":" + i + "]\n";
+            macros += "`define DATA_OUT_E" + i + " data_out_E[" + (i+1) + "*`DATA_WIDTH-1:" + i + "*`DATA_WIDTH]\n\n";
 
             i = 2*row+1;
-            macros += "`define VALID_BIT_OUT_" + i + "  valid_bit_out[" + i + ":" + i + "]\n";
-            macros += "`define FLAG_OUT_" + i + " flag_out[" + i + ":" + i + "]\n";
-            macros += "`define DATA_OUT_" + i + " data_out[" + (i+1) + "*`DATA_WIDTH-1:" + i + "*`DATA_WIDTH]\n\n";
+            macros += "`define VALID_BIT_OUT_E" + i + "  valid_bit_out_E[" + i + ":" + i + "]\n";
+            macros += "`define FLAG_OUT_E" + i + " flag_out_E[" + i + ":" + i + "]\n";
+            macros += "`define DATA_OUT_E" + i + " data_out_E[" + (i+1) + "*`DATA_WIDTH-1:" + i + "*`DATA_WIDTH]\n\n";
         }
 
         // module definition
@@ -75,18 +75,18 @@ public class CRCVerilogTestBenchGenerator {
                         "    reg [" + (crc.getRows()*2) + "-1:0] valid_bit_in_W;\n" +
                         "    reg [(" + (crc.getRows()*2) + "*`CONFIG_SELECT_WIDTH)-1:0] config_select_in_W;\n" +
                         "\n" +
-                        "    reg [" + (crc.getRows()*2) + "-1:0] output_fifo_read;\n" +
+                        "    reg [" + (crc.getRows()*2) + "-1:0] output_fifo_read_E;\n" +
                         "\n" +
                         "\n" +
-                        "    wire [(" + (crc.getRows()*2) + "*`DATA_WIDTH)-1:0] data_out;\n" +
-                        "    wire [" + (crc.getRows()*2) + "-1:0] flag_out;\n" +
-                        "    wire [" + (crc.getRows()*2) + "-1:0] valid_bit_out;\n" +
-                        "    wire [(" + (crc.getRows()*2) + "*`CONFIG_SELECT_WIDTH)-1:0] config_select_out;\n" +
+                        "    wire [(" + (crc.getRows()*2) + "*`DATA_WIDTH)-1:0] data_out_E;\n" +
+                        "    wire [" + (crc.getRows()*2) + "-1:0] flag_out_E;\n" +
+                        "    wire [" + (crc.getRows()*2) + "-1:0] valid_bit_out_E;\n" +
+                        "    wire [(" + (crc.getRows()*2) + "*`CONFIG_SELECT_WIDTH)-1:0] config_select_out_E;\n" +
                         "\n" +
                         "    wire [" + (crc.getRows()*crc.getColumns()) + "-1:0] flag_exception;\n" +
                         "\n" +
                         "    wire [" + (crc.getRows()*2) + "-1:0] input_fifo_full_W;\n" +
-                        "    wire [" + (crc.getRows()*2) + "-1:0] output_fifo_full;\n\n";
+                        "    wire [" + (crc.getRows()*2) + "-1:0] output_fifo_full_E;\n\n";
 
         // task which sets all inputs to 0
         module +=       "    task setAllInputsTo0();\n" +
@@ -101,7 +101,7 @@ public class CRCVerilogTestBenchGenerator {
                         "        valid_bit_in_W <= {(" + crc.getRows() + "*2){1'b0}};\n" +
                         "        config_select_in_W <= {(" + (crc.getRows()*crc.getColumns()) + "*`CONFIG_SELECT_WIDTH){1'b0}};\n" +
                         "\n" +
-                        "        output_fifo_read <= {(" + crc.getRows() + "*2){1'b0}};\n" +
+                        "        output_fifo_read_E <= {(" + crc.getRows() + "*2){1'b0}};\n" +
                         "    endtask\n\n";
 
         // task which resets CRC
@@ -163,13 +163,13 @@ public class CRCVerilogTestBenchGenerator {
 
         // task which displays the data/flag output
         module +=       "    task displayDataFlagOutput();\n";
-        module +=       "        $display(\"OUTPUT_DATA\");\n";
+        module +=       "        $display(\"OUTPUT_DATA_E\");\n";
         module +=       "        $display(\"\\tv f          d\");\n";
 
         for(int row = 0; row < crc.getRows(); row++) {
             module +=   "        $display(\"ROW " + row + "\");\n";
-            module +=   "        $display(\"" + (2*row) + "\\t%b %b %d\", valid_bit_out[" + (2*row) + ":" + (2*row) + "], flag_out[" + (2*row) + ":" + (2*row) + "], data_out[(`DATA_WIDTH*" + (2*row+1) + ")-1 -:`DATA_WIDTH]);\n";
-            module +=   "        $display(\"" + (2*row+1) + "\\t%b %b %d\", valid_bit_out[" + (2*row+1) + ":" + (2*row+1) + "], flag_out[" + (2*row+1) + ":" + (2*row+1) + "], data_out[(`DATA_WIDTH*" + (2*row+2) + ")-1 -:`DATA_WIDTH]);\n";
+            module +=   "        $display(\"" + (2*row) + "\\t%b %b %d\", valid_bit_out_E[" + (2*row) + ":" + (2*row) + "], flag_out_E[" + (2*row) + ":" + (2*row) + "], data_out_E[(`DATA_WIDTH*" + (2*row+1) + ")-1 -:`DATA_WIDTH]);\n";
+            module +=   "        $display(\"" + (2*row+1) + "\\t%b %b %d\", valid_bit_out_E[" + (2*row+1) + ":" + (2*row+1) + "], flag_out_E[" + (2*row+1) + ":" + (2*row+1) + "], data_out_E[(`DATA_WIDTH*" + (2*row+2) + ")-1 -:`DATA_WIDTH]);\n";
         }
 
         module +=       "    endtask\n\n";
@@ -180,10 +180,10 @@ public class CRCVerilogTestBenchGenerator {
                         "\n" +
                         "        /**\n" +
                         "         * Macros for data inputs and outputs\n" +
-                        "         * data_{IN,OUT}_{N,S,W}_*:\n" +
-                        "         * `VALID_BIT_{IN,OUT}_{N,S,W}_*\n" +
-                        "         * `FLAG_{IN,OUT}_{N,S,W}_*\n" +
-                        "         * `DATA_{IN,OUT}_{N,S,W}_*\n" +
+                        "         * data_{IN,OUT}_{N,E,S,W}_*:\n" +
+                        "         * `VALID_BIT_{IN,OUT}_{N,E,S,W}_*\n" +
+                        "         * `FLAG_{IN,OUT}_{N,E,S,W}_*\n" +
+                        "         * `DATA_{IN,OUT}_{N,E,S,W}_*\n" +
                         "         */\n" +
                         "\n" +
                         "        clk = 1;\n" +
@@ -219,14 +219,14 @@ public class CRCVerilogTestBenchGenerator {
                         "        .valid_bit_in_W(valid_bit_in_W),\n" +
                         "        .config_select_in_W(config_select_in_W),\n" +
                         "\n" +
-                        "        .data_out(data_out),\n" +
-                        "        .flag_out(flag_out),\n" +
-                        "        .valid_bit_out(valid_bit_out),\n" +
-                        "        .config_select_out(config_select_out),\n" +
+                        "        .data_out_E(data_out_E),\n" +
+                        "        .flag_out_E(flag_out_E),\n" +
+                        "        .valid_bit_out_E(valid_bit_out_E),\n" +
+                        "        .config_select_out_E(config_select_out_E),\n" +
                         "\n" +
                         "        .input_fifo_full_W(input_fifo_full_W),\n" +
-                        "        .output_fifo_full(output_fifo_full),\n" +
-                        "        .output_fifo_read(output_fifo_read)\n" +
+                        "        .output_fifo_full_E(output_fifo_full_E),\n" +
+                        "        .output_fifo_read_E(output_fifo_read_E)\n" +
                         "    );\n\n";
 
         module += "endmodule\n";
