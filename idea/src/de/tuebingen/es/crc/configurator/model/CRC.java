@@ -362,7 +362,6 @@ public class CRC {
 
                 for(int row = 0; row < this.rows; row++) {
                     for(int column = 0; column < this.columns; column++) {
-                        System.out.println(row + "," + column);
                         truncateConstantRegisterContent(staticConfig.getPe(row, column), dataWidth);
                     }
                 }
@@ -484,6 +483,7 @@ public class CRC {
         pe.setDataFlagOutE1(PE.DataFlagOutDriver.none);
         pe.setDataFlagOutS0(PE.DataFlagOutDriver.none);
         pe.setDataFlagOutS1(PE.DataFlagOutDriver.none);
+        pe.setConstantRegContent(0);
         pe.setFuFunction(FU.FuFunction.none);
     }
 
@@ -876,7 +876,6 @@ public class CRC {
             bits = this.getPeStaticConstRegContentBits(row, column, entry.getKey()) + bits;
         }
 
-        System.out.println();
 
         return bits;
     }
