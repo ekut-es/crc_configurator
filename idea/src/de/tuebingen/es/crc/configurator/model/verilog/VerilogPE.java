@@ -19,7 +19,13 @@ public class VerilogPE implements VerilogModule {
     public boolean op_shift_right;
     public boolean op_compare;
     public boolean op_multiplex;
+    public boolean op_dsp48;
+    public boolean op_lut_8bit;
+    public boolean op_max;
+    public boolean op_min;
     public String static_config_content;
+    public String static_const_reg_content;
+    public String lut_8bit_content;
     public boolean regs_in_north;
     public boolean regs_in_south;
 
@@ -133,9 +139,15 @@ public class VerilogPE implements VerilogModule {
                 "        .op_shift_left(" + (this.op_shift_left ? "1'b1" : "1'b0") + "),\n" +
                 "        .op_shift_right(" + (this.op_shift_right ? "1'b1" : "1'b0") + "),\n" +
                 "        .op_compare(" + (this.op_compare ? "1'b1" : "1'b0") + "),\n" +
-                "        .op_multiplex(" + (this.op_multiplex ? "1'b1" : "1'b0") + "),\n";
+                "        .op_multiplex(" + (this.op_multiplex ? "1'b1" : "1'b0") + "),\n" +
+                "        .op_dsp48(" + (this.op_dsp48 ? "1'b1" : "1'b0") + "),\n" +
+                "        .op_lut_8bit(" + (this.op_lut_8bit ? "1'b1" : "1'b0") + "),\n" +
+                "        .op_max(" + (this.op_max ? "1'b1" : "1'b0") + "),\n" +
+                "        .op_min(" + (this.op_min ? "1'b1" : "1'b0") + "),\n";
 
         peModule += (this.static_config_content != null) ? "        .static_config_content(" + this.static_config_content + "),\n" : "";
+        peModule += (this.static_const_reg_content != null) ? "        .static_const_reg_content(" + this.static_const_reg_content + "),\n" : "";
+        peModule += (this.op_lut_8bit && this.lut_8bit_content != null) ? "        .lut_8bit_content(" + this.lut_8bit_content + "),\n" : "";
 
         peModule +=
                 "        .regs_in_north(" + (this.regs_in_north ? "1'b1" : "1'b0") + "),\n" +
