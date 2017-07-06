@@ -92,16 +92,48 @@ public class ConstantRegisterContentDialog extends Stage {
         // change allowed prefix when radix was changed
         toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if(radioButtonDecimal.isSelected()) {
-                allowedPrefixLabel.setText("Allowed Prefix: " + allowedPrefixStringDecimal);
+
                 contentTextField.setText(removeFormat(contentTextField.getText()));
+
+                // convert radix
+                Integer value = 0;
+                if(oldValue == radioButtonHexadecimal) {
+                    value = Integer.parseInt(contentTextField.getText(),16);
+                } else if(oldValue == radioButtonBinary) {
+                    value = Integer.parseInt(contentTextField.getText(), 2);
+                }
+
+                contentTextField.setText(value.toString());
+                allowedPrefixLabel.setText("Allowed Prefix: " + allowedPrefixStringDecimal);
             }
             else if(radioButtonHexadecimal.isSelected()) {
-                allowedPrefixLabel.setText("Allowed Prefix: " + allowedPrefixStringHexadecimal);
                 contentTextField.setText(removeFormat(contentTextField.getText()));
+
+                // convert radix
+                Integer value = 0;
+                if(oldValue == radioButtonDecimal) {
+                    value = Integer.parseInt(contentTextField.getText());
+                } else if(oldValue == radioButtonBinary) {
+                    value = Integer.parseInt(contentTextField.getText(), 2);
+                }
+
+                contentTextField.setText("0x" + Integer.toHexString(value));
+                allowedPrefixLabel.setText("Allowed Prefix: " + allowedPrefixStringHexadecimal);
             }
             else if(radioButtonBinary.isSelected()) {
-                allowedPrefixLabel.setText("Allowed Prefix: " + allowedPrefixStringBinary);
+
                 contentTextField.setText(removeFormat(contentTextField.getText()));
+
+                // convert radix
+                Integer value = 0;
+                if(oldValue == radioButtonDecimal) {
+                    value = Integer.parseInt(contentTextField.getText());
+                } else if(oldValue == radioButtonHexadecimal) {
+                    value = Integer.parseInt(contentTextField.getText(), 16);
+                }
+
+                contentTextField.setText("0b" + Integer.toBinaryString(value));
+                allowedPrefixLabel.setText("Allowed Prefix: " + allowedPrefixStringBinary);
             }
         });
 
