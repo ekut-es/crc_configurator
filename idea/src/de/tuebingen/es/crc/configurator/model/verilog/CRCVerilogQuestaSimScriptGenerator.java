@@ -34,6 +34,7 @@ public class CRCVerilogQuestaSimScriptGenerator {
                         "\n" +
                         "## in .bashrc\n" +
                         "## export DESIGN_WARE_VERILOG_DIR_PATH=\"/path/to/design/ware/verilog/files\"\n" +
+                        "## export CRC_VERILOG_DIR_PATH=\"/path/to/design/ware/verilog/files\"\n" +
                         "\n" +
                         "vlog -novopt $env(DESIGN_WARE_VERILOG_DIR_PATH)/DW01_add.v\n" +
                         "vlog -novopt $env(DESIGN_WARE_VERILOG_DIR_PATH)/DW01_sub.v\n" +
@@ -41,16 +42,19 @@ public class CRCVerilogQuestaSimScriptGenerator {
                         "vlog -novopt $env(DESIGN_WARE_VERILOG_DIR_PATH)/DW_div.v\n" +
                         "vlog -novopt $env(DESIGN_WARE_VERILOG_DIR_PATH)/DW01_cmp6.v\n" +
                         "vlog -novopt $env(DESIGN_WARE_VERILOG_DIR_PATH)/DW01_mux_any.v\n" +
-                        "vlog -novopt fu.v\n" +
-                        "vlog -novopt fu_input_ready.v\n" +
-                        "vlog -novopt ext_input_ready_fu_consumer.v\n" +
-                        "vlog -novopt ext_input_ready_data_in_consumer.v\n" +
-                        "vlog -novopt valid_bit_data_in_consumer.v\n" +
-                        "vlog -novopt data_out_reg.v\n" +
-                        "vlog -novopt config_line.v\n" +
-                        "vlog -novopt pe.v\n" +
-                        "vlog -novopt input_fifo.v\n" +
-                        "vlog -novopt output_fifo.v\n" +
+                        "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/dsp48.v\n" +
+                        "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/lut_8bit.v\n" +
+                        "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/fu.v\n" +
+                        "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/fu_input_ready.v\n" +
+                        "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/ext_input_ready_fu_consumer.v\n" +
+                        "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/ext_input_ready_data_in_consumer.v\n" +
+                        "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/valid_bit_data_in_consumer.v\n" +
+                        "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/data_out_reg.v\n" +
+                        "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/config_line.v\n" +
+                        "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/const_reg.v\n" +
+                        "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/pe.v\n" +
+                        "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/input_fifo.v\n" +
+                        "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/output_fifo.v\n" +
                         "vlog -novopt " + this.verilogFileName + "\n" +
                         "vlog -novopt " + this.testBenchFileName + "\n" +
                         "vopt CRC_CORE_W_INPUT_OUTPUT_FIFOS_tb -debugdb -o tb\n" +
