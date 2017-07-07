@@ -85,7 +85,8 @@ public class PE {
         this.dataFlagOutN1 = pe.getDataFlagOutN1();
         this.dataFlagOutE0 = pe.getDataFlagOutE0();
         this.dataFlagOutE1 = pe.getDataFlagOutE1();
-        this.dataFlagOutS0 = pe.getDataFlagOutS1();
+        this.dataFlagOutS0 = pe.getDataFlagOutS0();
+        this.dataFlagOutS1 = pe.getDataFlagOutS1();
         this.dataFlagInFU0 = pe.getDataFlagInFu0();
         this.dataFlagInFU1 = pe.getDataFlagInFu1();
         this.dataFlagInFUMux = pe.getDataFlagInFuMux();
