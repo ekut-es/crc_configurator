@@ -93,6 +93,7 @@ public class CRCVerilogTestBenchGenerator {
                         "    reg clk;\n" +
                         "    reg reset;\n" +
                         "    reg [" + (crc.getRows()*crc.getColumns()) + "-1:0] enable_config_read;\n" +
+                        "    reg [" + (crc.getRows()*crc.getColumns()) + "-1:0] enable_const_reg_read;\n" +
                         "\n" +
                         "    reg [(" + (crc.getRows()*crc.getColumns()) + "*`CONFIG_WIDTH)-1:0] config_in;\n" +
                         "    reg [(" + (crc.getRows()*crc.getColumns()) + "*`CONFIG_SELECT_WIDTH)-1:0] config_load_select;\n" +
@@ -138,6 +139,7 @@ public class CRCVerilogTestBenchGenerator {
         // task which sets all inputs to 0
         module +=       "    task setAllInputsTo0();\n" +
                         "        enable_config_read <= {" + (crc.getRows()*crc.getColumns()) + "{1'b0}};\n" +
+                        "        enable_const_reg_read <= {" + (crc.getRows()*crc.getColumns()) + "{1'b0}};\n" +
                         "\n" +
                         "        config_in <= {(" + (crc.getRows()*crc.getColumns()) + "*`CONFIG_WIDTH){1'b0}};\n" +
                         "        config_load_select <= {(" + (crc.getRows()*crc.getColumns()) + "*`CONFIG_SELECT_WIDTH){1'b0}};\n" +
@@ -215,7 +217,7 @@ public class CRCVerilogTestBenchGenerator {
         module +=       "    endtask\n\n";
 
         // task which loads a config line into a PE
-        module +=       "    task doConfiguration(integer row, integer column, reg [`CONFIG_WIDTH-1:0] config_data);\n";
+        module +=       "    task doConfiguration(integer row, integer column, bit [`CONFIG_WIDTH-1:0] config_data);\n";
         module +=       "        enable_config_read[((row * " + crc.getColumns()+ ") + column +1) -1 -: 1] = 1'b1;\n";
         module +=       "        config_in[(`CONFIG_WIDTH*((row * " + crc.getColumns() + ") + column +1)) -1 -: `CONFIG_WIDTH] = config_data;\n";
         module +=       "        `TICK\n";
@@ -223,6 +225,14 @@ public class CRCVerilogTestBenchGenerator {
         module +=       "        enable_config_read[((row * " + crc.getColumns()+ ") + column +1) -1 -: 1] = 1'b0;\n";
         module +=       "    endtask\n\n";
 
+        // task which loads a value into the const reg of a PE
+        module +=       "    task doConstantRegLoad(integer row, integer column, bit [`DATA_WIDTH-1+1:0] const_reg_data);\n";
+        module +=       "        enable_const_reg_read[((row * " + crc.getColumns()+ ") + column +1) -1 -: 1] = 1'b1;\n";
+        module +=       "        config_in[(`CONFIG_WIDTH*((row * " + crc.getColumns() + ") + column +1)) -1 -: `CONFIG_WIDTH] = const_reg_data;\n";
+        module +=       "        `TICK\n";
+        module +=       "        `TICK\n";
+        module +=       "        enable_const_reg_read[((row * " + crc.getColumns()+ ") + column +1) -1 -: 1] = 1'b0;\n";
+        module +=       "    endtask\n\n";
 
         for(int dynamicConfigurationNumber = 0; dynamicConfigurationNumber < crc.getDynamicConfigLines(); dynamicConfigurationNumber++) {
 
@@ -233,6 +243,7 @@ public class CRCVerilogTestBenchGenerator {
                 for(int column = 0; column < crc.getColumns(); column++) {
                     module += "        `TICK\n";
                     module += "        doConfiguration(" + row + ", " + column + ", " + crc.getPeDynamicConfigParameterBits(row, column, dynamicConfigurationNumber).length() + "'b" + crc.getPeDynamicConfigParameterBits(row, column, dynamicConfigurationNumber) + ");\n";
+                    module += "        doConstantRegLoad(" + row + ", " + column + ", " + crc.getPeDynamicConstRegContentBits(row, column, dynamicConfigurationNumber).length() + "'b" + crc.getPeDynamicConstRegContentBits(row, column, dynamicConfigurationNumber) + ");\n";
                 }
             }
 
@@ -286,6 +297,7 @@ public class CRCVerilogTestBenchGenerator {
                         "        .clk(clk),\n" +
                         "        .reset(reset),\n" +
                         "        .enable_config_read(enable_config_read),\n" +
+                        "        .enable_const_reg_read(enable_const_reg_read),\n" +
                         "        .flag_exception(flag_exception),\n" +
                         "\n" +
                         "        .config_in(config_in),\n" +

@@ -30,6 +30,7 @@ public class VerilogPE implements VerilogModule {
     public boolean regs_in_south;
 
     public String enable_config_read;
+    public String enable_const_reg_read;
 
     public String flag_exception;
 
@@ -156,6 +157,7 @@ public class VerilogPE implements VerilogModule {
                 "        .clk(clk),\n" +
                 "        .reset(reset),\n" +
                 "        .enable_config_read(" + this.enable_config_read + "),\n" +
+                "        .enable_const_reg_read(" + this.enable_const_reg_read + "),\n" +
                 "        .flag_exception(" + this.flag_exception + "),\n" +
                 "        .config_in(" + this.config_in + "),\n" +
                 "        .config_select(" + this.config_select + "),\n" +

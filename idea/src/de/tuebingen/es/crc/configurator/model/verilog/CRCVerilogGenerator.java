@@ -776,6 +776,7 @@ public class CRCVerilogGenerator {
                         "    clk,\n" +
                         "    reset,\n" +
                         "    enable_config_read,\n" +
+                        "    enable_const_reg_read,\n" +
                         "    flag_exception,\n" +
                         "\n" +
                         "    config_in,\n" +
@@ -822,6 +823,7 @@ public class CRCVerilogGenerator {
                         "    input wire clk;\n" +
                         "    input wire reset;\n" +
                         "    input wire [" + (crc.getRows()*crc.getColumns()) + "-1:0] enable_config_read;\n" +
+                        "    input wire [" + (crc.getRows()*crc.getColumns()) + "-1:0] enable_const_reg_read;\n" +
                         "\n" +
                         "    input wire [(" + (crc.getRows()*crc.getColumns()) + "*`CONFIG_WIDTH)-1:0] config_in;\n" +
                         "    input wire [(" + (crc.getRows()*crc.getColumns()) + "*`CONFIG_SELECT_WIDTH)-1:0] config_load_select;\n" +
@@ -1181,6 +1183,7 @@ public class CRCVerilogGenerator {
                 pe.lut_8bit_content = "2048'h" + crc.getFu(row, column).getLut8BitContentHexString();
 
                 pe.enable_config_read = "enable_config_read[" + (crc.getColumns()*row+column) + ":" + (crc.getColumns()*row+column) + "]";
+                pe.enable_const_reg_read = "enable_const_reg_read[" + (crc.getColumns()*row+column) + ":" + (crc.getColumns()*row+column) + "]";
                 pe.flag_exception = "flag_exception[" + (crc.getColumns()*row+column) + ":" + (crc.getColumns()*row+column)+ "]";
 
                 pe.config_in = "config_in[`CONFIG_WIDTH*" + ((row*crc.getColumns())+column+1) + "-1:`CONFIG_WIDTH*" + ((row*crc.getColumns())+column) + "]";
