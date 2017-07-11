@@ -57,6 +57,20 @@ public class CRCVerilogTestBenchGenerator {
             }
         }
 
+        if(this.crc.areInputsSouth()) {
+            for(int column = 0; column < crc.getColumns(); column++) {
+                int i = 2*column;
+                macros += "`define DATA_IN_S_" + i + " data_in_S[" + (i+1) + "*`DATA_WIDTH-1:" + i + "*`DATA_WIDTH]\n";
+                macros += "`define FLAG_IN_S_" + i + " flag_in_S[" + i + ":" + i + "]\n";
+                macros += "`define VALID_BIT_IN_S_" + i + "  valid_bit_in_S[" + i + ":" + i + "]\n\n";
+
+                i = 2*column+1;
+                macros += "`define DATA_IN_S_" + i + " data_in_S[" + (i+1) + "*`DATA_WIDTH-1:" + i + "*`DATA_WIDTH]\n";
+                macros += "`define FLAG_IN_S_" + i + " flag_in_S[" + i + ":" + i + "]\n";
+                macros += "`define VALID_BIT_IN_S_" + i + "  valid_bit_in_S[" + i + ":" + i + "]\n\n";
+            }
+        }
+
         // macros for data outputs
         for(int row = 0; row < crc.getRows(); row++) {
             int i = 2*row;
@@ -100,6 +114,15 @@ public class CRCVerilogTestBenchGenerator {
                         "\n";
         }
 
+        if(crc.areInputsSouth()) {
+            module +=   "    reg [(" + (crc.getColumns()*2) + "*`DATA_WIDTH)-1:0] data_in_S;\n" +
+                        "    reg [" + (crc.getColumns()*2) + "-1:0] flag_in_S;\n" +
+                        "    reg [" + (crc.getColumns()*2) + "-1:0] valid_bit_in_S;\n" +
+                        "    reg [(" + (crc.getColumns()*2) + "*`CONFIG_SELECT_WIDTH)-1:0] config_select_in_S;\n" +
+                        "    wire [" + (crc.getColumns()*2) + "-1:0] input_fifo_full_S;\n" +
+                        "\n";
+        }
+
         module +=       "    reg [" + (crc.getRows()*2) + "-1:0] output_fifo_read_E;\n" +
                         "\n" +
                         "\n" +
@@ -134,6 +157,14 @@ public class CRCVerilogTestBenchGenerator {
                         "\n";
         }
 
+        if(crc.areInputsSouth()) {
+            module +=   "        data_in_S <= {(" + crc.getColumns() + "*`DATA_WIDTH*2){1'b0}};\n" +
+                        "        flag_in_S <= {(" + crc.getColumns() + "*2){1'b0}};\n" +
+                        "        valid_bit_in_S <= {(" + crc.getColumns() + "*2){1'b0}};\n" +
+                        "        config_select_in_S <= {(" + crc.getColumns() + "*`CONFIG_SELECT_WIDTH*2){1'b0}};\n" +
+                        "\n";
+        }
+
         module +=       "        output_fifo_read_E <= {(" + crc.getRows() + "*2){1'b0}};\n" +
                         "    endtask\n\n";
 
@@ -163,9 +194,18 @@ public class CRCVerilogTestBenchGenerator {
             }
         }
 
-        for(int column = 0; column < crc.getColumns(); column++) {
-            configSelectIns += "        config_select_in_N[`CONFIG_SELECT_WIDTH*" + (2*column+1) + "-1 -: `CONFIG_SELECT_WIDTH] = config_select_value;\n";
-            configSelectIns += "        config_select_in_N[`CONFIG_SELECT_WIDTH*" + (2*column+2) + "-1 -: `CONFIG_SELECT_WIDTH] = config_select_value;\n";
+        if(this.crc.areInputsNorth()) {
+            for(int column = 0; column < crc.getColumns(); column++) {
+                configSelectIns += "        config_select_in_N[`CONFIG_SELECT_WIDTH*" + (2*column+1) + "-1 -: `CONFIG_SELECT_WIDTH] = config_select_value;\n";
+                configSelectIns += "        config_select_in_N[`CONFIG_SELECT_WIDTH*" + (2*column+2) + "-1 -: `CONFIG_SELECT_WIDTH] = config_select_value;\n";
+            }
+        }
+
+        if(this.crc.areInputsSouth()) {
+            for(int column = 0; column < crc.getColumns(); column++) {
+                configSelectIns += "        config_select_in_S[`CONFIG_SELECT_WIDTH*" + (2*column+1) + "-1 -: `CONFIG_SELECT_WIDTH] = config_select_value;\n";
+                configSelectIns += "        config_select_in_S[`CONFIG_SELECT_WIDTH*" + (2*column+2) + "-1 -: `CONFIG_SELECT_WIDTH] = config_select_value;\n";
+            }
         }
 
         module += configSelectIns + "\n";
@@ -264,6 +304,15 @@ public class CRCVerilogTestBenchGenerator {
                         "        .valid_bit_in_N(valid_bit_in_N),\n" +
                         "        .config_select_in_N(config_select_in_N),\n" +
                         "        .input_fifo_full_N(input_fifo_full_N),\n" +
+                        "\n";
+        }
+
+        if(crc.areInputsSouth()) {
+            module +=   "        .data_in_S(data_in_S),\n" +
+                        "        .flag_in_S(flag_in_S),\n" +
+                        "        .valid_bit_in_S(valid_bit_in_S),\n" +
+                        "        .config_select_in_S(config_select_in_S),\n" +
+                        "        .input_fifo_full_S(input_fifo_full_S),\n" +
                         "\n";
         }
 
