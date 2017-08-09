@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.File;
+import java.util.prefs.Preferences;
 
 /**
  * Created by Konstantin (Konze) Lübeck on 27/02/2017.
@@ -43,6 +44,15 @@ public class ExportVerilogDialog extends Stage {
         this.initStyle(StageStyle.UNIFIED);
         this.initModality(Modality.APPLICATION_MODAL);
 
+        Preferences userPreferences = Preferences.userNodeForPackage(this.getClass());
+        this.fifosBetweenPes = userPreferences.getBoolean("fifosBetweenPes", false);
+        this.interPeFifoLength = userPreferences.getInt("interPeFifoLength", 2);
+        this.inputFifoLength = userPreferences.getInt("inputFifoLength", 2);
+        this.outputFifoLength = userPreferences.getInt("outputFifoLength", 2);
+        this.generateTestbenchAndQuestaSimScript = userPreferences.getBoolean("generateTestbenchAndQuestaSimScript", false);
+        this.generatePreprocessor = userPreferences.getBoolean("generatePreprocessor", false);
+        this.clockCycle = userPreferences.getInt("clockCycle", 20);
+
         Group root = new Group();
 
         Scene scene = new Scene(root, 400, 575);
@@ -64,23 +74,24 @@ public class ExportVerilogDialog extends Stage {
 
         NumberTextField interPeFifoLengthTextField = new NumberTextField();
         interPeFifoLengthTextField.setMaxDigits(2);
-        interPeFifoLengthTextField.setMinNumber(0);
-        interPeFifoLengthTextField.setMaxNumber(0);
+        interPeFifoLengthTextField.setMinNumber(2);
         interPeFifoLengthTextField.setMinWidth(40);
         interPeFifoLengthTextField.setMaxWidth(40);
-        interPeFifoLengthTextField.setEditable(false);
+        interPeFifoLengthTextField.setText("" + interPeFifoLength);
+
+        // cheap trick to make it final for lambda but still writable
+        final int[] temporaryInterPeFifoLenth = {interPeFifoLength};
 
         fifoBetweenPesCheckbox.setOnAction( event -> {
             if(fifoBetweenPesCheckbox.isSelected()) {
                 interPeFifoLengthTextField.setEditable(true);
-                interPeFifoLengthTextField.setMinNumber(2);
-                interPeFifoLengthTextField.setMaxNumber(100);
             } else {
                 interPeFifoLengthTextField.setEditable(false);
-                interPeFifoLengthTextField.setMinNumber(0);
-                interPeFifoLengthTextField.setMaxNumber(0);
             }
         });
+
+        fifoBetweenPesCheckbox.setSelected(fifosBetweenPes);
+        interPeFifoLengthTextField.setEditable(fifosBetweenPes);
 
         // Label and TextField for input fifo length
         Label inputFifoLengthLabel = new Label("Length of input FIFOs (W)");
@@ -91,6 +102,7 @@ public class ExportVerilogDialog extends Stage {
         inputFifoLengthTextField.setMinNumber(2);
         inputFifoLengthTextField.setMinWidth(40);
         inputFifoLengthTextField.setMaxWidth(40);
+        inputFifoLengthTextField.setText("" + inputFifoLength);
 
 
         // Label and TextField for output fifo length
@@ -102,6 +114,7 @@ public class ExportVerilogDialog extends Stage {
         outputFifoLengthTextField.setMinNumber(2);
         outputFifoLengthTextField.setMinWidth(40);
         outputFifoLengthTextField.setMaxWidth(40);
+        outputFifoLengthTextField.setText("" + outputFifoLength);
 
 
         // add fifo length inputs to grid pane
@@ -198,6 +211,11 @@ public class ExportVerilogDialog extends Stage {
             }
         });
 
+        generateTestBenchAndQuestaSimScriptCheckBox.setSelected(generateTestbenchAndQuestaSimScript);
+        if(generateTestbenchAndQuestaSimScript) {
+            pathToTestBenchFileTextField.setText(this.getTestBenchFilePath());
+            pathToQuestaSimScriptTextField.setText(this.getQuestaSimScriptPath());
+        }
 
         // check box for the generation of a preprocessor.v
         CheckBox generatePreprocessorCheckBox = new CheckBox("Generate preprocessor.v");
@@ -224,7 +242,7 @@ public class ExportVerilogDialog extends Stage {
         clockCycleTextField.setMinNumber(1);
         clockCycleTextField.setMaxNumber(999);
         clockCycleTextField.setMaxDigits(3);
-        clockCycleTextField.setText("20");
+        clockCycleTextField.setText("" + clockCycle);
         clockCycleTextField.setMaxWidth(45);
         clockCycleTextField.setMinWidth(45);
 
@@ -246,6 +264,12 @@ public class ExportVerilogDialog extends Stage {
                 clockCycleTextField.setEditable(false);
             }
         });
+
+        generatePreprocessorCheckBox.setSelected(generatePreprocessor);
+        if(generatePreprocessor) {
+            pathToPreprocessorTextField.setText(this.getPreprocessorPath());
+            clockCycleTextField.setEditable(true);
+        }
 
         // update test bench file and QuestaSim script text field when path to verilog file changes
         pathToVerilogFileTextField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -275,6 +299,15 @@ public class ExportVerilogDialog extends Stage {
             generateTestbenchAndQuestaSimScript = generateTestBenchAndQuestaSimScriptCheckBox.isSelected();
             generatePreprocessor = generatePreprocessorCheckBox.isSelected();
             clockCycle = clockCycleTextField.getNumber();
+
+            userPreferences.putBoolean("fifosBetweenPes", fifosBetweenPes);
+            userPreferences.putInt("interPeFifoLength", interPeFifoLength);
+            userPreferences.putInt("inputFifoLength", inputFifoLength);
+            userPreferences.putInt("outputFifoLength", outputFifoLength);
+            userPreferences.putBoolean("generateTestbenchAndQuestaSimScript", generateTestbenchAndQuestaSimScript);
+            userPreferences.putBoolean("generatePreprocessor", generatePreprocessor);
+            userPreferences.putInt("clockCycle", clockCycle);
+
             export = true;
             this.close();
         });
