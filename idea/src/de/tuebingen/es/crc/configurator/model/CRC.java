@@ -267,9 +267,11 @@ public class CRC {
             if(i < oldStaticConfigLines) {
                 staticConfigs.put(i, new Configuration(this, i, tempStaticConfigs.get(i)));
 
-                // set outputs driven by south to none in PEs of last row
-                for(int j = 0; j < columns; j++) {
-                    staticConfigs.get(i).getPe(rows - 1, j).setOutputsDrivenBySouthInputsToNone();
+                // set inputs driven by south to none in PEs of last row if inputs from south were disabled
+                if(this.inputsSouth && !inputsSouth) {
+                    for (int j = 0; j < columns; j++) {
+                        staticConfigs.get(i).getPe(rows - 1, j).setOutputsDrivenBySouthInputsToNone();
+                    }
                 }
 
             } else {
@@ -295,9 +297,11 @@ public class CRC {
             if(i < oldDynamicConfigLines) {
                 dynamicConfigs.put(i, new Configuration(this, i, tempDynamicConfigs.get(i)));
 
-                // south inputs of PEs in last row to none
-                for(int j = 0; j < columns; j++) {
-                    dynamicConfigs.get(i).getPe(rows - 1, j).setOutputsDrivenBySouthInputsToNone();
+                // set inputs driven by south to none in PEs of last row if inputs from south were disabled
+                if(this.inputsSouth && !inputsSouth) {
+                    for (int j = 0; j < columns; j++) {
+                        dynamicConfigs.get(i).getPe(rows - 1, j).setOutputsDrivenBySouthInputsToNone();
+                    }
                 }
 
             } else {
