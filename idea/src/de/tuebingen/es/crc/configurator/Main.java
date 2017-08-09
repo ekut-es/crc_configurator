@@ -18,6 +18,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public class Main extends Application {
 
@@ -69,13 +70,14 @@ public class Main extends Application {
         Parent root = fxmlLoader.load();
 
         Model model = new Model();
+        Preferences userPreferences = Preferences.userNodeForPackage(this.getClass());
 
         Controller controller = fxmlLoader.getController();
         controller.initModelViewController(model);
         controller.setStage(primaryStage);
 
-        int stageWidth = 2*ConfiguratorTab.CANVAS_PADDING+2*ConfiguratorTab.PE_DRAW_SIZE+3*ConfiguratorTab.INTER_PE_DISTANCE+10;
-        int stageHeight = 2*ConfiguratorTab.CANVAS_PADDING+2*ConfiguratorTab.PE_DRAW_SIZE+2*ConfiguratorTab.INTER_PE_DISTANCE+110;
+        int stageWidth = userPreferences.getInt("stageWidth", 2*ConfiguratorTab.CANVAS_PADDING+2*ConfiguratorTab.PE_DRAW_SIZE+3*ConfiguratorTab.INTER_PE_DISTANCE+10);
+        int stageHeight = userPreferences.getInt("stageHeight", 2*ConfiguratorTab.CANVAS_PADDING+2*ConfiguratorTab.PE_DRAW_SIZE+2*ConfiguratorTab.INTER_PE_DISTANCE+110);
 
         primaryStage.setTitle("CRC Configurator");
         primaryStage.getIcons().add(new Image("icon/icon_512x512.png"));
@@ -84,7 +86,13 @@ public class Main extends Application {
         primaryStage.setMinHeight(stageHeight);
         primaryStage.setScene(new Scene(root, stageWidth, stageHeight));
 
-        primaryStage.setOnCloseRequest(event -> controller.quitApplication());
+        primaryStage.setOnCloseRequest(event -> {
+            // save stage width and height
+            userPreferences.putInt("stageWidth", (int) primaryStage.getWidth());
+            userPreferences.putInt("stageHeight", (int) primaryStage.getHeight());
+            // quit application
+            controller.quitApplication();
+        });
 
         if(!exportBits && !exportPNGs) {
             primaryStage.show();
