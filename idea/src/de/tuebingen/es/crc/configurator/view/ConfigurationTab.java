@@ -55,7 +55,8 @@ public class ConfigurationTab extends ConfiguratorTab implements Observer {
         put(FU.FuFunction.dsp_mul, 0.8*peDrawSizeTwentieth);
         put(FU.FuFunction.dsp_mula, 0.2*peDrawSizeTwentieth);
         put(FU.FuFunction.lut_8bit, 1.2*peDrawSizeTwentieth);
-        put(FU.FuFunction.max, 1.2*peDrawSizeTwentieth);
+        put(FU.FuFunction.max_2, 0.8*peDrawSizeTwentieth);
+        put(FU.FuFunction.max_3, 0.8*peDrawSizeTwentieth);
         put(FU.FuFunction.min, 1.2*peDrawSizeTwentieth);
     }};
 

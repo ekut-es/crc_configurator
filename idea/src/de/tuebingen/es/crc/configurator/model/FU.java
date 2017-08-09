@@ -37,7 +37,8 @@ public class FU {
         dsp_mul,
         dsp_mula,
         lut_8bit,
-        max,
+        max_2,
+        max_3,
         min
     }
 
@@ -89,7 +90,10 @@ public class FU {
             add(FuFunction.dsp_mula);
         }});
         put(FuMode.lut_8bit, new HashSet<FuFunction>(){{ add(FuFunction.lut_8bit); }});
-        put(FuMode.max, new HashSet<FuFunction>(){{ add(FuFunction.max); }});
+        put(FuMode.max, new HashSet<FuFunction>(){{
+            add(FuFunction.max_2);
+            add(FuFunction.max_3);
+        }});
         put(FuMode.min, new HashSet<FuFunction>(){{ add(FuFunction.min); }});
     }};
 
@@ -116,7 +120,8 @@ public class FU {
         put(FuFunction.dsp_mul, FuMode.dsp48);
         put(FuFunction.dsp_mula, FuMode.dsp48);
         put(FuFunction.lut_8bit, FuMode.lut_8bit);
-        put(FuFunction.max, FuMode.max);
+        put(FuFunction.max_2, FuMode.max);
+        put(FuFunction.max_3, FuMode.max);
         put(FuFunction.min, FuMode.min);
     }};
 
@@ -144,7 +149,8 @@ public class FU {
         put(FuFunction.dsp_mul, "dsp_mul");
         put(FuFunction.dsp_mula, "dsp_mula");
         put(FuFunction.lut_8bit, "lut_8bit");
-        put(FuFunction.max, "max");
+        put(FuFunction.max_2, "max_2");
+        put(FuFunction.max_3, "max_3");
         put(FuFunction.min, "min");
     }};
 
@@ -172,7 +178,8 @@ public class FU {
         put(FuFunction.dsp_mul, "dsp×");
         put(FuFunction.dsp_mula, "dsp×+");
         put(FuFunction.lut_8bit, "lut8");
-        put(FuFunction.max, "max");
+        put(FuFunction.max_2, "max2");
+        put(FuFunction.max_3, "max3");
         put(FuFunction.min, "min");
     }};
 
@@ -200,8 +207,9 @@ public class FU {
         put(FuFunction.dsp_mul, "10011");
         put(FuFunction.dsp_mula, "10100");
         put(FuFunction.lut_8bit, "10101");
-        put(FuFunction.max, "10110");
-        put(FuFunction.min, "10111");
+        put(FuFunction.max_2, "10110");
+        put(FuFunction.max_3, "10111");
+        put(FuFunction.min, "11000");
     }};
 
     private LinkedHashMap<FuMode, Boolean> availableModes;

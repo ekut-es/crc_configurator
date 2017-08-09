@@ -99,6 +99,15 @@ public class CRCVerilogPreprocessorGenerator {
                 " * ------------------------------------------------------------------------- */\n" +
                 "`define CONFIG_SELECT_WIDTH " + (log2(staticConfigLines + dynamicConfigLines - 1)+1) + "\n\n";
 
+        // fixed point math (TODO: make decimal places an editable parameter)
+        preprocessor +=
+               "/* -------------------------------------------------------------------------\n" +
+               " * Parameters for fixed point math\n" +
+               " * ------------------------------------------------------------------------- */\n" +
+               "`define DECIMAL_PLACES 10\n" +
+               "`define FIX_ONE {{`DATA_WIDTH-`DECIMAL_PLACES-1{1'b0}},1'b1,{`DECIMAL_PLACES{1'b0}}}\n" +
+               "`define PRECISION (1.0/(2.0 ** `DECIMAL_PLACES))" + "\n\n";
+
         // reset active low
         preprocessor +=
                 "/* -------------------------------------------------------------------------\n" +
@@ -133,9 +142,9 @@ public class CRCVerilogPreprocessorGenerator {
                 "`define FU_FUNCTION_DSP_MUL     5'b10011\n" +
                 "`define FU_FUNCTION_DSP_MULA    5'b10100\n" +
                 "`define FU_FUNCTION_LUT_8BIT    5'b10101\n" +
-                "`define FU_FUNCTION_MAX         5'b10110\n" +
-                "`define FU_FUNCTION_MIN         5'b10111\n" +
-                "`define FU_FUNCTION_EXCEPTION_6  5'b11000\n" +
+                "`define FU_FUNCTION_MAX_2       5'b10110\n" +
+                "`define FU_FUNCTION_MAX_3       5'b10111\n" +
+                "`define FU_FUNCTION_MIN         5'b11000\n" +
                 "`define FU_FUNCTION_EXCEPTION_7  5'b11001\n" +
                 "`define FU_FUNCTION_EXCEPTION_8  5'b11010\n" +
                 "`define FU_FUNCTION_EXCEPTION_9  5'b11011\n" +

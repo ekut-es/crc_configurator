@@ -136,6 +136,37 @@ public class CRCVerilogTestBenchGenerator {
                         "\n" +
                         "    wire [" + (crc.getRows()*2) + "-1:0] output_fifo_full_E;\n\n";
 
+        // function for converting floating point to fixed point numbers
+        module +=       "    function bit[`DATA_WIDTH-1:0] floatingPointToFixedPoint(real a);\n" +
+                        "        real float;\n" +
+                        "        bit[`DATA_WIDTH-1:0] fixed;\n" +
+                        "        float = `FIX_ONE * a;\n" +
+                        "        fixed = float;\n" +
+                        "        return fixed;\n" +
+                        "    endfunction\n\n";
+
+        // function for converting fixed point to a floating point numbers
+        module +=       "    function real fixedPointToFloatingPoint(bit[`DATA_WIDTH-1:0] a);\n" +
+                        "        real float; \n" +
+                        "        bit [`DATA_WIDTH-`DECIMAL_PLACES-1:0] before_comma;\n" +
+                        "        bit [`DECIMAL_PLACES-1:0] after_comma;\n" +
+                        "\n" +
+                        "        // check if it is a negative number\n" +
+                        "        if(a[`DATA_WIDTH-1:`DATA_WIDTH-1] == 1'b1) begin\n" +
+                        "            a = ~a + 1'b1;\n" +
+                        "            before_comma = a[`DATA_WIDTH-1:`DECIMAL_PLACES];\n" +
+                        "            after_comma = a[`DECIMAL_PLACES-1:0];\n" +
+                        "            float = -1*(before_comma + (after_comma * `PRECISION));\n" +
+                        "        end\n" +
+                        "        else begin\n" +
+                        "            before_comma = a[`DATA_WIDTH-1:`DECIMAL_PLACES];\n" +
+                        "            after_comma = a[`DECIMAL_PLACES-1:0];\n" +
+                        "            float = before_comma + (after_comma * `PRECISION);\n" +
+                        "        end\n" +
+                        "\n" +
+                        "        return float;\n" +
+                        "    endfunction\n\n";
+
         // task which sets all inputs to 0
         module +=       "    task setAllInputsTo0();\n" +
                         "        enable_config_read <= {" + (crc.getRows()*crc.getColumns()) + "{1'b0}};\n" +
@@ -259,6 +290,19 @@ public class CRCVerilogTestBenchGenerator {
             module +=   "        $display(\"ROW " + row + "\");\n";
             module +=   "        $display(\"" + (2*row) + "\\t%b %b %d\", valid_bit_out_E[" + (2*row) + ":" + (2*row) + "], flag_out_E[" + (2*row) + ":" + (2*row) + "], data_out_E[(`DATA_WIDTH*" + (2*row+1) + ")-1 -:`DATA_WIDTH]);\n";
             module +=   "        $display(\"" + (2*row+1) + "\\t%b %b %d\", valid_bit_out_E[" + (2*row+1) + ":" + (2*row+1) + "], flag_out_E[" + (2*row+1) + ":" + (2*row+1) + "], data_out_E[(`DATA_WIDTH*" + (2*row+2) + ")-1 -:`DATA_WIDTH]);\n";
+        }
+
+        module +=       "    endtask\n\n";
+
+        // task which displays the data/flag output as fixed point number
+        module +=       "    task displayDataFlagOutputAsFixedPoint();\n";
+        module +=       "        $display(\"OUTPUT_DATA_E\");\n";
+        module +=       "        $display(\"\\tv f          d\");\n";
+
+        for(int row = 0; row < crc.getRows(); row++) {
+            module +=   "        $display(\"ROW " + row + "\");\n";
+            module +=   "        $display(\"" + (2*row) + "\\t%b %b %f\", valid_bit_out_E[" + (2*row) + ":" + (2*row) + "], flag_out_E[" + (2*row) + ":" + (2*row) + "], fixedPointToFloatingPoint(data_out_E[(`DATA_WIDTH*" + (2*row+1) + ")-1 -:`DATA_WIDTH]));\n";
+            module +=   "        $display(\"" + (2*row+1) + "\\t%b %b %f\", valid_bit_out_E[" + (2*row+1) + ":" + (2*row+1) + "], flag_out_E[" + (2*row+1) + ":" + (2*row+1) + "], fixedPointToFloatingPoint(data_out_E[(`DATA_WIDTH*" + (2*row+2) + ")-1 -:`DATA_WIDTH]));\n";
         }
 
         module +=       "    endtask\n\n";
