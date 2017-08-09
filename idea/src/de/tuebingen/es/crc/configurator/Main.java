@@ -82,8 +82,8 @@ public class Main extends Application {
         primaryStage.setTitle("CRC Configurator");
         primaryStage.getIcons().add(new Image("icon/icon_512x512.png"));
 
-        primaryStage.setMinWidth(stageWidth);
-        primaryStage.setMinHeight(stageHeight);
+        primaryStage.setWidth(stageWidth);
+        primaryStage.setHeight(stageHeight);
         primaryStage.setScene(new Scene(root, stageWidth, stageHeight));
 
         primaryStage.setOnCloseRequest(event -> {
