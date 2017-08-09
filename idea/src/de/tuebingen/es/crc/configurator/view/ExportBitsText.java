@@ -120,6 +120,7 @@ public class ExportBitsText {
                     text += getString(crc.getPeDynamicConstRegContentBits(i, j, entry.getKey()), cLikeHexRepresentation);
                     text += "\n\n";
                 }
+                text += "\n\n";
             }
         }
 
