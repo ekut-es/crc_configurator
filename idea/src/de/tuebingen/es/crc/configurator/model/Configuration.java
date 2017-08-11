@@ -10,6 +10,10 @@ import java.util.List;
  */
 public class Configuration implements Observable {
 
+   public enum ConfigurationType {
+       NONE, STATIC, DYNAMIC
+   }
+
     private CRC crc;
 
     private int number;

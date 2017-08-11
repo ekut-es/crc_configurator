@@ -44,6 +44,7 @@ public class CRCVerilogQuestaSimScriptGenerator {
                         "vlog -novopt $env(DESIGN_WARE_VERILOG_DIR_PATH)/DW01_mux_any.v\n" +
                         "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/dsp48_umula.v\n" +
                         "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/dsp48_signed_fixed_point_add.v\n" +
+                        "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/dsp48_signed_fixed_point_sub.v\n" +
                         "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/dsp48_signed_fixed_point_mul.v\n" +
                         "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/dsp48_signed_fixed_point_mula.v\n" +
                         "vlog -novopt $env(CRC_VERILOG_DIR_PATH)/dsp48_signed_fixed_point_max_2.v\n" +

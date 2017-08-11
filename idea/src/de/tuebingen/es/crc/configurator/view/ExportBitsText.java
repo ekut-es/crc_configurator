@@ -82,7 +82,7 @@ public class ExportBitsText {
         return outString;
     }
 
-    public String getText(CRC crc, boolean cLikeHexRepresentation) {
+    public String getText(CRC crc, boolean cLikeHexRepresentation, Configuration.ConfigurationType configurationType, int configurationNumber) {
 
         String buffer;
         String text = "";
@@ -98,29 +98,61 @@ public class ExportBitsText {
         */
         text += "Bits for Single PEs (pe.v) ";
 
-        for(int i = 0; i < crc.getRows(); i++) {
-            for(int j = 0; j < crc.getColumns(); j++) {
-                text += "PE " + i + "," + j + ":\n";
-                text += "static_config_content:\n";
-                text += getString(crc.getPeStaticConfigParameterBits(i, j), cLikeHexRepresentation);
-                text += "\n\n";
-
-                text += "static_const_reg_content:\n";
-                text += getString(crc.getPeStaticConstRegContentBits(i, j), cLikeHexRepresentation);
-                text += "\n\n";
-
-                HashMap<Integer, Configuration> dynamicConfigs = crc.getDynamicConfigs();
-
-                for(Map.Entry<Integer, Configuration> entry : dynamicConfigs.entrySet()) {
-                    text += "dynamic_config_content_" + entry.getKey() + ":\n";
-                    text += getString(crc.getPeDynamicConfigParameterBits(i, j, entry.getKey()), cLikeHexRepresentation);
+        if(configurationType == Configuration.ConfigurationType.NONE) {
+            for (int i = 0; i < crc.getRows(); i++) {
+                for (int j = 0; j < crc.getColumns(); j++) {
+                    text += "PE " + i + "," + j + ":\n";
+                    text += "static_config_content:\n";
+                    text += getString(crc.getPeStaticConfigParameterBits(i, j), cLikeHexRepresentation);
                     text += "\n\n";
 
-                    text += "dynamic_const_reg_content_:" + entry.getKey() + "\n";
-                    text += getString(crc.getPeDynamicConstRegContentBits(i, j, entry.getKey()), cLikeHexRepresentation);
+                    text += "static_const_reg_content:\n";
+                    text += getString(crc.getPeStaticConstRegContentBits(i, j), cLikeHexRepresentation);
+                    text += "\n\n";
+
+                    HashMap<Integer, Configuration> dynamicConfigs = crc.getDynamicConfigs();
+
+                    for (Map.Entry<Integer, Configuration> entry : dynamicConfigs.entrySet()) {
+                        text += "dynamic_config_content_" + entry.getKey() + ":\n";
+                        text += getString(crc.getPeDynamicConfigParameterBits(i, j, entry.getKey()), cLikeHexRepresentation);
+                        text += "\n\n";
+
+                        text += "dynamic_const_reg_content_:" + entry.getKey() + "\n";
+                        text += getString(crc.getPeDynamicConstRegContentBits(i, j, entry.getKey()), cLikeHexRepresentation);
+                        text += "\n\n";
+                    }
                     text += "\n\n";
                 }
-                text += "\n\n";
+            }
+        }
+
+        else {
+            if(configurationType == Configuration.ConfigurationType.STATIC) {
+                for (int i = 0; i < crc.getRows(); i++) {
+                    for (int j = 0; j < crc.getColumns(); j++) {
+                        text += "PE " + i + "," + j + ":\n";
+                        text += "static_config_content:\n";
+                        text += getString(crc.getPeStaticConfigParameterBits(i, j), cLikeHexRepresentation);
+                        text += "\n\n";
+
+                        text += "static_const_reg_content:\n";
+                        text += getString(crc.getPeStaticConstRegContentBits(i, j), cLikeHexRepresentation);
+                        text += "\n\n";
+                    }
+                }
+            } else {
+                for (int i = 0; i < crc.getRows(); i++) {
+                    for (int j = 0; j < crc.getColumns(); j++) {
+                        text += "PE " + i + "," + j + ":\n";
+                        text += "dynamic_config_content_" + configurationNumber + ":\n";
+                        text += getString(crc.getPeDynamicConfigParameterBits(i, j, configurationNumber), cLikeHexRepresentation);
+                        text += "\n\n";
+
+                        text += "dynamic_const_reg_content_:" + configurationNumber + "\n";
+                        text += getString(crc.getPeDynamicConstRegContentBits(i, j, configurationNumber), cLikeHexRepresentation);
+                        text += "\n\n";
+                    }
+                }
             }
         }
 

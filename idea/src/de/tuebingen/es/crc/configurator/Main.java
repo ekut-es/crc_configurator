@@ -1,5 +1,6 @@
 package de.tuebingen.es.crc.configurator;
 
+import de.tuebingen.es.crc.configurator.model.Configuration;
 import de.tuebingen.es.crc.configurator.model.Model;
 import de.tuebingen.es.crc.configurator.view.ConfiguratorTab;
 import de.tuebingen.es.crc.configurator.view.ExportBitsText;
@@ -105,7 +106,7 @@ public class Main extends Application {
 
             if(exportBits) {
                 ExportBitsText exportBitsText = new ExportBitsText();
-                System.out.println(exportBitsText.getText(model.getCrc(), false));
+                System.out.println(exportBitsText.getText(model.getCrc(), false, Configuration.ConfigurationType.NONE, 0));
             }
 
             if(exportPNGs) {
