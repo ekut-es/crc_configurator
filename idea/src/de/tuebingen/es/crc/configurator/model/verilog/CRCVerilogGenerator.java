@@ -1177,8 +1177,10 @@ public class CRCVerilogGenerator {
                 pe.op_max = availableFuModes.get(FU.FuMode.max);
                 pe.op_min = availableFuModes.get(FU.FuMode.min);
 
-                pe.static_config_content = "" + crc.getPeStaticConfigParameterBits(row, column).length() + "'b" + crc.getPeStaticConfigParameterBits(row, column);
-                pe.static_const_reg_content = "" + crc.getPeStaticConstRegContentBits(row, column).length() + "'b" + crc.getPeStaticConstRegContentBits(row, column);
+                if(crc.getStaticConfigLines() != 0) {
+                    pe.static_config_content = "" + crc.getPeStaticConfigParameterBits(row, column).length() + "'b" + crc.getPeStaticConfigParameterBits(row, column);
+                    pe.static_const_reg_content = "" + crc.getPeStaticConstRegContentBits(row, column).length() + "'b" + crc.getPeStaticConstRegContentBits(row, column);
+                }
 
                 pe.lut_8bit_content = "2048'h" + crc.getFu(row, column).getLut8BitContentHexString();
 

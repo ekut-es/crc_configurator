@@ -81,8 +81,16 @@ public class CRCVerilogPreprocessorGenerator {
         preprocessor +=
                 "/* -------------------------------------------------------------------------\n" +
                 " * STATIC_CONFIG_LINES definess how many static config lines all PEs have\n" +
-                " * ------------------------------------------------------------------------- */\n" +
+                " * ------------------------------------------------------------------------- */\n";
+        if(staticConfigLines != 0) {
+            preprocessor +=
+                "`define STATIC_CONFIG\n" +
                 "`define STATIC_CONFIG_LINES " + staticConfigLines + "\n\n";
+        } else {
+            preprocessor +=
+                "//`define STATIC_CONFIG\n" +
+                "`define STATIC_CONFIG_LINES 0\n\n";
+        }
 
         // dynamic config lines
         preprocessor +=
